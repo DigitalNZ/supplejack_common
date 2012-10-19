@@ -45,12 +45,15 @@ module Harvester
     def attributes
       modified_attributes = {}
 
-      attribute_names = self.class._attribute_definitions.keys + self.class.instance_methods(false)
       attribute_names.each do |name|
         modified_attributes[name] = self.send(name)
       end
 
       modified_attributes
+    end
+
+    def attribute_names
+      self.class._attribute_definitions.keys + self.class.instance_methods(false)
     end
 
     def to_s

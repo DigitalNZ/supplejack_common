@@ -10,16 +10,15 @@ module Harvester
 
       def contents(attribute_name)
         values = record.original_attributes[attribute_name.to_sym]
-        @is_array = values.is_a?(Array)
         values = *values
       end
 
       def within(attribute_name)
         values = contents(attribute_name).map do |value|
-          value.gsub(regexp, substitute_value)
-        end
+          value.gsub(regexp, substitute_value) if value.match(regexp)
+        end.compact
 
-        values = values.first unless @is_array
+        values = values.first if values.size == 1
         values
       end
     end
