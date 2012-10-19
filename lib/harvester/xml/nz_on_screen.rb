@@ -20,6 +20,7 @@ class NzOnScreen < Harvester::Xml::Base
   attribute :thumbnail_url,           xpath: "thumbnail-image/title/path"
   attribute :large_thumbnail_url,     xpath: "thumbnail-image/large/path"
   attribute :dc_type,                 xpath: "genre", separator: ","
+  attribute :attachments,             xpath: "video", object: true
 
   def contributor
     return nil unless original_attributes[:contributor].respond_to?(:each)
@@ -27,6 +28,19 @@ class NzOnScreen < Harvester::Xml::Base
       first_name = person.xpath("first-name")
       last_name = person.xpath("last-name")
       [first_name, last_name].join(" ")
+    end
+  end
+
+  def attachments
+    original_attributes[:attachments].map do |video|
+      attributes = {}
+      attributes[:name] = video.xpath("label").text
+      attributes[:url] = video.xpath("files/hi_res/m4v").text
+      attributes[:aspect_ratio] = video.xpath("aspect_ratio").text
+      attributes[:dc_type] = "Videos"
+      attributes[:large_thumbnail_url] = self.large_thumbnail_url
+      attributes[:dc_identifier] = attributes[:url].split("/").last
+      attributes
     end
   end
 end
