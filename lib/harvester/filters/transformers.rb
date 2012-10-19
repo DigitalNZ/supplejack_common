@@ -9,7 +9,7 @@ module Harvester
       end
 
       def contents(attribute_name)
-        values = record.attributes[attribute_name.to_sym]
+        values = record.original_attributes[attribute_name.to_sym]
         @is_array = values.is_a?(Array)
         values = *values
       end

@@ -8,7 +8,7 @@ module Harvester
       end
 
       def contents(attribute_name)
-        contents = *record.attributes[attribute_name.to_sym]
+        contents = *record.original_attributes[attribute_name.to_sym]
       end
     end
 

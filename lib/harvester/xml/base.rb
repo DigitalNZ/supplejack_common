@@ -1,32 +1,23 @@
 module Harvester
   module Xml
-    module Base
-      extend ActiveSupport::Concern
+    class Base < Harvester::Base
 
-      included do
-        include Harvester::Base
+      self._base_urls = []
+      self._attribute_definitions = {}
 
-        class_attribute :_attribute_definitions
-
-        self._attribute_definitions = {}
-      end
-
-      module ClassMethods
-        def attribute(name, options={})
-          self._attribute_definitions[name] = options || {}
-        end
-
+      class << self
         def records
           records = Hash.from_xml RestClient.get(self._base_urls.first)
           records = records["titles"]
 
+          records = records[0..9]
           @@records = records.map {|hash| new(hash["slug"]) }
         end
       end
 
       def initialize(slug)
         @slug = slug
-        @attributes = {}
+        super
       end
 
       def fetch_record_xml
@@ -56,10 +47,10 @@ module Harvester
             value = value.split(options[:separator])
           end
 
-          @attributes[attribute_name] = value
+          @original_attributes[attribute_name] = value
         end
 
-        @attributes
+        @original_attributes
       end
     end
   end

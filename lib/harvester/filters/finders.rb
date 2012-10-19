@@ -31,7 +31,7 @@ module Harvester
       private
 
       def attribute(field)
-        self.attributes[field.to_sym]
+        self.original_attributes[field.to_sym]
       end
     end
   end

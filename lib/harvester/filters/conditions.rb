@@ -11,7 +11,7 @@ module Harvester
       end
 
       def if_present(attribute_name)
-        value_to_check = record.attributes[attribute_name]
+        value_to_check = record.original_attributes[attribute_name]
 
         if value_to_check.present?
           new_value + existing_values

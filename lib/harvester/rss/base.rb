@@ -1,36 +1,25 @@
 module Harvester
   module Rss
-    module Base
-      extend ActiveSupport::Concern
+    class Base < Harvester::Base
 
-      included do
-        include Harvester::Base
+      class_attribute :_default_elements
+      self._default_elements = [:title, :url, :author, :content, :summary, :published, :updated, :categories, :entry_id]
 
-        class_attribute :_attribute_definitions
-        class_attribute :_default_elements
+      self._base_urls = []
+      self._attribute_definitions = {}
 
-        self._attribute_definitions = {}
-        self._default_elements = [:title, :url, :author, :content, :summary, :published, :updated, :categories, :entry_id]
-      end
+      attr_reader :record
 
-      module ClassMethods
+      class << self
         def attribute(name, options={})
-          unless self._default_elements.include?(name)
+          if !self._default_elements.include?(name) && options[:default].blank?
             feedzirra_options = {}
             feedzirra_options[:value] = options[:value] if options[:value]
             feedzirra_options[:with] = options[:with] if options[:with]
             Feedzirra::Feed.add_common_feed_entry_element(options[:from], feedzirra_options)
           end
 
-          self._attribute_definitions[name] = options || {}
-        end
-
-        def attributes(*args)
-          options = args.pop if args.last.is_a?(Hash)
-
-          args.each do |attribute|
-            self._attribute_definitions[attribute] = options || {}
-          end
+          super(name, options)
         end
 
         def records
@@ -48,12 +37,16 @@ module Harvester
       end
 
       def initialize(record)
-        @attributes = {}
-        @attributes.merge!(self.class._default_values)
+        @record = record
+        super
+      end
 
+      def set_attribute_values
         self.class._attribute_definitions.each do |name, options|
-          from_method_name = options[:from] || name
-          @attributes[name] = record.send(from_method_name)
+          value = nil
+          value = options[:default] if options[:default].present?
+          value = record.send(options[:from] || name) unless value
+          @original_attributes[name] = value
         end
       end
 

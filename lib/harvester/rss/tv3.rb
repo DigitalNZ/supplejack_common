@@ -1,18 +1,15 @@
-require_relative 'base'
-
-class Tv3
-  include Harvester::Rss::Base
+class Tv3 < Harvester::Rss::Base
   
   base_url "http://www.3news.co.nz/DesktopModules/Article%20Presentation/External.aspx?tabid=783&moduleid=5943&cat=64"
   base_url "http://www.3news.co.nz/DesktopModules/Article%20Presentation/External.aspx?tabid=783&moduleid=5943&cat=67"
 
-  default :archive_title,           "tv3-rss"
-  default :category,                ["Newspapers"]
-  default :content_partner,         ["TV3"]
-  default :display_content_partner, "TV3"
-  default :creator,                 ["TV3"]
-  default :collection,              "tv3.co.nz"
-  default :copyright,               ["All rights reserved"]
+  attribute :archive_title,           default: "tv3-rss"
+  attribute :category,                default: ["Newspapers"]
+  attribute :content_partner,         default: ["TV3"]
+  attribute :display_content_partner, default: "TV3"
+  attribute :creator,                 default: ["TV3"]
+  attribute :collection,              default: "tv3.co.nz"
+  attribute :copyright,               default: ["All rights reserved"]
 
   attribute :title
   attribute :description, from: :summary
