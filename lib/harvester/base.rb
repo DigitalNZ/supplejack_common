@@ -29,11 +29,19 @@ module Harvester
           self.attribute(attribute, options)
         end
       end
+
+      def with_options(options={}, &block)
+        yield(Harvester::Scope.new(self, options))
+      end
     end
 
     def initialize(*args)
       @original_attributes = {}
       self.set_attribute_values
+
+      (@original_attributes.keys - instance_methods).each do |method_name|
+        self.class.send(:define_method, method_name, lambda { @original_attributes[method_name] })
+      end
     end
 
     def set_attribute_values
@@ -53,7 +61,11 @@ module Harvester
     end
 
     def attribute_names
-      self.class._attribute_definitions.keys + self.class.instance_methods(false)
+      self.class._attribute_definitions.keys + self.instance_methods
+    end
+
+    def instance_methods
+      self.class.instance_methods(false)
     end
 
     def to_s
