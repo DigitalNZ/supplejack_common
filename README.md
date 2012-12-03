@@ -51,3 +51,29 @@ Since each adapater and each parser file are just ruby classes with very little 
 
 ## Vision
 The vision of this proyect is to have something that change very easily since harvesting in itself is a very unpredictable task with very different types of sources and also the data requierements for the API evolve.
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'dnz_harvester'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install dnz_harvester
+
+## Usage
+
+TODO: Write usage instructions here
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request

@@ -1,6 +1,6 @@
-module Harvester
+module DnzHarvester
   module Sitemap
-    class Base < Harvester::Base
+    class Base < DnzHarvester::Base
 
       self._base_urls = []
       self._attribute_definitions = {}

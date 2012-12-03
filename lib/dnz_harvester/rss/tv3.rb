@@ -1,4 +1,4 @@
-class Tv3 < Harvester::Rss::Base
+class Tv3 < DnzHarvester::Rss::Base
   
   base_url "http://www.3news.co.nz/DesktopModules/Article%20Presentation/External.aspx?tabid=783&moduleid=5943&cat=64"
   base_url "http://www.3news.co.nz/DesktopModules/Article%20Presentation/External.aspx?tabid=783&moduleid=5943&cat=67"

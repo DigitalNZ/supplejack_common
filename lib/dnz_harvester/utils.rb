@@ -1,4 +1,4 @@
-module Harvester
+module DnzHarvester
   module Utils
     extend self
 

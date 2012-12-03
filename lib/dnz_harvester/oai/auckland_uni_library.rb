@@ -1,4 +1,4 @@
-class AucklandUniLibrary < Harvester::Oai::Base
+class AucklandUniLibrary < DnzHarvester::Oai::Base
   
   base_url "http://researchspace.auckland.ac.nz/dspace-oai/request"
 

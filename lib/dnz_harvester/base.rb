@@ -1,9 +1,7 @@
-require 'active_support/core_ext/class/attribute'
-
-module Harvester
+module DnzHarvester
   class Base
-    include Harvester::Filters::Finders
-    include Harvester::Filters::Modifiers
+    include DnzHarvester::Filters::Finders
+    include DnzHarvester::Filters::Modifiers
 
     class_attribute :_base_urls
     class_attribute :_attribute_definitions
@@ -31,7 +29,7 @@ module Harvester
       end
 
       def with_options(options={}, &block)
-        yield(Harvester::Scope.new(self, options))
+        yield(DnzHarvester::Scope.new(self, options))
       end
     end
 

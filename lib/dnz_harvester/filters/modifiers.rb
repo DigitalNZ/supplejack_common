@@ -1,4 +1,4 @@
-module Harvester
+module DnzHarvester
   module Filters
     module Modifiers
       extend ActiveSupport::Concern

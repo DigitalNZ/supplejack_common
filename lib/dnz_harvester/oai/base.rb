@@ -1,8 +1,8 @@
 require 'open-uri'
 
-module Harvester
+module DnzHarvester
   module Oai
-    class Base < Harvester::Base
+    class Base < DnzHarvester::Base
 
       self._base_urls = []
       self._attribute_definitions = {}

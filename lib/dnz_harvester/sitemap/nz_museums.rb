@@ -1,4 +1,4 @@
-class NzMuseums < Harvester::Sitemap::Base
+class NzMuseums < DnzHarvester::Sitemap::Base
   
   base_url "/Users/fede/code/dnz/config/harvester-resources/dnz03/sitemaps/nzmuseums-sitemap-reservebank.xml"
 

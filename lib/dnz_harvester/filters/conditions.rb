@@ -1,4 +1,4 @@
-module Harvester
+module DnzHarvester
   module Filters
     class IfCondition
 

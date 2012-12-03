@@ -1,4 +1,4 @@
-module Harvester
+module DnzHarvester
   class Scope
 
     def initialize(klass, options)

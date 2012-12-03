@@ -1,7 +1,7 @@
-module Harvester
+module DnzHarvester
   module Filters
     module Finders
-      extend ActiveSupport::Concern
+      extend ::ActiveSupport::Concern
 
       def find_with(regexp)
         WithSelector.new(self, regexp, :first)

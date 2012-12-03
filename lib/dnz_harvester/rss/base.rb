@@ -1,6 +1,6 @@
-module Harvester
+module DnzHarvester
   module Rss
-    class Base < Harvester::Base
+    class Base < DnzHarvester::Base
 
       class_attribute :_default_elements
       self._default_elements = [:title, :url, :author, :content, :summary, :published, :updated, :categories, :entry_id]

@@ -1,4 +1,4 @@
-class NzOnScreen < Harvester::Xml::Base
+class NzOnScreen < DnzHarvester::Xml::Base
   
   base_url "http://zachobson:f1ash1ight@www.nzonscreen.com/api/title/"
 
