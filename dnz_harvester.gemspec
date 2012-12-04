@@ -17,11 +17,12 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_runtime_dependency "oai",            "~> 0.2.1"
+  gem.add_runtime_dependency "oai"
   gem.add_runtime_dependency "feedzirra",      "~> 0.1.3"
   gem.add_runtime_dependency "activesupport"
   gem.add_runtime_dependency "rest-client",    "~> 1.6.7"
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec",      "~> 2.11.0"
+  gem.add_development_dependency "webmock",    "~> 1.8"
 end
