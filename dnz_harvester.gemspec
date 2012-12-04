@@ -22,7 +22,6 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "activesupport"
   gem.add_runtime_dependency "rest-client",    "~> 1.6.7"
 
+  gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec",      "~> 2.11.0"
-  gem.add_development_dependency "guard"
-  gem.add_development_dependency "guard-rspec"
 end

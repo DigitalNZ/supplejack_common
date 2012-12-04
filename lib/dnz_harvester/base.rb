@@ -16,6 +16,10 @@ module DnzHarvester
         self._base_urls << url
       end
 
+      def base_urls
+        self._base_urls
+      end
+
       def attribute(name, options={})
         self._attribute_definitions[name] = options || {}
       end
@@ -28,8 +32,16 @@ module DnzHarvester
         end
       end
 
+      def attribute_definitions
+        self._attribute_definitions
+      end
+
       def with_options(options={}, &block)
         yield(DnzHarvester::Scope.new(self, options))
+      end
+
+      def custom_instance_methods
+        self.instance_methods(false)
       end
     end
 
@@ -37,7 +49,7 @@ module DnzHarvester
       @original_attributes = {}
       self.set_attribute_values
 
-      (@original_attributes.keys - instance_methods).each do |method_name|
+      (@original_attributes.keys - self.class.custom_instance_methods).each do |method_name|
         self.class.send(:define_method, method_name, lambda { @original_attributes[method_name] })
       end
     end
@@ -59,11 +71,7 @@ module DnzHarvester
     end
 
     def attribute_names
-      self.class._attribute_definitions.keys + self.instance_methods
-    end
-
-    def instance_methods
-      self.class.instance_methods(false)
+      self.class._attribute_definitions.keys + self.class.custom_instance_methods
     end
 
     def to_s
