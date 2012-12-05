@@ -4,9 +4,6 @@ module DnzHarvester
   module Oai
     class Base < DnzHarvester::Base
 
-      self._base_urls = []
-      self._attribute_definitions = {}
-
       class_attribute :_enrichment_definitions
       self._enrichment_definitions = {}
 
@@ -18,11 +15,11 @@ module DnzHarvester
         end
 
         def client
-          @@client ||= OAI::Client.new(self._base_urls.first)
+          @client ||= OAI::Client.new(self.base_urls.first)
         end
 
         def records
-          @@records ||= client.list_records.map do |record|
+          @records ||= client.list_records.map do |record|
             self.new(record)
           end
         end

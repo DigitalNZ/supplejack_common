@@ -13,7 +13,7 @@ module DnzHarvester
 
     class << self
       def base_url(url)
-        self._base_urls << url
+        self._base_urls += [url]
       end
 
       def base_urls

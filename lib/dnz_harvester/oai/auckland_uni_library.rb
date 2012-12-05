@@ -1,6 +1,6 @@
 class AucklandUniLibrary < DnzHarvester::Oai::Base
   
-  base_url "http://researchspace.auckland.ac.nz/dspace-oai/request"
+  base_url "https://researchspace.auckland.ac.nz/dspace-oai/request"
 
   attribute :archive_title,           default: "auck-uni-libraries-oai"
   attribute :category,                default: "Research papers"
