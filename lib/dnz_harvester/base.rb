@@ -60,12 +60,22 @@ module DnzHarvester
           @original_attributes[name] = options[:default]
         elsif options[:from]
           @original_attributes[name] = get_value_from(options[:from])
+        elsif options[:xpath] && options[:if]
+          @original_attributes[name] = DnzHarvester::ConditionalOption.new(document, options).value
+        elsif options[:xpath] && options[:mappings]
+          @original_attributes[name] = DnzHarvester::MappingOption.new(document, options).value
+        elsif options[:xpath]
+          @original_attributes[name] = DnzHarvester::XpathOption.new(document, options).value
         end
       end
     end
 
     def get_value_from(name)
       raise NotImplementedError.new("All subclasses of DnzHarvester::Base must override #get_value_from.")
+    end
+
+    def document
+      raise NotImplementedError.new("All subclasses of DnzHarvester::Base must override #document.")
     end
 
     def attributes

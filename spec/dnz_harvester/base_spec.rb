@@ -100,6 +100,51 @@ describe DnzHarvester::Base do
       record.set_attribute_values
       record.original_attributes.should include(content_partner: "Value")
     end
+
+    context "complex options" do
+      let!(:document) { mock(:document).as_null_object }
+      let!(:record) { klass.new }
+
+      before do
+        record.stub(:document) { document }
+      end
+
+      context "conditional option" do
+        let!(:options) { {xpath: "table/tr", if: {"td[1]" => "dc.date"}, value: "td[2]"} }
+        let!(:conditional_option) { mock(:conditional_option, value: "Conditional Value") }
+
+        it "sets the conditional value" do
+          klass._attribute_definitions = {date: options}
+          DnzHarvester::ConditionalOption.should_receive(:new).with(document, options) { conditional_option }
+          record.set_attribute_values
+          record.original_attributes.should include(date: "Conditional Value")
+        end
+      end
+
+      context "mapping option" do
+        let!(:options) { {xpath: "table/tr", mappings: {"Non commercial" => "CC-BY-NC", "Share" => "CC-BY-SA"}} }
+        let!(:mapping_option) { mock(:mapping_option, value: "Mapping Value") }
+
+        it "sets the mapping option" do
+          klass._attribute_definitions = {date: options}
+          DnzHarvester::MappingOption.should_receive(:new).with(document, options) { mapping_option }
+          record.set_attribute_values
+          record.original_attributes.should include(date: "Mapping Value")
+        end
+      end
+
+      context "xpath option" do
+        let!(:options) { {xpath: "table/tr"} }
+        let!(:xpath_option) { mock(:xpath_option, value: "Xpath Value") }
+
+        it "sets the xpath option" do
+          klass._attribute_definitions = {date: options}
+          DnzHarvester::XpathOption.should_receive(:new).with(document, options) { xpath_option }
+          record.set_attribute_values
+          record.original_attributes.should include(date: "Xpath Value")
+        end
+      end
+    end
   end
 
   describe "#attributes" do

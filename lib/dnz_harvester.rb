@@ -7,7 +7,10 @@ require "dnz_harvester/version"
 require "dnz_harvester/utils"
 require "dnz_harvester/scope"
 
+require 'dnz_harvester/helpers/abstract_option'
 require 'dnz_harvester/helpers/conditional_option'
+require 'dnz_harvester/helpers/mapping_option'
+require 'dnz_harvester/helpers/xpath_option'
 
 require "dnz_harvester/filters/selectors"
 require "dnz_harvester/filters/transformers"
