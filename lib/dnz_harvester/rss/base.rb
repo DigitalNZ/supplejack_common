@@ -8,7 +8,7 @@ module DnzHarvester
       self._base_urls = []
       self._attribute_definitions = {}
 
-      attr_reader :record
+      attr_reader :rss_entry
 
       class << self
         def attribute(name, options={})
@@ -28,26 +28,21 @@ module DnzHarvester
             entries += feed.entries
           end
 
-          @@records = entries.map {|entry| new(entry) }
+          @records = entries.map {|entry| new(entry) }
         end
 
         def feeds
-          @@feeds ||= Feedzirra::Feed.fetch_and_parse(self._base_urls)
+          @feeds ||= Feedzirra::Feed.fetch_and_parse(self.base_urls)
         end
       end
 
-      def initialize(record)
-        @record = record
+      def initialize(rss_entry)
+        @rss_entry = rss_entry
         super
       end
 
-      def set_attribute_values
-        self.class._attribute_definitions.each do |name, options|
-          value = nil
-          value = options[:default] if options[:default].present?
-          value = record.send(options[:from] || name) unless value
-          @original_attributes[name] = value
-        end
+      def get_value_from(name)
+        rss_entry.send(name)
       end
 
     end

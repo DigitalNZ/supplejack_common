@@ -11,7 +11,7 @@ class Tv3 < DnzHarvester::Rss::Base
   attribute :collection,              default: "tv3.co.nz"
   attribute :copyright,               default: ["All rights reserved"]
 
-  attribute :title
+  attribute :title, from: :title
   attribute :description, from: :summary
 
   attributes :date, :display_date, from: :published

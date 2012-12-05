@@ -56,8 +56,16 @@ module DnzHarvester
 
     def set_attribute_values
       self.class._attribute_definitions.each do |name, options|
-        @original_attributes[name] = options[:default] if options[:default].present?
+        if options[:default]
+          @original_attributes[name] = options[:default]
+        elsif options[:from]
+          @original_attributes[name] = get_value_from(options[:from])
+        end
       end
+    end
+
+    def get_value_from(name)
+      raise NotImplementedError.new("All subclasses of DnzHarvester::Base must override #get_value_from.")
     end
 
     def attributes

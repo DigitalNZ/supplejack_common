@@ -1,4 +1,4 @@
-class OaiLibrary < DnzHarvester::Oai::Base
+class OaiParser < DnzHarvester::Oai::Base
   
   base_url "http://library.org"
 

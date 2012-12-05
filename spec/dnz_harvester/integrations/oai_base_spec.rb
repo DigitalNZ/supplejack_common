@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require_relative 'parsers/oai_library'
+require_relative 'parsers/oai_parser'
 
 describe DnzHarvester::Oai::Base do
 
@@ -11,7 +11,7 @@ describe DnzHarvester::Oai::Base do
     OAI::Client.any_instance.stub(:strip_invalid_utf_8_chars).with(body).and_return(body)
   end
 
-  let!(:record) { OaiLibrary.records.first }
+  let!(:record) { OaiParser.records.first }
 
   context "default values" do
 

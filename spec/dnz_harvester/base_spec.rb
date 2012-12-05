@@ -3,6 +3,11 @@ require 'spec_helper'
 describe DnzHarvester::Base do
   let(:klass) { DnzHarvester::Base }
 
+  after(:each) do
+    klass._base_urls = []
+    klass._attribute_definitions = {}
+  end
+
   describe ".base_url" do
     before { klass._base_urls = [] }
 
@@ -77,8 +82,23 @@ describe DnzHarvester::Base do
 
   describe "#set_attribute_values" do
     it "sets the default values" do
-      klass._attribute_definitions[:content_partner] = {default: "Google"}
+      klass._attribute_definitions = {content_partner: {default: "Google"}}
       klass.new.original_attributes.should include(content_partner: "Google")
+    end
+
+    it "sets the from value for a attribute" do
+      class ValueParser < DnzHarvester::Base
+
+        attribute :content_partner, from: :some_attribute_name
+
+        def get_value_from(from_value)
+          "Value"
+        end
+      end
+
+      record = ValueParser.new
+      record.set_attribute_values
+      record.original_attributes.should include(content_partner: "Value")
     end
   end
 

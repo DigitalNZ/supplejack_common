@@ -37,12 +37,7 @@ module DnzHarvester
         @root = record.metadata.first
         @original_attributes[:identifier] = record.header.identifier
 
-        self.class._attribute_definitions.each do |name, options|
-          value = nil
-          value = options[:default] if options[:default].present?
-          value = get_value_from(options[:from]) unless value
-          @original_attributes[name] = value
-        end
+        super
       end
 
       def attributes
@@ -54,8 +49,8 @@ module DnzHarvester
         super + self._enrichment_definitions.keys
       end
 
-      def get_value_from(element_name)
-        values = root.get_elements(element_name)
+      def get_value_from(name)
+        values = root.get_elements(name)
         values = values.map(&:texts).flatten.map(&:to_s) if values.try(:any?)
         values
       end
