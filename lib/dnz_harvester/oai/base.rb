@@ -4,10 +4,13 @@ module DnzHarvester
   module Oai
     class Base < DnzHarvester::Base
 
+      self._base_urls = []
+      self._attribute_definitions = {}
+
       class_attribute :_enrichment_definitions
       self._enrichment_definitions = {}
 
-      attr_reader :record
+      attr_reader :record, :root
 
       class << self
         def enrich(name, options={})
@@ -31,13 +34,13 @@ module DnzHarvester
       end
 
       def set_attribute_values
-        root = record.metadata.first
+        @root = record.metadata.first
         @original_attributes[:identifier] = record.header.identifier
 
         self.class._attribute_definitions.each do |name, options|
           value = nil
           value = options[:default] if options[:default].present?
-          value = extract_value_from(options[:from], root) unless value
+          value = get_value_from(options[:from]) unless value
           @original_attributes[name] = value
         end
       end
@@ -51,8 +54,8 @@ module DnzHarvester
         super + self._enrichment_definitions.keys
       end
 
-      def extract_value_from(element_name, rexml_element)
-        values = rexml_element.get_elements(element_name)
+      def get_value_from(element_name)
+        values = root.get_elements(element_name)
         values = values.map(&:texts).flatten.map(&:to_s) if values.try(:any?)
         values
       end
@@ -66,15 +69,9 @@ module DnzHarvester
         return nil if url.blank?
         
         self._enrichment_definitions.each do |name, options|
-          nodes = enrichment_document.xpath("//#{options[:xpath]}")
-
-          conditions = options[:if]
-          condition_xpath = conditions.keys.first
-          condition_value = conditions.values.first
-          node = nodes.detect {|n| n.xpath(condition_xpath).text == condition_value }
-
-          if node
-            @original_attributes[name] = node.xpath(options[:value]).text
+          conditional_option = DnzHarvester::ConditionalOption.new(enrichment_document, options)
+          if conditional_option.value.present?
+            @original_attributes[name] = conditional_option.value
           end
         end
       end
