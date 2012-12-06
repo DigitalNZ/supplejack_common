@@ -30,11 +30,64 @@ describe DnzHarvester::Oai::Base do
   describe ".records" do
     let(:record) { mock(:record) }
     let(:client) { mock(:client, list_records: [record]) }
+    let!(:records_container) { DnzHarvester::Oai::RecordsContainer.new([record]) }
+    let(:response) { mock(:response, resumption_token: "123", map: [record]) }
 
-    it "initializes a new Oai record for every result" do
+    before(:each) do
+      klass.stub(:new) { record }
       klass.stub(:client) { client }
-      klass.should_receive(:new).once.with(record)
+      client.stub(:list_records) { response }
+    end
+
+    it "initializes a RecordsContainer with the results" do
+      client.stub(:list_records) { [record] }
+      DnzHarvester::Oai::RecordsContainer.should_receive(:new).with([record]) { records_container }
       klass.records
+    end
+
+    it "accepts a :from option and pass it on to list_records" do
+      date = Date.today
+      client.should_receive(:list_records).with(hash_including(from: date)) { [record] }
+      klass.records(from: date)
+    end
+
+    it "accepts a :resumption_token option" do
+      client.should_receive(:list_records).with(hash_including(resumption_token: "1234")) { [record] }
+      klass.records(resumption_token: "1234")
+    end
+
+    it "does not pass on unknown options" do
+      client.should_not_receive(:list_records).with(hash_including(golf_scores: :all)) { [record] }
+      klass.records(golf_scores: :all)
+    end
+
+    it "stores the oai response" do
+      klass.records
+      klass.response.should eq response
+    end
+  end
+
+  describe "#resumption_token" do
+    it "returns the current resumption_token" do
+      klass.stub(:response) { mock(:response, resumption_token: "123456") }
+      klass.resumption_token.should eq "123456"
+    end
+
+    it "returns nil when response is nil" do
+      klass.stub(:response) { nil }
+      klass.resumption_token.should be_nil
+    end
+  end
+
+  describe "#deleted?" do
+    it "returns true" do
+      oai_record.stub(:deleted?) { true }
+      record.deleted?.should be_true
+    end
+
+    it "returns false" do
+      oai_record.stub(:deleted?) { false }
+      record.deleted?.should be_false
     end
   end
 
@@ -55,6 +108,12 @@ describe DnzHarvester::Oai::Base do
       record.should_receive(:get_value_from).with("dc:title") { "Dogs" }
       record.set_attribute_values
       record.original_attributes.should include(title: "Dogs")
+    end
+
+    it "sets the root to nil when metadata is not present" do
+      oai_record.stub(:metadata) { nil }
+      record.set_attribute_values
+      record.root.should be_nil
     end
   end
 
@@ -87,6 +146,11 @@ describe DnzHarvester::Oai::Base do
     it "extracts a value for a given node name" do
       root.should_receive(:get_elements).with("dc:title") { [node] }
       record.get_value_from("dc:title").should eq ["Dogs and cats"]
+    end
+
+    it "returns nil when root is nil" do
+      record.stub(:root) { nil }
+      record.get_value_from("dc:title").should be_nil
     end
   end
 

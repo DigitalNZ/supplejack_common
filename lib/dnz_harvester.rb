@@ -19,8 +19,10 @@ require "dnz_harvester/filters/finders"
 require "dnz_harvester/filters/modifiers"
 
 require "dnz_harvester/base"
+require "dnz_harvester/records_container"
 
 require "dnz_harvester/oai/base"
+require "dnz_harvester/oai/records_container"
 require "dnz_harvester/oai/auckland_uni_library"
 
 require "dnz_harvester/rss/base"
