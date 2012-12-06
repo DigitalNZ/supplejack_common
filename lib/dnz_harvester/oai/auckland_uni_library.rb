@@ -18,10 +18,9 @@ class AucklandUniLibrary < DnzHarvester::Oai::Base
   attribute :relation,      from: "dc:relation"
   attribute :rights,        from: "dc:rights"
 
-  #A: Group this with enrichment_url?
-  enrich :citation,         xpath: "table/tr", if: {"td[1]" => "dc.identifier.citation"}, value: "td[2]"
+  enrich :citation,         xpath: "//table/tr", if: {"td[1]" => "dc.identifier.citation"}, value: "td[2]"
 
-  #A: could these be more symantic?
+  #A: could these be more semantic?
   #   for example:
   #   
   #   custom_attribute :identifier do 

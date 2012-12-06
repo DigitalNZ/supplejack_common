@@ -14,7 +14,7 @@ module DnzHarvester
       @nodes = []
 
       xpath_expressions.each do |xpath|
-        @nodes += document.xpath("//#{xpath}")
+        @nodes += document.xpath("#{xpath}")
       end
 
       @nodes

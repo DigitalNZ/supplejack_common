@@ -7,8 +7,8 @@ describe DnzHarvester::Sitemap::Base do
   let(:record) { mock(:record) }
 
   after do
-    klass._base_urls = []
-    klass._attribute_definitions = {}
+    klass._base_urls[klass.identifier] = []
+    klass._attribute_definitions[klass.identifier] = {}
   end
 
   describe ".sitemap_file" do

@@ -1,5 +1,3 @@
-require 'open-uri'
-
 module DnzHarvester
   module Utils
     extend self
@@ -21,7 +19,7 @@ module DnzHarvester
     end
 
     def get(url)
-      open(url)
+      RestClient.get(url)
     end
   end
 end

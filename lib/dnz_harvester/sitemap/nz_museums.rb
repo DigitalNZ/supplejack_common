@@ -6,9 +6,9 @@ class NzMuseums < DnzHarvester::Sitemap::Base
   attribute :collection,          default: ["NZMuseums"]
   attribute :source,              default: "NZMuseums"
 
-  attributes :thumbnail_url, :large_thumbnail_url, xpath: ["div[@class='ehObjectSingleImage']/a/img", "div[@class='ehObjectImageMultiple']/a/img"], value: :src
+  attributes :thumbnail_url, :large_thumbnail_url, xpath: ["//div[@class='ehObjectSingleImage']/a/img", "//div[@class='ehObjectImageMultiple']/a/img"], value: :src
 
-  with_options xpath: "div[@class='ehFieldLabelDescription']", if: {"span[@class='label']" => :label_value}, value: "span[@class='value']" do |w|
+  with_options xpath: "//div[@class='ehFieldLabelDescription']", if: {"span[@class='label']" => :label_value}, value: "span[@class='value']" do |w|
 
     w.attribute :title,                 label_value: "Name/Title"
     w.attribute :creator,               label_value: "Maker"
@@ -21,8 +21,8 @@ class NzMuseums < DnzHarvester::Sitemap::Base
 
   end
 
-  attribute :subject,     xpath: "form[@class='ehTagForm']/span/a"
-  attribute :license,     xpath: "div[@class='ehObjectLicence']/a", value: :href,
+  attribute :subject,     xpath: "//form[@class='ehTagForm']/span/a"
+  attribute :license,     xpath: "//div[@class='ehObjectLicence']/a", value: :href,
                           mappings: {
                             ".*Attribution$" => "CC-BY",
                             ".*Attribution_-_Share_Alike$" => "CC-BY-SA",
@@ -32,10 +32,10 @@ class NzMuseums < DnzHarvester::Sitemap::Base
                             ".*Attribution_-_Non-Commercial_-_No_Derivatives$" => "CC-BY-NC-ND"
                           }
 
-  attributes :content_partner, :display_content_partner, :publisher, xpath: "div[@class='ehFieldAccountLink']/a"
+  attributes :content_partner, :display_content_partner, :publisher, xpath: "//div[@class='ehFieldAccountLink']/a"
 
-  attribute :date,          xpath: "li[@span='Date Made']"
-  attribute :display_date,  xpath: "div[@class='ehRepeatingLabelDescription']", if: {"span[@class='label']" => "Date Made"}, value: "span[@class='value']"
+  attribute :date,          xpath: "//li[@span='Date Made']"
+  attribute :display_date,  xpath: "//div[@class='ehRepeatingLabelDescription']", if: {"span[@class='label']" => "Date Made"}, value: "span[@class='value']"
 
   def category
     return "Images" if original_attributes[:thumbnail_url].present?

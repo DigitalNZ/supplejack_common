@@ -2,8 +2,8 @@ module DnzHarvester
   module Oai
     class Base < DnzHarvester::Base
 
-      self._base_urls = []
-      self._attribute_definitions = {}
+      self._base_urls[self.identifier] = []
+      self._attribute_definitions[self.identifier] = {}
 
       class_attribute :_enrichment_definitions
       self._enrichment_definitions = {}

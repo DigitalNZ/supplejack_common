@@ -2,8 +2,8 @@ module DnzHarvester
   module Sitemap
     class Base < DnzHarvester::Base
 
-      self._base_urls = []
-      self._attribute_definitions = {}
+      self._base_urls[self.identifier] = []
+      self._attribute_definitions[self.identifier] = {}
 
       class << self
         def sitemap_file

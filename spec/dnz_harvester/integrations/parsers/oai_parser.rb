@@ -7,7 +7,7 @@ class OaiParser < DnzHarvester::Oai::Base
   attribute :title,                   from: "dc:title"
   attribute :dc_identifier,           from: "dc:identifier"
 
-  enrich :citation,                   xpath: "table/tr", if: {"td[1]" => "dc.identifier.citation"}, value: "td[2]"
+  enrich :citation,                   xpath: "//table/tr", if: {"td[1]" => "dc.identifier.citation"}, value: "td[2]"
 
   def identifier
     find_without(/http/).within(:dc_identifier)

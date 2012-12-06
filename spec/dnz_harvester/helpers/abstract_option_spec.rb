@@ -3,7 +3,7 @@ require "spec_helper"
 describe DnzHarvester::AbstractOption do
   
   let(:document) { mock(:document) }
-  let(:options) { {xpath: "table/tr"} }
+  let(:options) { {xpath: "//table/tr"} }
   let(:ao) { DnzHarvester::AbstractOption.new(document, options) }
 
   describe "#initialize" do
@@ -22,7 +22,7 @@ describe DnzHarvester::AbstractOption do
     end
 
     it "returns all matching nodes for the multiple xpath expressions" do
-      ao.stub(:options) { {xpath: ["table/tr", "div/img"]} }
+      ao.stub(:options) { {xpath: ["//table/tr", "//div/img"]} }
       document.should_receive(:xpath).with("//table/tr").and_return([node])
       document.should_receive(:xpath).with("//div/img").and_return([node])
       ao.nodes.should eq [node, node]

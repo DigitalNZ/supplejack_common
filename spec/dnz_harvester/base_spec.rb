@@ -4,12 +4,29 @@ describe DnzHarvester::Base do
   let(:klass) { DnzHarvester::Base }
 
   after(:each) do
-    klass._base_urls = []
-    klass._attribute_definitions = {}
+    klass._base_urls[klass.identifier] = []
+    klass._attribute_definitions[klass.identifier] = {}
+  end
+
+  describe "identifier" do
+    before do
+      class LibraryParser < DnzHarvester::Sitemap::Base; end
+    end
+
+    it "returns a unique identifier of the class" do
+      LibraryParser.identifier.should eq "sitemap_library_parser"
+    end
+
+    it "memoizes the identifier" do
+      LibraryParser.instance_variable_set("@identifier", nil)
+      LibraryParser.should_receive(:ancestors).once { [nil, DnzHarvester::Sitemap::Base] }
+      LibraryParser.identifier
+      LibraryParser.identifier
+    end
   end
 
   describe ".base_url" do
-    before { klass._base_urls = [] }
+    before { klass._base_urls[klass.identifier] = [] }
 
     it "adds the base_url" do
       klass.base_url "http://google.com"
@@ -26,14 +43,28 @@ describe DnzHarvester::Base do
 
   describe ".base_urls" do
     it "returns the list of base_urls" do
-      klass.stub(:_base_urls) { ["http://google.com"] }
+      klass.base_url "http://google.com"
       klass.base_urls.should include "http://google.com"
+    end
+  end
+
+  describe ".basic_auth" do
+    it "should set the basic auth username and password" do
+      klass.basic_auth "username", "password"
+      klass._basic_auth[klass.identifier].should eq({username: "username", password: "password"})
+    end
+  end
+
+  describe ".basic_auth_credentials" do
+    it "returns the basic auth credentials" do
+      klass.basic_auth "username", "password"
+      klass.basic_auth_credentials.should eq({username: "username", password: "password"})
     end
   end
 
   describe "#attribute_definitions" do
     it "returns the attributes defined" do
-      klass.stub(:_attribute_definitions) { {category: {option: true}} }
+      klass.stub(:_attribute_definitions) { {klass.identifier => {category: {option: true}}} }
       klass.attribute_definitions.should eq(category: {option: true})
     end
   end
@@ -81,69 +112,49 @@ describe DnzHarvester::Base do
   end
 
   describe "#set_attribute_values" do
-    it "sets the default values" do
-      klass._attribute_definitions = {content_partner: {default: "Google"}}
-      klass.new.original_attributes.should include(content_partner: "Google")
-    end
+    let(:record) { klass.new }
 
-    it "sets the from value for a attribute" do
-      class ValueParser < DnzHarvester::Base
-
-        attribute :content_partner, from: :some_attribute_name
-
-        def get_value_from(from_value)
-          "Value"
-        end
-      end
-
-      record = ValueParser.new
+    it "assigns the attribute values in a hash" do
+      klass.attribute :category, {default: "Value"}
+      record.stub(:attribute_value) { "Value" }
       record.set_attribute_values
-      record.original_attributes.should include(content_partner: "Value")
+      record.original_attributes.should include(category: "Value")
     end
 
-    context "complex options" do
-      let!(:document) { mock(:document).as_null_object }
-      let!(:record) { klass.new }
+    it "splits the values by the separator character" do
+      klass.attribute :category, {default: "Value1, Value2", separator: ","}
+      record.set_attribute_values
+      record.original_attributes.should include(category: ["Value1", "Value2"])
+    end
+  end
 
-      before do
-        record.stub(:document) { document }
-      end
+  describe "#attribute_value" do
+    let(:record) { klass.new }
+    let(:document) { mock(:document) }
+    let(:option_object) { mock(:option, value: "Google") }
 
-      context "conditional option" do
-        let!(:options) { {xpath: "table/tr", if: {"td[1]" => "dc.date"}, value: "td[2]"} }
-        let!(:conditional_option) { mock(:conditional_option, value: "Conditional Value") }
+    it "returns the default value" do
+      record.attribute_value({default: "Google"}).should eq "Google"
+    end
 
-        it "sets the conditional value" do
-          klass._attribute_definitions = {date: options}
-          DnzHarvester::ConditionalOption.should_receive(:new).with(document, options) { conditional_option }
-          record.set_attribute_values
-          record.original_attributes.should include(date: "Conditional Value")
-        end
-      end
+    it "gets the value from another location" do
+      record.should_receive(:get_value_from).with(:some_path) { "Google" }
+      record.attribute_value({from: :some_path}).should eq "Google"
+    end
 
-      context "mapping option" do
-        let!(:options) { {xpath: "table/tr", mappings: {"Non commercial" => "CC-BY-NC", "Share" => "CC-BY-SA"}} }
-        let!(:mapping_option) { mock(:mapping_option, value: "Mapping Value") }
+    it "gets the value from the conditional options" do
+      DnzHarvester::ConditionalOption.should_receive(:new) { option_object }
+      record.attribute_value({xpath: "table/tr", if: {"td[1]" => "dc.date"}, value: "td[2]"}, document).should eq "Google"
+    end
 
-        it "sets the mapping option" do
-          klass._attribute_definitions = {date: options}
-          DnzHarvester::MappingOption.should_receive(:new).with(document, options) { mapping_option }
-          record.set_attribute_values
-          record.original_attributes.should include(date: "Mapping Value")
-        end
-      end
+    it "gets the value from the mapping option" do
+      DnzHarvester::MappingOption.should_receive(:new) { option_object }
+      record.attribute_value({xpath: "table/tr", mappings: {"Non commercial" => "CC-BY-NC", "Share" => "CC-BY-SA"}}, document).should eq "Google"
+    end
 
-      context "xpath option" do
-        let!(:options) { {xpath: "table/tr"} }
-        let!(:xpath_option) { mock(:xpath_option, value: "Xpath Value") }
-
-        it "sets the xpath option" do
-          klass._attribute_definitions = {date: options}
-          DnzHarvester::XpathOption.should_receive(:new).with(document, options) { xpath_option }
-          record.set_attribute_values
-          record.original_attributes.should include(date: "Xpath Value")
-        end
-      end
+    it "gets the value from the xpath option" do
+      DnzHarvester::XpathOption.should_receive(:new) { option_object }
+      record.attribute_value({xpath: "table/tr"}, document).should eq "Google"
     end
   end
 
@@ -159,7 +170,7 @@ describe DnzHarvester::Base do
 
   describe "#attribute_names" do
     it "returns a list all attributes defined" do
-      klass._attribute_definitions[:content_partner] = {default: "Google"}
+      klass.attribute :content_partner, {default: "Google"}
       klass.new.attribute_names.should include(:content_partner)
     end
 

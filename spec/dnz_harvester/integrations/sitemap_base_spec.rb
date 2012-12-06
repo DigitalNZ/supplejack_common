@@ -6,7 +6,7 @@ describe DnzHarvester::Sitemap::Base do
 
   before do
     sitemap_path = File.dirname(__FILE__) + "/source_data/sitemap_parser_urls.xml"
-    SitemapParser._base_urls = [sitemap_path]
+    SitemapParser._base_urls[SitemapParser.identifier] = [sitemap_path]
 
     record_html = File.read(File.dirname(__FILE__) + "/source_data/sitemap_parser_record.html")
     stub_request(:get, "http://www.nzmuseums.co.nz/account/3700/object/145276/Attenhofer_A15_Swing_Jet_ski").to_return(:status => 200, :body => record_html)

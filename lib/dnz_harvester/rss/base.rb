@@ -5,8 +5,8 @@ module DnzHarvester
       class_attribute :_default_elements
       self._default_elements = [:title, :url, :author, :content, :summary, :published, :updated, :categories, :entry_id]
 
-      self._base_urls = []
-      self._attribute_definitions = {}
+      self._base_urls[self.identifier] = []
+      self._attribute_definitions[self.identifier] = {}
 
       attr_reader :rss_entry
 

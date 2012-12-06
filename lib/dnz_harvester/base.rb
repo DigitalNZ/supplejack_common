@@ -5,23 +5,42 @@ module DnzHarvester
 
     class_attribute :_base_urls
     class_attribute :_attribute_definitions
+    class_attribute :_basic_auth
 
-    self._base_urls = []
+    self._base_urls = {}
     self._attribute_definitions = {}
+    self._basic_auth = {}
 
     attr_reader :original_attributes
 
     class << self
+      def identifier
+        @identifier ||= begin
+          parent_adapter = self.ancestors[1].to_s.split("::")[1]
+          "#{parent_adapter.underscore}_#{self.name.underscore}"
+        end
+      end
+
       def base_url(url)
-        self._base_urls += [url]
+        self._base_urls[self.identifier] ||= []
+        self._base_urls[self.identifier] += [url]
       end
 
       def base_urls
-        self._base_urls
+        self._base_urls[self.identifier]
+      end
+
+      def basic_auth(username, password)
+        self._basic_auth[self.identifier] = {username: username, password: password}
+      end
+
+      def basic_auth_credentials
+        self._basic_auth[self.identifier]
       end
 
       def attribute(name, options={})
-        self._attribute_definitions[name] = options || {}
+        self._attribute_definitions[self.identifier] ||= {}
+        self._attribute_definitions[self.identifier][name] = options || {}
       end
 
       def attributes(*args)
@@ -33,7 +52,8 @@ module DnzHarvester
       end
 
       def attribute_definitions
-        self._attribute_definitions
+        self._attribute_definitions[self.identifier] ||= {}
+        self._attribute_definitions[self.identifier]
       end
 
       def with_options(options={}, &block)
@@ -55,19 +75,24 @@ module DnzHarvester
     end
 
     def set_attribute_values
-      self.class._attribute_definitions.each do |name, options|
-        if options[:default]
-          @original_attributes[name] = options[:default]
-        elsif options[:from]
-          @original_attributes[name] = get_value_from(options[:from])
-        elsif options[:xpath] && options[:if]
-          @original_attributes[name] = DnzHarvester::ConditionalOption.new(document, options).value
-        elsif options[:xpath] && options[:mappings]
-          @original_attributes[name] = DnzHarvester::MappingOption.new(document, options).value
-        elsif options[:xpath]
-          @original_attributes[name] = DnzHarvester::XpathOption.new(document, options).value
+      self.class.attribute_definitions.each do |name, options|
+        value = attribute_value(options, document)
+
+        if options[:separator]
+          value = value.join(options[:separator]) if value.is_a?(Array)
+          value = value.split(options[:separator]).map(&:strip) 
         end
+
+        @original_attributes[name] = value
       end
+    end
+
+    def attribute_value(options={}, document=nil)
+      return options[:default] if options[:default]
+      return get_value_from(options[:from]) if options[:from]
+      return DnzHarvester::ConditionalOption.new(document, options).value if options[:xpath] && options[:if]
+      return DnzHarvester::MappingOption.new(document, options).value if options[:xpath] && options[:mappings]
+      return DnzHarvester::XpathOption.new(document, options).value if options[:xpath]
     end
 
     def get_value_from(name)
@@ -75,7 +100,7 @@ module DnzHarvester
     end
 
     def document
-      raise NotImplementedError.new("All subclasses of DnzHarvester::Base must override #document.")
+      nil
     end
 
     def attributes
@@ -89,7 +114,7 @@ module DnzHarvester
     end
 
     def attribute_names
-      self.class._attribute_definitions.keys + self.class.custom_instance_methods
+      self.class.attribute_definitions.keys + self.class.custom_instance_methods
     end
 
     def to_s

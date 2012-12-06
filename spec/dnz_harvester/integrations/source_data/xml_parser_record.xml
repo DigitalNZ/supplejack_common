@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<title xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <thumbnail-image>
+    <large>
+      <path>http://www.nzonscreen.com/content/images/0000/2203/698.KEY.jpg</path>
+    </large>
+    <title>
+      <path>http://www.nzonscreen.com/content/images/0000/3114/weekly-review-395.jpg</path>
+    </title>
+  </thumbnail-image>
+  <slug>weekly-review-no-395-1949</slug>
+  <tags>te rangi h&#299;roa,public health,m&#257;ori health,scenery</tags>
+  <production-year>1949</production-year>
+  <metadata>
+    <dc:description>This Weekly Review features: An interview with Sir Peter Buck in which Te Rangi H&#299;roa (then Medical Officer of Health for Maori) explains the sabbatical he took to research Polynesian anthropology</dc:description>
+    <dc:date>13:00:00, 29/01/2009</dc:date>
+    <dc:contributor>NZ On Screen</dc:contributor>
+    <dc:subject>New Zealand television and film</dc:subject>
+    <dc:title>NZ On Screen - Weekly Review No. 395</dc:title>
+    <dc:format>text/xml</dc:format>
+    <dc:language>en</dc:language>
+  </metadata>
+  <nzfc-funded type="boolean">false</nzfc-funded>
+  <synopsis>This Weekly Review features: An interview with Sir Peter Buck in which Te Rangi H&#299;roa (then Medical Officer of Health for Maori) explains the sabbatical he took to research Polynesian anthropology</synopsis>
+  <date-created>01:21:50, 08/11/2008</date-created>
+  <places type="array"/>
+  <media-category>Short Film</media-category>
+  <name>Weekly Review No. 395</name>
+  <videos type="array">
+    <video>
+      <thumbnail>
+        <path>http://www.nzonscreen.com/content/images/0000/2203/698.KEY.jpg</path>
+      </thumbnail>
+      <description>The full length film.</description>
+      <embed-code>&amp;lt;object width=&amp;quot;410&amp;quot; height=&amp;quot;358&amp;quot;&amp;gt;&amp;lt;param name=&amp;quot;movie&amp;quot; value=&amp;quot;http://www.nzonscreen.com/nzonscreen-player.swf&amp;quot;&amp;gt;&amp;lt;/param&amp;gt;&amp;lt;param name=&amp;quot;allowFullScreen&amp;quot; value=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/param&amp;gt;&amp;lt;param name=&amp;quot;allowscriptaccess&amp;quot; value=&amp;quot;always&amp;quot;&amp;gt;&amp;lt;/param&amp;gt;&amp;lt;param name=&amp;quot;flashvars&amp;quot; value=&amp;quot;c=1336&amp;amp;v=1143&amp;quot;&amp;gt;&amp;lt;embed src=&amp;quot;http://www.nzonscreen.com/nzonscreen-player.swf&amp;quot; type=&amp;quot;application/x-shockwave-flash&amp;quot; allowscriptaccess=&amp;quot;always&amp;quot; allowfullscreen=&amp;quot;true&amp;quot; flashvars=&amp;quot;c=1336&amp;amp;v=1143&amp;quot; width=&amp;quot;410&amp;quot; height=&amp;quot;358&amp;quot;&amp;gt;&amp;lt;/embed&amp;gt;&amp;lt;/object&amp;gt;</embed-code>
+      <primary type="boolean">true</primary>
+      <files>
+        <hi-res>
+          <flv>http://media.nzonscreen.com/0000/1143/698.0754.HI.flv</flv>
+          <m4v>http://media.nzonscreen.com/0000/1143/698.Apple.0754.HI.m4v</m4v>
+        </hi-res>
+        <lo-res>
+          <flv>http://media.nzonscreen.com/0000/1143/698.LO.flv</flv>
+          <m4v>http://media.nzonscreen.com/0000/1143/698.Apple.LO.m4v</m4v>
+        </lo-res>
+      </files>
+      <duration type="integer">474</duration>
+      <embeddable type="boolean">true</embeddable>
+      <label>Weekly Review No. 395</label>
+      <geolocked type="boolean">false</geolocked>
+      <aspect-ratio>4:3</aspect-ratio>
+    </video>
+  </videos>
+  <credits type="array">
+    <credit>
+      <type>Producer</type>
+      <person>
+        <first-name>Stanhope</first-name>
+        <slug>stanhope-andrews</slug>
+        <last-name>Andrews</last-name>
+        <label>Producer, Manager</label>
+      </person>
+      <title>
+        <slug>weekly-review-no-395-1949</slug>
+        <url>
+          <loc>http://www.nzonscreen.com/api/title/weekly-review-no-395-1949</loc>
+        </url>
+        <name>Weekly Review No. 395</name>
+      </title>
+      <role-period nil="true"></role-period>
+      <character-name nil="true"></character-name>
+    </credit>
+  </credits>
+  <rights>The copyright for this title is held by Archives New Zealand.</rights>
+  <genre>Historical, M&#257;ori</genre>
+</title>

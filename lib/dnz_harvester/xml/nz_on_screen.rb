@@ -1,6 +1,8 @@
 class NzOnScreen < DnzHarvester::Xml::Base
   
-  base_url "http://zachobson:f1ash1ight@www.nzonscreen.com/api/title/"
+  base_url "http://www.nzonscreen.com/api/title/"
+  basic_auth "zachobson", "f1ash1ight"
+  record_url_xpath "//loc"
 
   attribute :content_partner,         default: ["NZ On Screen"]
   attribute :display_content_partner, default: "NZ On Screen"
@@ -9,18 +11,18 @@ class NzOnScreen < DnzHarvester::Xml::Base
   attribute :display_collection,      default: "NZ On Screen"
 
   attribute :category,                default: ["Videos"]
-  attribute :title,                   xpath: "name"
-  attribute :description,             xpath: "synopsis"
-  attribute :date,                    xpath: "dc:date"
-  attribute :contributor,             xpath: "person", object: true
-  attribute :subject,                 xpath: "dc:subject"
-  attribute :dnz_type,                xpath: "media-category"
+  attribute :title,                   xpath: "//name"
+  attribute :description,             xpath: "//synopsis"
+  attribute :date,                    xpath: "//dc:date"
+  attribute :contributor,             xpath: "//person", object: true
+  attribute :subject,                 xpath: "//dc:subject"
+  attribute :dnz_type,                xpath: "//media-category"
   attribute :language
-  attribute :tag,                     xpath: "tags", separator: ","
-  attribute :thumbnail_url,           xpath: "thumbnail-image/title/path"
-  attribute :large_thumbnail_url,     xpath: "thumbnail-image/large/path"
-  attribute :dc_type,                 xpath: "genre", separator: ","
-  attribute :attachments,             xpath: "video", object: true
+  attribute :tag,                     xpath: "//tags", separator: ","
+  attribute :thumbnail_url,           xpath: "//thumbnail-image/title/path"
+  attribute :large_thumbnail_url,     xpath: "//thumbnail-image/large/path"
+  attribute :dc_type,                 xpath: "//genre", separator: ","
+  attribute :attachments,             xpath: "//video", object: true
 
   def contributor
     return nil unless original_attributes[:contributor].respond_to?(:each)

@@ -45,13 +45,13 @@ describe DnzHarvester::Oai::Base do
     end
 
     it "sets the default values" do
-      klass._attribute_definitions = {category: {default: "Papers"}}
+      klass.attribute :category, {default: "Papers"}
       record.set_attribute_values
       record.original_attributes.should include(category: "Papers")
     end
 
     it "extracts the values from the root" do
-      klass._attribute_definitions = {title: {from: "dc:title"}}
+      klass.attribute :title, {from: "dc:title"}
       record.should_receive(:get_value_from).with("dc:title") { "Dogs" }
       record.set_attribute_values
       record.original_attributes.should include(title: "Dogs")
