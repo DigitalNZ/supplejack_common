@@ -1,5 +1,3 @@
-require 'open-uri'
-
 module DnzHarvester
   module Oai
     class Base < DnzHarvester::Base
@@ -56,7 +54,7 @@ module DnzHarvester
       end
 
       def enrichment_document
-        @enrichment_document ||= Nokogiri.parse(open(self.enrichment_url))
+        @enrichment_document ||= Nokogiri.parse(DnzHarvester::Utils.get(self.enrichment_url))
       end
 
       def enrich_record

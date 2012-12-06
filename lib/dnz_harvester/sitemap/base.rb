@@ -26,17 +26,15 @@ module DnzHarvester
         end
       end
 
+      attr_reader :url
+
       def initialize(url)
         @url = url
         super
       end
 
-      def fetch_record_xml
-        @record_xml ||= RestClient.get(@url)
-      end
-
       def document
-        @document ||= Nokogiri.parse(fetch_record_xml)
+        @document ||= Nokogiri.parse(DnzHarvester::Utils.get(@url))
       end
     end
   end
