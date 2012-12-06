@@ -15,7 +15,7 @@ describe DnzHarvester::Oai::Base do
 
   context "default values" do
 
-    it "defaults the catefory to Research papers" do
+    it "defaults the category to Research papers" do
       record.category.should eq "Research papers"
     end
 
@@ -38,6 +38,7 @@ describe DnzHarvester::Oai::Base do
   end
 
   context "enrichment" do
+
     before do
       entichment_body = File.read(File.dirname(__FILE__) + "/source_data/oai_library_enrichment.html")
       stub_request(:get, "https://researchspace.auckland.ac.nz/handle/2292/3?show=full").to_return(:status => 200, :body => entichment_body)

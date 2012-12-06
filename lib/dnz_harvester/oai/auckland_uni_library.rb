@@ -18,8 +18,15 @@ class AucklandUniLibrary < DnzHarvester::Oai::Base
   attribute :relation,      from: "dc:relation"
   attribute :rights,        from: "dc:rights"
 
+  #A: Group this with enrichment_url?
   enrich :citation,         xpath: "table/tr", if: {"td[1]" => "dc.identifier.citation"}, value: "td[2]"
 
+  #A: could these be more symantic?
+  #   for example:
+  #   
+  #   custom_attribute :identifier do 
+  #     find_without(/http/).within(:identifier)
+  #   end
   def identifier
     find_without(/http/).within(:identifier)
   end
@@ -31,6 +38,15 @@ class AucklandUniLibrary < DnzHarvester::Oai::Base
   def description
     last(:description)
   end
+
+  #A: this isn't really an attribute, it's required configuration for
+  #   enriched attributes, like base_url
+  #
+  #   enrichment_url do
+  #     find_and_replace(/.*handle.net(.*)/, 'https://researchspace.auckland.ac.nz/handle\1?show=full').within(:dc_identifier)
+  #   end
+  #
+  #   enrich_attribute :citation,         xpath: "table/tr", if: {"td[1]" => "dc.identifier.citation"}, value: "td[2]"
 
   def enrichment_url
     find_and_replace(/.*handle.net(.*)/, 'https://researchspace.auckland.ac.nz/handle\1?show=full').within(:dc_identifier)

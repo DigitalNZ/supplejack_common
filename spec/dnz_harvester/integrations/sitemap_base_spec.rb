@@ -47,6 +47,10 @@ describe DnzHarvester::Sitemap::Base do
   end
 
   it "gets the license" do
+    record.license.should eq "CC-BY"
+  end
+
+  it "gets the display_date" do
     record.display_date.should eq "1970"
   end
 
