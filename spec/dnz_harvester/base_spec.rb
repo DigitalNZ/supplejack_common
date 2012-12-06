@@ -46,6 +46,12 @@ describe DnzHarvester::Base do
       klass.base_url "http://google.com"
       klass.base_urls.should include "http://google.com"
     end
+
+    it "returns a list of urls with basic_auth" do
+      klass.base_url "http://google.com"
+      klass.basic_auth "username", "password"
+      klass.base_urls.should include "http://username:password@google.com"
+    end
   end
 
   describe ".basic_auth" do

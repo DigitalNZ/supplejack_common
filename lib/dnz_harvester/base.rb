@@ -27,7 +27,13 @@ module DnzHarvester
       end
 
       def base_urls
-        self._base_urls[self.identifier]
+        if self.basic_auth_credentials
+          self._base_urls[self.identifier].map do |url|
+            url.gsub("http://", "http://#{self.basic_auth_credentials[:username]}:#{self.basic_auth_credentials[:password]}@")
+          end
+        else
+          self._base_urls[self.identifier]
+        end
       end
 
       def basic_auth(username, password)

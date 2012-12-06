@@ -8,8 +8,11 @@ module DnzHarvester
       class_attribute :_record_url_xpath
 
       class << self
-        def records
+        def records(options={})
+          options.reverse_merge!(limit: nil)
+
           url_nodes = index_document.xpath("#{self._record_url_xpath}")
+          url_nodes = url_nodes[0..(options[:limit].to_i-1)] if options[:limit]
           url_nodes.map {|node| new(node.text) }
         end
 

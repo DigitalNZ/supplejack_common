@@ -32,12 +32,20 @@ describe DnzHarvester::Xml::Base do
   describe ".records" do
     let(:xml) { File.read("spec/dnz_harvester/integrations/source_data/xml_parser_urls.xml") }
 
-    it "initializes a record for every url" do
+    before do
       klass.record_url_xpath "//loc"
       klass.stub(:index_document) { Nokogiri.parse(xml) }
+    end
 
-      klass.should_receive(:new).with("http://www.nzonscreen.com/api/title/weekly-review-no-395-1949").once
+    it "initializes a record for every url" do
+      klass.should_receive(:new).once.with("http://www.nzonscreen.com/api/title/weekly-review-no-395-1949")
       klass.records
+    end
+
+    it "limits the number of records to 1" do
+      node = mock(:node, text: "http://google.com")
+      klass.stub(:index_document) { mock(:doc, xpath: [node, node, node]) }
+      klass.records(limit: 1).size.should eq 1
     end
   end
 
