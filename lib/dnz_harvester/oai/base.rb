@@ -8,7 +8,7 @@ module DnzHarvester
       class_attribute :_enrichment_definitions
       self._enrichment_definitions = {}
 
-      VALID_RECORDS_OPTIONS = [:from, :resumption_token]
+      VALID_RECORDS_OPTIONS = [:from, :limit]
 
       attr_reader :oai_record, :root
 
@@ -25,13 +25,7 @@ module DnzHarvester
 
         def records(options={})
           options = options.keep_if {|key| VALID_RECORDS_OPTIONS.include?(key) }
-
-          @response = client.list_records(options)
-          records = @response.map do |oai_record|
-            self.new(oai_record)
-          end
-
-          DnzHarvester::Oai::RecordsContainer.new(records)
+          DnzHarvester::Oai::PaginatedCollection.new(client, options, self)
         end
 
         def resumption_token

@@ -1,9 +1,9 @@
 require "spec_helper"
 
-describe DnzHarvester::RecordsContainer do
+describe DnzHarvester::PaginatedCollection do
   
   let(:record) { mock(:record) }
-  let(:klass) { DnzHarvester::RecordsContainer }
+  let(:klass) { DnzHarvester::PaginatedCollection }
   
   describe "#initialize" do
     it "assigns the records" do
@@ -11,18 +11,12 @@ describe DnzHarvester::RecordsContainer do
     end
   end
 
-  describe "#deletions" do
-    it "returns an empty array" do
-      klass.new([record]).deletions.should eq []
-    end
-  end
-
   describe "#method_missing" do
     it "executes any method on the records array" do
       records = [record]
-      container = klass.new(records)
+      paginator = klass.new(records)
       records.should_receive(:map) { records }
-      container.map {|r| r}
+      paginator.map {|r| r}
     end
   end
 end

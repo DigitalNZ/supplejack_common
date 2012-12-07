@@ -1,10 +1,18 @@
+GIT
+  remote: https://github.com/code4lib/ruby-oai.git
+  revision: ec5483cdaefaf0e26ae2c9449bfeb07ab9dd03de
+  specs:
+    oai (0.2.1)
+      builder (>= 2.0.0)
+      faraday
+      faraday_middleware
+
 PATH
   remote: .
   specs:
     dnz_harvester (0.0.1)
       activesupport
       feedzirra (~> 0.1.3)
-      oai
       rest-client (~> 1.6.7)
 
 GEM
@@ -39,10 +47,6 @@ GEM
     multi_json (1.2.0)
     multipart-post (1.1.5)
     nokogiri (1.5.5)
-    oai (0.2.1)
-      builder (>= 2.0.0)
-      faraday
-      faraday_middleware
     rake (10.0.2)
     rdoc (3.12)
       json (~> 1.4)
@@ -67,6 +71,7 @@ PLATFORMS
 
 DEPENDENCIES
   dnz_harvester!
+  oai!
   rake
   rspec (~> 2.11.0)
   webmock (~> 1.8)

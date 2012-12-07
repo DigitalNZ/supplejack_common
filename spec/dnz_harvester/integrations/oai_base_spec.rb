@@ -75,18 +75,4 @@ describe DnzHarvester::Oai::Base do
     end
 
   end
-
-  context "deleted record" do
-
-    before do
-      body = File.read(File.dirname(__FILE__) + "/source_data/oai_library_inc.xml")
-      stub_request(:get, "http://library.org/?metadataPrefix=oai_dc&verb=ListRecords").to_return(:status => 200, :body => body)
-
-      OAI::Client.any_instance.stub(:strip_invalid_utf_8_chars).with(body).and_return(body)
-    end
-
-    it "returns the deletions" do
-      OaiParser.records.deletions.size.should eq 5
-    end
-  end
 end

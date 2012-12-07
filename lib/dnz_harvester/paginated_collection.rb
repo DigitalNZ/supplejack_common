@@ -1,5 +1,5 @@
 module DnzHarvester
-  class RecordsContainer
+  class PaginatedCollection
     
     def initialize(records)
       @records = records
@@ -7,10 +7,6 @@ module DnzHarvester
 
     def records
       @records
-    end
-
-    def deletions
-      []
     end
 
     def method_missing(name, *args, &block)

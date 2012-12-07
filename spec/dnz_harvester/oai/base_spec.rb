@@ -28,42 +28,32 @@ describe DnzHarvester::Oai::Base do
   end
 
   describe ".records" do
-    let(:record) { mock(:record) }
-    let(:client) { mock(:client, list_records: [record]) }
-    let!(:records_container) { DnzHarvester::Oai::RecordsContainer.new([record]) }
-    let(:response) { mock(:response, resumption_token: "123", map: [record]) }
+    let(:client) { mock(:client) }
+    let!(:paginator) { mock(:paginator) }
 
     before(:each) do
-      klass.stub(:new) { record }
       klass.stub(:client) { client }
-      client.stub(:list_records) { response }
     end
 
-    it "initializes a RecordsContainer with the results" do
-      client.stub(:list_records) { [record] }
-      DnzHarvester::Oai::RecordsContainer.should_receive(:new).with([record]) { records_container }
+    it "initializes a PaginatedCollection with the results" do
+      DnzHarvester::Oai::PaginatedCollection.should_receive(:new).with(client, {}, klass) { paginator }
       klass.records
     end
 
     it "accepts a :from option and pass it on to list_records" do
       date = Date.today
-      client.should_receive(:list_records).with(hash_including(from: date)) { [record] }
+      DnzHarvester::Oai::PaginatedCollection.should_receive(:new).with(client, {from: date}, klass) { paginator }
       klass.records(from: date)
     end
 
-    it "accepts a :resumption_token option" do
-      client.should_receive(:list_records).with(hash_including(resumption_token: "1234")) { [record] }
-      klass.records(resumption_token: "1234")
+    it "accepts a :limit option" do
+      DnzHarvester::Oai::PaginatedCollection.should_receive(:new).with(client, {limit: 10}, klass) { paginator }
+      klass.records(limit: 10)
     end
 
     it "does not pass on unknown options" do
-      client.should_not_receive(:list_records).with(hash_including(golf_scores: :all)) { [record] }
+      DnzHarvester::Oai::PaginatedCollection.should_not_receive(:new).with(client, {golf_scores: :all}, klass) { paginator }
       klass.records(golf_scores: :all)
-    end
-
-    it "stores the oai response" do
-      klass.records
-      klass.response.should eq response
     end
   end
 
