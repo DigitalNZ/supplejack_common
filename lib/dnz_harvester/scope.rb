@@ -21,7 +21,7 @@ module DnzHarvester
     end
 
     def attributes(*args)
-      options = args.pop if args.last.is_a?(Hash)
+      options = args.extract_options!
 
       args.each do |attribute|
         self.attribute(attribute, options)
