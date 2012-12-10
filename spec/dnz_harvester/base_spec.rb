@@ -85,6 +85,14 @@ describe DnzHarvester::Base do
       klass.attribute :category
       klass.attribute_definitions.should include(category: {})
     end
+
+    it "stores the block" do
+      klass.attribute :category do
+        last(:description)
+      end
+
+      klass.attribute_definitions[:category][:block].should be_a Proc
+    end
   end
 
   describe "attributes" do
@@ -171,6 +179,23 @@ describe DnzHarvester::Base do
       record.stub(:attribute_names) { [:category] }
       record.stub(:category) { "Images" }
       record.attributes.should eq(category: "Images")
+    end
+  end
+
+  describe "#evaluate_block_or_send" do
+    let(:record) { klass.new }
+    let(:block) { Proc.new { "Test" } }
+
+    it "evaluates the block" do
+      klass._attribute_definitions[klass.identifier][:category] = {block: block}
+
+      record.should_receive(:instance_eval).with(block) { "Test" }
+      record.evaluate_block_or_send(:category)
+    end
+
+    it "executes the method with the name" do
+      klass._attribute_definitions[klass.identifier][:category] = {default: "Video"}
+      record.evaluate_block_or_send(:category).should eq "Video"
     end
   end
 

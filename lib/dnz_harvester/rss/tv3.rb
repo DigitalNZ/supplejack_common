@@ -19,9 +19,13 @@ class Tv3 < DnzHarvester::Rss::Base
 
   attribute :thumbnail_url, from: :enclosure, value: :url, with: {type: "image/jpeg"}
 
-  def large_thumbnail_url
+  attribute :large_thumbnail_url do
     find_and_replace(/width=[\d]{1,4}/, "width=520").within(:thumbnail_url)
   end
+
+  # def large_thumbnail_url
+  #   find_and_replace(/width=[\d]{1,4}/, "width=520").within(:thumbnail_url)
+  # end
 
   def category
     add("Images", to: :category).if_present(:thumbnail_url)

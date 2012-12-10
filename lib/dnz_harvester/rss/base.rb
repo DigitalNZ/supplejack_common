@@ -12,7 +12,7 @@ module DnzHarvester
 
       class << self
         def attribute(name, options={})
-          if !self._default_elements.include?(name) && options[:default].blank?
+          if !self._default_elements.include?(name) && options[:from] && options[:default].blank?
             feedzirra_options = {}
             feedzirra_options[:value] = options[:value] if options[:value]
             feedzirra_options[:with] = options[:with] if options[:with]

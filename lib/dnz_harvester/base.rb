@@ -12,7 +12,7 @@ module DnzHarvester
     self._attribute_definitions = {}
     self._basic_auth = {}
 
-    attr_reader :original_attributes
+    attr_reader :original_attributes, :attributes
 
     class << self
       def identifier
@@ -45,9 +45,11 @@ module DnzHarvester
         self._basic_auth[self.identifier]
       end
 
-      def attribute(name, options={})
+      def attribute(name, options={}, &block)
         self._attribute_definitions[self.identifier] ||= {}
         self._attribute_definitions[self.identifier][name] = options || {}
+
+        self._attribute_definitions[self.identifier][name][:block] = &block if block_given?
       end
 
       def attributes(*args)
@@ -106,13 +108,24 @@ module DnzHarvester
     end
 
     def attributes
-      modified_attributes = {}
+      return @attributes if @attributes
+      @attributes = {}
 
       attribute_names.each do |name|
-        modified_attributes[name] = self.send(name)
+        @attributes[name] = self.evaluate_block_or_send(name)
       end
 
-      modified_attributes
+      @attributes
+    end
+
+    def evaluate_block_or_send(name)
+      if &block = self.class.attribute_definitions[name][:block] rescue nil
+        puts "\nBloc: #{block.inspect}\n"
+
+        instance_eval(&block)
+      else
+        self.send(name)
+      end
     end
 
     def attribute_names
@@ -120,12 +133,12 @@ module DnzHarvester
     end
 
     def to_s
-      "=> #<#{self.class.to_s} @original_attributes=#{@original_attributes.inspect}>"
+      "<#{self.class.to_s} @original_attributes=#{@original_attributes.inspect}>"
     end
 
     def method_missing(symbol, *args, &block)
-      raise NoMethodError, "undefined method '#{symbol.to_s}' for #{self.class.to_s}" unless @original_attributes.has_key?(symbol)
-      @original_attributes[symbol]
+      raise NoMethodError, "undefined method '#{symbol.to_s}' for #{self.class.to_s}" unless attributes.has_key?(symbol)
+      attributes[symbol]
     end
   end
 end
