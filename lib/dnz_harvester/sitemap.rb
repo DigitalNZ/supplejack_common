@@ -1,2 +1,3 @@
 require "dnz_harvester/sitemap/base"
-require "dnz_harvester/sitemap/nz_museums"
+
+Dir[File.dirname(__FILE__) + '/sitemap/*.rb'].each {|file| require file }

@@ -1,2 +1,3 @@
 require "dnz_harvester/json/base"
-require "dnz_harvester/json/europeana"
+
+Dir[File.dirname(__FILE__) + '/json/*.rb'].each {|file| require file }

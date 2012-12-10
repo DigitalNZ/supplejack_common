@@ -1,2 +1,3 @@
 require "dnz_harvester/rss/base"
-require "dnz_harvester/rss/tv3"
+
+Dir[File.dirname(__FILE__) + '/rss/*.rb'].each {|file| require file }

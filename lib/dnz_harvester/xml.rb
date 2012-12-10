@@ -1,2 +1,3 @@
 require "dnz_harvester/xml/base"
-require "dnz_harvester/xml/nz_on_screen"
+
+Dir[File.dirname(__FILE__) + '/xml/*.rb'].each {|file| require file }
