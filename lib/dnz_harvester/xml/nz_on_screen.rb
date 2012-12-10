@@ -2,7 +2,7 @@ class NzOnScreen < DnzHarvester::Xml::Base
   
   base_url "http://www.nzonscreen.com/api/title/"
   basic_auth "zachobson", "f1ash1ight"
-  record_url_xpath "//loc"
+  record_url_selector "//loc"
 
   attribute :content_partner,         default: ["NZ On Screen"]
   attribute :display_content_partner, default: "NZ On Screen"

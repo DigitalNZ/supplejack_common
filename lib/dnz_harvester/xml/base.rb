@@ -5,19 +5,19 @@ module DnzHarvester
       self._base_urls[self.identifier] = []
       self._attribute_definitions[self.identifier] = {}
 
-      class_attribute :_record_url_xpath
+      class_attribute :_record_url_selector
 
       class << self
         def records(options={})
           options.reverse_merge!(limit: nil)
 
-          url_nodes = index_document.xpath("#{self._record_url_xpath}")
+          url_nodes = index_document.xpath("#{self._record_url_selector}")
           url_nodes = url_nodes[0..(options[:limit].to_i-1)] if options[:limit]
           url_nodes.map {|node| new(node.text) }
         end
 
-        def record_url_xpath(xpath)
-          self._record_url_xpath = xpath
+        def record_url_selector(xpath)
+          self._record_url_selector = xpath
         end
 
         def index_document

@@ -10,10 +10,10 @@ describe DnzHarvester::Xml::Base do
     klass._attribute_definitions[klass.identifier] = {}
   end
 
-  describe ".record_url_xpath" do
+  describe ".record_url_selector" do
     it "stores the xpath to retrieve every record url" do
-      klass.record_url_xpath "loc"
-      klass._record_url_xpath.should eq "loc"
+      klass.record_url_selector "loc"
+      klass._record_url_selector.should eq "loc"
     end
   end
 
@@ -33,7 +33,7 @@ describe DnzHarvester::Xml::Base do
     let(:xml) { File.read("spec/dnz_harvester/integrations/source_data/xml_parser_urls.xml") }
 
     before do
-      klass.record_url_xpath "//loc"
+      klass.record_url_selector "//loc"
       klass.stub(:index_document) { Nokogiri.parse(xml) }
     end
 

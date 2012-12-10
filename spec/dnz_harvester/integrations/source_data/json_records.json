@@ -1,0 +1,151 @@
+{
+"description": "\"new zealand\" - Europeana Open Search",
+"link": "http://api.europeana.eu/api/opensearch.json?searchTerms=%22new%20zealand%22&startPage=1",
+"totalResults": 1710,
+"startIndex": 0,
+"itemsPerPage": 12,
+"items": [
+{
+"guid": "http://www.europeana.eu/portal/record/08701/533BD2421E162B12D599BBCC3BF0BA3C516A8CFB.html"
+,"title": "Transactions and proceedings of the New Zealand Institute. Volume v.30 (1897)"
+,"link": "http://www.europeana.eu/portal/record/08701/533BD2421E162B12D599BBCC3BF0BA3C516A8CFB.json?wskey=NEEIVFPGTW"
+,"description": "New Zealand Institute (Wellington, N.Z;BHL Europe"
+,"enclosure": "http://bhl.ait.co.at/templates/bhle/sampledata/cachedImage.php?maxSize=200&filename=http://www.biodiversitylibrary.org/pagethumb/25449335"
+,"dc:creator": "New Zealand Institute (Wellington, N.Z"
+,"europeana:year": ""
+,"europeana:language": "mul"
+,"europeana:type": "TEXT"
+,"europeana:provider": "BHL Europe"
+,"europeana:dataProvider": "NCSU Libraries (archive.org)"
+,"europeana:rights": [
+"http://www.europeana.eu/rights/rr-f/"
+]
+,"enrichment:concept_term": [
+"http://www.eionet.europa.eu/gemet/concept/7472"
+]
+,"enrichment:concept_label": [
+"vitenskap",
+"tiede",
+"tudomány",
+"επιστήμη",
+"věda",
+"videnskab",
+"科学",
+"nauka",
+"vedy",
+"ciencia",
+"science",
+"ştiinţă",
+"mokslas",
+"ciência",
+"наука",
+"teadus",
+"znanost, veda",
+"vetenskap",
+"scienze",
+"wetenschappen",
+"wissenschaft"
+]
+},
+{
+"guid": "http://www.europeana.eu/portal/record/08701/7BC1E51D898EE12D4999AD29FD66B88450225845.html"
+,"title": "Studies in the bryology of New Zealand, with special reference to the herbarium of Robert Brown. Edited and published under the authority of the Board of Governors of the [New Zealand] Institute."
+,"link": "http://www.europeana.eu/portal/record/08701/7BC1E51D898EE12D4999AD29FD66B88450225845.json?wskey=NEEIVFPGTW"
+,"description": "Dixon, Hugh Neville,;BHL Europe"
+,"enclosure": "http://bhl.ait.co.at/templates/bhle/sampledata/cachedImage.php?maxSize=200&filename=http://www.biodiversitylibrary.org/pagethumb/20741231"
+,"dc:creator": "Dixon, Hugh Neville,"
+,"europeana:year": ""
+,"europeana:language": "mul"
+,"europeana:type": "TEXT"
+,"europeana:provider": "BHL Europe"
+,"europeana:dataProvider": "Earth Sciences - University of Toronto (archive.org)"
+,"europeana:rights": [
+"http://www.europeana.eu/rights/rr-f/"
+]
+},
+{
+"guid": "http://www.europeana.eu/portal/record/08701/0140D07A82A11BB90B515B9F6423A180C56A6E75.html"
+,"title": "Transactions and proceedings of the New Zealand Institute. Volume v.16 (1883)"
+,"link": "http://www.europeana.eu/portal/record/08701/0140D07A82A11BB90B515B9F6423A180C56A6E75.json?wskey=NEEIVFPGTW"
+,"description": "New Zealand Institute (Wellington, N.Z;BHL Europe"
+,"enclosure": "http://bhl.ait.co.at/templates/bhle/sampledata/cachedImage.php?maxSize=200&filename=http://www.biodiversitylibrary.org/pagethumb/33732471"
+,"dc:creator": "New Zealand Institute (Wellington, N.Z"
+,"europeana:year": ""
+,"europeana:language": "mul"
+,"europeana:type": "TEXT"
+,"europeana:provider": "BHL Europe"
+,"europeana:dataProvider": "Smithsonian Institution Libraries"
+,"europeana:rights": [
+"http://www.europeana.eu/rights/rr-f/"
+]
+,"enrichment:concept_term": [
+"http://www.eionet.europa.eu/gemet/concept/7472"
+]
+,"enrichment:concept_label": [
+"vitenskap",
+"tiede",
+"tudomány",
+"επιστήμη",
+"věda",
+"videnskab",
+"科学",
+"nauka",
+"vedy",
+"ciencia",
+"science",
+"ştiinţă",
+"mokslas",
+"ciência",
+"наука",
+"teadus",
+"znanost, veda",
+"vetenskap",
+"scienze",
+"wetenschappen",
+"wissenschaft"
+]
+},
+{
+"guid": "http://www.europeana.eu/portal/record/08701/1F1DEC901937C8192A1C3B0B49F764259112F08C.html"
+,"title": "Transactions and proceedings of the New Zealand Institute. Volume v.1 (1868)"
+,"link": "http://www.europeana.eu/portal/record/08701/1F1DEC901937C8192A1C3B0B49F764259112F08C.json?wskey=NEEIVFPGTW"
+,"description": "New Zealand Institute (Wellington, N.Z;BHL Europe"
+,"enclosure": "http://bhl.ait.co.at/templates/bhle/sampledata/cachedImage.php?maxSize=200&filename=http://www.biodiversitylibrary.org/pagethumb/34573327"
+,"dc:creator": "New Zealand Institute (Wellington, N.Z"
+,"europeana:year": ""
+,"europeana:language": "mul"
+,"europeana:type": "TEXT"
+,"europeana:provider": "BHL Europe"
+,"europeana:dataProvider": "Smithsonian Institution Libraries"
+,"europeana:rights": [
+"http://www.europeana.eu/rights/rr-f/"
+]
+,"enrichment:concept_term": [
+"http://www.eionet.europa.eu/gemet/concept/7472"
+]
+,"enrichment:concept_label": [
+"vitenskap",
+"tiede",
+"tudomány",
+"επιστήμη",
+"věda",
+"videnskab",
+"科学",
+"nauka",
+"vedy",
+"ciencia",
+"science",
+"ştiinţă",
+"mokslas",
+"ciência",
+"наука",
+"teadus",
+"znanost, veda",
+"vetenskap",
+"scienze",
+"wetenschappen",
+"wissenschaft"
+]
+}
+]
+}

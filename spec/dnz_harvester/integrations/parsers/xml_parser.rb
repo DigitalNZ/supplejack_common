@@ -1,7 +1,7 @@
 class XmlParser < DnzHarvester::Xml::Base
   
   base_url "http://www.nzonscreen.com/api/title/"
-  record_url_xpath "//loc"
+  record_url_selector "//loc"
 
   attribute :content_partner,         default: "NZ On Screen"
   attribute :category,                default: "Videos"

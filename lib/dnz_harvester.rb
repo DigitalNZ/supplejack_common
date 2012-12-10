@@ -2,6 +2,7 @@ require 'active_support/all'
 require 'feedzirra'
 require 'oai'
 require 'rest_client'
+require 'jsonpath'
 
 require "dnz_harvester/version"
 require "dnz_harvester/utils"
@@ -33,6 +34,9 @@ require "dnz_harvester/sitemap/nz_museums"
 
 require "dnz_harvester/xml/base"
 require "dnz_harvester/xml/nz_on_screen"
+
+require "dnz_harvester/json/base"
+require "dnz_harvester/json/europeana"
 
 module DnzHarvester
   # Your code goes here...
