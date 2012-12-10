@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DnzHarvester::Base do
   let(:klass) { DnzHarvester::Base }
 
-  after(:each) do
+  before(:each) do
     klass._base_urls[klass.identifier] = []
     klass._attribute_definitions[klass.identifier] = {}
   end
@@ -177,25 +177,17 @@ describe DnzHarvester::Base do
 
     it "returns hash with attribute definitions" do
       record.stub(:attribute_names) { [:category] }
-      record.stub(:category) { "Images" }
+      record.stub(:final_attribute_value).with(:category) { "Images" }
       record.attributes.should eq(category: "Images")
     end
   end
 
-  describe "#evaluate_block_or_send" do
+  describe "#final_attribute_value" do
     let(:record) { klass.new }
-    let(:block) { Proc.new { "Test" } }
-
-    it "evaluates the block" do
-      klass._attribute_definitions[klass.identifier][:category] = {block: block}
-
-      record.should_receive(:instance_eval).with(block) { "Test" }
-      record.evaluate_block_or_send(:category)
-    end
 
     it "executes the method with the name" do
       klass._attribute_definitions[klass.identifier][:category] = {default: "Video"}
-      record.evaluate_block_or_send(:category).should eq "Video"
+      record.final_attribute_value(:category).should eq "Video"
     end
   end
 

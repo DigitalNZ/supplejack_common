@@ -49,7 +49,7 @@ module DnzHarvester
         self._attribute_definitions[self.identifier] ||= {}
         self._attribute_definitions[self.identifier][name] = options || {}
 
-        self._attribute_definitions[self.identifier][name][:block] = &block if block_given?
+        self._attribute_definitions[self.identifier][name][:block] = block if block_given?
       end
 
       def attributes(*args)
@@ -77,10 +77,6 @@ module DnzHarvester
     def initialize(*args)
       @original_attributes = {}
       self.set_attribute_values
-
-      (@original_attributes.keys - self.class.custom_instance_methods).each do |method_name|
-        self.class.send(:define_method, method_name, lambda { @original_attributes[method_name] })
-      end
     end
 
     def set_attribute_values
@@ -112,24 +108,24 @@ module DnzHarvester
       @attributes = {}
 
       attribute_names.each do |name|
-        @attributes[name] = self.evaluate_block_or_send(name)
+        @attributes[name] = self.final_attribute_value(name)
       end
 
       @attributes
     end
 
-    def evaluate_block_or_send(name)
-      if &block = self.class.attribute_definitions[name][:block] rescue nil
-        puts "\nBloc: #{block.inspect}\n"
-
+    def final_attribute_value(name)
+      if block = self.class.attribute_definitions[name][:block] rescue nil
         instance_eval(&block)
-      else
+      elsif self.class.custom_instance_methods.include?(name)
         self.send(name)
+      else
+        original_attributes[name]
       end
     end
 
     def attribute_names
-      self.class.attribute_definitions.keys + self.class.custom_instance_methods
+      @attribute_names ||= self.class.attribute_definitions.keys + self.class.custom_instance_methods
     end
 
     def to_s
@@ -137,8 +133,8 @@ module DnzHarvester
     end
 
     def method_missing(symbol, *args, &block)
-      raise NoMethodError, "undefined method '#{symbol.to_s}' for #{self.class.to_s}" unless attributes.has_key?(symbol)
-      attributes[symbol]
+      raise NoMethodError, "undefined method '#{symbol.to_s}' for #{self.class.to_s}" unless attribute_names.include?(symbol)
+      final_attribute_value(symbol)
     end
   end
 end

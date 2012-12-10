@@ -43,7 +43,7 @@ describe DnzHarvester::Rss::Base do
 
   context "overriden methods" do
 
-    it "generates a large_thumbnail_url from the thumbnail_url", :focus do
+    it "generates a large_thumbnail_url from the thumbnail_url" do
       record.large_thumbnail_url.should eq "http://cdn.3news.co.nz/3news/AM/2012/12/5/279322/Manuel-Robinson-Nicho-Waipuka-1200.jpg?width=520"
     end
 
