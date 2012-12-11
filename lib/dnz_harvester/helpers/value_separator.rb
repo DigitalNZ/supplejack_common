@@ -20,10 +20,4 @@ module DnzHarvester
     end
     
   end
-
-  module ValueSeparatorHelper
-    def split_value(original_value, separator)
-      ValueSeparator.new(original_value, separator).value
-    end
-  end
 end

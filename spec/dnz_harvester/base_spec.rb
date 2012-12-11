@@ -172,6 +172,20 @@ describe DnzHarvester::Base do
     end
   end
 
+  describe "#transformed_attribute_value" do
+    let(:record) { klass.new }
+
+    it "splits the value" do
+      record.stub(:attribute_value) { "Value1, Value2" }
+      record.transformed_attribute_value({separator: ","}).should eq ["Value1", "Value2"]
+    end
+
+    it "joins the values" do
+      record.stub(:attribute_value) { ["Value1", "Value2"] }
+      record.transformed_attribute_value({join: ", "}).should eq "Value1, Value2"
+    end
+  end
+
   describe "#attributes" do
     let(:record) { klass.new }
 

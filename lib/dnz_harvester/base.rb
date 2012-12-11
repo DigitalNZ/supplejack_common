@@ -2,7 +2,7 @@ module DnzHarvester
   class Base
     include DnzHarvester::Filters::Finders
     include DnzHarvester::Filters::Modifiers
-    include DnzHarvester::ValueSeparatorHelper
+    include DnzHarvester::Helpers::ValueTransformers
 
     class_attribute :_base_urls
     class_attribute :_attribute_definitions
@@ -81,11 +81,17 @@ module DnzHarvester
 
     def set_attribute_values
       self.class.attribute_definitions.each do |name, options|
-        value = attribute_value(options, document)
-        value = split_value(value, options[:separator]) if options[:separator]
+        value = transformed_attribute_value(options, document)
         @original_attributes[name] ||= nil
         @original_attributes[name] = value if value.present?
       end
+    end
+
+    def transformed_attribute_value(options, document=nil)
+      value = attribute_value(options, document)
+      value = split_value(value, options[:separator]) if options[:separator]
+      value = join_value(value, options[:join]) if options[:join]
+      value
     end
 
     def attribute_value(options={}, document=nil)
