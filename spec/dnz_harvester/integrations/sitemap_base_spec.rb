@@ -23,7 +23,7 @@ describe DnzHarvester::Sitemap::Base do
   end
 
   it "gets the title" do
-    record.title.should eq "Attenhofer A15 'Swing Jet' ski. "
+    record.title.should eq "Attenhofer A15 'Swing Jet' ski."
   end
 
   it "gets the record description" do

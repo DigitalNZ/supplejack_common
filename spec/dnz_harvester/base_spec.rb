@@ -184,6 +184,11 @@ describe DnzHarvester::Base do
       record.stub(:attribute_value) { ["Value1", "Value2"] }
       record.transformed_attribute_value({join: ", "}).should eq "Value1, Value2"
     end
+
+    it "removes any trailing and leading characters" do
+      record.stub(:attribute_value) { " Hi " }
+      record.transformed_attribute_value({}).should eq "Hi"
+    end
   end
 
   describe "#attributes" do

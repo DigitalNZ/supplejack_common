@@ -91,6 +91,7 @@ module DnzHarvester
       value = attribute_value(options, document)
       value = split_value(value, options[:separator]) if options[:separator]
       value = join_value(value, options[:join]) if options[:join]
+      value = strip_whitespace(value)
       value
     end
 
