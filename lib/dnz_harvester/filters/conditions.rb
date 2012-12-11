@@ -1,6 +1,7 @@
 module DnzHarvester
   module Filters
     class IfCondition
+      include DnzHarvester::Filters::AttributeValues
 
       attr_reader :record, :new_value, :existing_values
 
@@ -11,7 +12,7 @@ module DnzHarvester
       end
 
       def if_present(attribute_name)
-        value_to_check = record.original_attributes[attribute_name]
+        value_to_check = contents(attribute_name)
 
         if value_to_check.present?
           new_value + existing_values

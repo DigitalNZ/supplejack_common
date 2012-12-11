@@ -1,14 +1,12 @@
 module DnzHarvester
   module Filters
     class Selector
+      include DnzHarvester::Filters::AttributeValues
+
       attr_reader :record, :regexp, :scope
 
       def initialize(record, regexp, scope=:first)
         @record, @regexp, @scope = record, regexp, scope
-      end
-
-      def contents(attribute_name)
-        contents = *record.original_attributes[attribute_name.to_sym]
       end
 
       def selected_values(attribute_name)

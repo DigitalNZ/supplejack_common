@@ -19,19 +19,12 @@ module DnzHarvester
         WithoutSelector.new(self, regexp, :all)
       end
 
-      def last(field)
-        value = attribute(field)
-        Utils.array(value).last
-      end
-
       def find_and_replace(regex, substitute_value)
         Transformer.new(self, regex, substitute_value)
       end
 
-      private
-
-      def attribute(field)
-        self.original_attributes[field.to_sym]
+      def select(start_range, end_range=nil)
+        RangeSelector.new(self, start_range, end_range)
       end
     end
   end
