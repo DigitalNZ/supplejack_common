@@ -13,6 +13,10 @@ module DnzHarvester
       def strip_whitespace(original_value)
         WhitespaceStripper.new(original_value).value
       end
+
+      def strip_html(original_value)
+        HtmlStripper.new(original_value).value
+      end
     end
   end
 end

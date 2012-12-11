@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/code4lib/ruby-oai.git
-  revision: ec5483cdaefaf0e26ae2c9449bfeb07ab9dd03de
+  revision: 05e22cadf0064b04ccd9d7e38e8467eff75ba251
   specs:
-    oai (0.2.1)
+    oai (0.3.0)
       builder (>= 2.0.0)
       faraday
       faraday_middleware
@@ -11,7 +11,8 @@ PATH
   remote: .
   specs:
     dnz_harvester (0.0.1)
-      activesupport
+      actionpack (~> 3.1)
+      activesupport (~> 3.1)
       feedzirra (~> 0.1.3)
       jsonpath (~> 0.5.0)
       rest-client (~> 1.6.7)
@@ -19,13 +20,29 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    actionpack (3.1.8)
+      activemodel (= 3.1.8)
+      activesupport (= 3.1.8)
+      builder (~> 3.0.0)
+      erubis (~> 2.7.0)
+      i18n (~> 0.6)
+      rack (~> 1.3.6)
+      rack-cache (~> 1.2)
+      rack-mount (~> 0.8.2)
+      rack-test (~> 0.6.1)
+      sprockets (~> 2.0.4)
+    activemodel (3.1.8)
+      activesupport (= 3.1.8)
+      builder (~> 3.0.0)
+      i18n (~> 0.6)
     activesupport (3.1.8)
       multi_json (>= 1.0, < 1.3)
     addressable (2.3.2)
-    builder (3.1.4)
+    builder (3.0.4)
     crack (0.3.1)
     curb (0.7.18)
     diff-lcs (1.1.3)
+    erubis (2.7.0)
     faraday (0.8.4)
       multipart-post (~> 1.1)
     faraday_middleware (0.9.0)
@@ -40,6 +57,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.8)
       sax-machine (~> 0.1.0)
+    hike (1.2.1)
     i18n (0.6.1)
     json (1.7.5)
     jsonpath (0.5.0)
@@ -50,6 +68,13 @@ GEM
     multi_json (1.2.0)
     multipart-post (1.1.5)
     nokogiri (1.5.5)
+    rack (1.3.6)
+    rack-cache (1.2)
+      rack (>= 0.4)
+    rack-mount (0.8.3)
+      rack (>= 1.0.0)
+    rack-test (0.6.2)
+      rack (>= 1.0)
     rake (10.0.2)
     rdoc (3.12)
       json (~> 1.4)
@@ -65,6 +90,11 @@ GEM
     rspec-mocks (2.11.3)
     sax-machine (0.1.0)
       nokogiri (> 0.0.0)
+    sprockets (2.0.4)
+      hike (~> 1.2)
+      rack (~> 1.0)
+      tilt (~> 1.1, != 1.3.0)
+    tilt (1.3.3)
     webmock (1.8.11)
       addressable (>= 2.2.7)
       crack (>= 0.1.7)

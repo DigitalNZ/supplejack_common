@@ -1,4 +1,6 @@
 require 'active_support/all'
+require 'action_view/helpers/capture_helper'
+require 'action_view/helpers/sanitize_helper'
 require 'feedzirra'
 require 'oai'
 require 'rest_client'

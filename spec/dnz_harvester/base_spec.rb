@@ -189,6 +189,11 @@ describe DnzHarvester::Base do
       record.stub(:attribute_value) { " Hi " }
       record.transformed_attribute_value({}).should eq "Hi"
     end
+
+    it "removes any html" do
+      record.stub(:attribute_value) { "<div id='top'>Stripped</div>" }
+      record.transformed_attribute_value({}).should eq "Stripped"
+    end
   end
 
   describe "#attributes" do
