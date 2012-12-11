@@ -36,7 +36,15 @@ module DnzHarvester
 
       def attribute_value(options={}, document=nil)
         return options[:default] if options[:default]
-        return json_attributes[options[:path]] if options[:path]
+        return get_value_from_path(options[:path]) if options[:path]
+      end
+
+      def get_value_from_path(path)
+        if path.is_a?(Array)
+          path.map {|p| json_attributes[p] }
+        else
+          json_attributes[path]
+        end
       end
 
     end

@@ -59,7 +59,7 @@ describe DnzHarvester::Json::Base do
   end
 
   describe "#attribute_value" do
-    let(:record) { klass.new({"dc:creator" => "John"}) }
+    let(:record) { klass.new({"dc:creator" => "John", "dc:author" => "Fede"}) }
 
     it "extracts a default value" do
       record.attribute_value(default: "Hi").should eq "Hi"
@@ -67,6 +67,10 @@ describe DnzHarvester::Json::Base do
 
     it "returns the value of a attribute" do
       record.attribute_value(path: "dc:creator").should eq "John"
+    end
+
+    it "returns the values from multiple paths" do
+      record.attribute_value(path: ["dc:creator", "dc:author"]).should eq ["John", "Fede"]
     end
   end
 end
