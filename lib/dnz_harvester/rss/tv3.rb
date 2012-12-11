@@ -4,7 +4,11 @@ class Tv3 < DnzHarvester::Rss::Base
   base_url "http://www.3news.co.nz/DesktopModules/Article%20Presentation/External.aspx?tabid=783&moduleid=5943&cat=67"
 
   attribute :archive_title,           default: "tv3-rss"
-  attribute :category,                default: ["Newspapers"]
+
+  attribute :category,                default: ["Newspapers"] do
+    add("Images", to: :category).if_present(:thumbnail_url)
+  end
+
   attribute :content_partner,         default: ["TV3"]
   attribute :display_content_partner, default: "TV3"
   attribute :creator,                 default: ["TV3"]
@@ -21,9 +25,5 @@ class Tv3 < DnzHarvester::Rss::Base
 
   attribute :large_thumbnail_url do
     find_and_replace(/width=[\d]{1,4}/, "width=520").within(:thumbnail_url)
-  end
-
-  def category
-    add("Images", to: :category).if_present(:thumbnail_url)
   end
 end

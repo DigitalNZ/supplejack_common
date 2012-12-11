@@ -3,10 +3,16 @@ class NzMuseums < DnzHarvester::Sitemap::Base
   base_url "/Users/fede/code/dnz/config/harvester-resources/dnz03/sitemaps/nzmuseums-sitemap-reservebank.xml"
 
   attribute :archive_title,       default: "nzmuseums"
-  attribute :collection,          default: ["NZMuseums"]
+  attribute :collection,          default: "NZMuseums"
   attribute :source,              default: "NZMuseums"
 
-  attributes :thumbnail_url, :large_thumbnail_url, xpath: ["//div[@class='ehObjectSingleImage']/a/img", "//div[@class='ehObjectImageMultiple']/a/img"], value: :src
+  attributes :thumbnail_url, xpath: ["//div[@class='ehObjectSingleImage']/a/img", "//div[@class='ehObjectImageMultiple']/a/img"], value: :src do
+    find_and_replace(/m\.jpg$/, "s.jpg").within(:thumbnail_url)
+  end
+
+  attributes :large_thumbnail_url, xpath: ["//div[@class='ehObjectSingleImage']/a/img", "//div[@class='ehObjectImageMultiple']/a/img"], value: :src do
+    find_and_replace(/m\.jpg$/, "l.jpg").within(:thumbnail_url)
+  end
 
   with_options xpath: "//div[@class='ehFieldLabelDescription']", if: {"span[@class='label']" => :label_value}, value: "span[@class='value']" do |w|
 
@@ -37,17 +43,8 @@ class NzMuseums < DnzHarvester::Sitemap::Base
   attribute :date,          xpath: "//li[@span='Date Made']"
   attribute :display_date,  xpath: "//div[@class='ehRepeatingLabelDescription']", if: {"span[@class='label']" => "Date Made"}, value: "span[@class='value']"
 
-  def category
-    return "Images" if original_attributes[:thumbnail_url].present?
-    return "Other"
-  end
-
-  def thumbnail_url
-    find_and_replace(/m\.jpg$/, "s.jpg").within(:thumbnail_url)
-  end
-
-  def large_thumbnail_url
-    find_and_replace(/m\.jpg$/, "l.jpg").within(:thumbnail_url)
+  attribute :category do
+    original_attributes[:thumbnail_url].present? ? "Images" : "Other"
   end
 
   def usage

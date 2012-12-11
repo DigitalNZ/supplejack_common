@@ -83,7 +83,8 @@ module DnzHarvester
       self.class.attribute_definitions.each do |name, options|
         value = attribute_value(options, document)
         value = split_value(value, options[:separator]) if options[:separator]
-        @original_attributes[name] = value
+        @original_attributes[name] ||= nil
+        @original_attributes[name] = value if value.present?
       end
     end
 

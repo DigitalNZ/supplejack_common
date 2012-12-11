@@ -15,7 +15,7 @@ module DnzHarvester
       class << self
         attr_reader :response
 
-        def enrich(name, options={})
+        def enrich_attribute(name, options={})
           self._enrichment_definitions[name] = options || {}
         end
 

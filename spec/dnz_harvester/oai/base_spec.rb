@@ -9,10 +9,15 @@ describe DnzHarvester::Oai::Base do
   let(:oai_record) { mock(:oai_record, header: header, metadata: [root]).as_null_object }
   let(:record) { klass.new(oai_record) }
 
-  describe ".enrich" do
+  before do
+    klass._base_urls[klass.identifier] = []
+    klass._attribute_definitions[klass.identifier] = {}
+  end
+
+  describe ".enrich_attribute" do
     it "adds a enrichment definition" do
       class OaiEnrich < DnzHarvester::Oai::Base
-        enrich :citation, xpath: "table/td"
+        enrich_attribute :citation, xpath: "table/td"
       end
 
       OaiEnrich._enrichment_definitions.should include(citation: {xpath: "table/td"})
@@ -95,7 +100,7 @@ describe DnzHarvester::Oai::Base do
 
     it "extracts the values from the root" do
       klass.attribute :title, {from: "dc:title"}
-      record.should_receive(:get_value_from).with("dc:title") { "Dogs" }
+      record.should_receive(:attribute_value).with({from: "dc:title"}, nil).and_return("Dogs")
       record.set_attribute_values
       record.original_attributes.should include(title: "Dogs")
     end
@@ -118,7 +123,7 @@ describe DnzHarvester::Oai::Base do
   describe "#attribute_names" do
     it "should add the enrichment definitions" do
       class OaiEnrich < DnzHarvester::Oai::Base
-        enrich :citation, xpath: "table/td"
+        enrich_attribute :citation, xpath: "table/td"
       end
 
       OaiEnrich.new(oai_record).attribute_names.should include(:citation)
