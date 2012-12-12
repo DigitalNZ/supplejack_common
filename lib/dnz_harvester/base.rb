@@ -93,6 +93,7 @@ module DnzHarvester
       value = join_value(value, options[:join]) if options[:join]
       value = strip_html(value)
       value = strip_whitespace(value)
+      value = truncate_value(value, options[:truncate]) if options[:truncate]
       value
     end
 

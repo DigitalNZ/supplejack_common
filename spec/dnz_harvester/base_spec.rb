@@ -194,6 +194,11 @@ describe DnzHarvester::Base do
       record.stub(:attribute_value) { "<div id='top'>Stripped</div>" }
       record.transformed_attribute_value({}).should eq "Stripped"
     end
+
+    it "truncates the value to 10 charachters" do
+      record.stub(:attribute_value) { "Some random text longer that 10 charachters" }
+      record.transformed_attribute_value({truncate: 10}).should eq "Some rando"
+    end
   end
 
   describe "#attributes" do

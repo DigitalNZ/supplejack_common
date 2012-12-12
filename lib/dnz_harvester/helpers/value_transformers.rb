@@ -17,6 +17,10 @@ module DnzHarvester
       def strip_html(original_value)
         HtmlStripper.new(original_value).value
       end
+
+      def truncate_value(original_value, length, omission="")
+        ValueTruncator.new(original_value, length, omission).value
+      end
     end
   end
 end

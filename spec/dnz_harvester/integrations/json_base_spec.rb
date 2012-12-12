@@ -26,7 +26,7 @@ describe DnzHarvester::Json::Base do
   end
 
   it "gets the record description" do
-    record.description.should eq "New Zealand Institute (Wellington, N.Z;BHL Europe"
+    record.description.should eq "New Zealand Institute"
   end
 
   it "gets the creator" do

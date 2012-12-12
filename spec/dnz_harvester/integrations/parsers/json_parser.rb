@@ -7,7 +7,7 @@ class JsonParser < DnzHarvester::Json::Base
 
   attribute :identifier,              path: "guid"
   attribute :title,                   path: "title"
-  attribute :description,             path: "description"
+  attribute :description,             path: "description", truncate: 21
   attribute :landing_url,             path: "link"
   attribute :thumbnail_url,           path: "enclosure"
   attribute :creator,                 path: "dc:creator"
