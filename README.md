@@ -15,6 +15,7 @@ The following adapters have been implemented:
 * Really Simple Syndication
 * Sitemap
 * XML
+* JSON
 
 Each adapter is very easy to implement, for the current adapters they only have between 60 and 100 lines of code each.
 
@@ -28,7 +29,7 @@ The parser files for the different sources are defined using a Domain Specific L
 It takes a url as a argument which will be used to fetch the resources.
 
 #### attribute / attributes
-It takes the name of the attribute and then some options to specify how that particular field is going to be populated.
+It takes the name of the attribute and then some options to specify how that particular field is going to be populated. It can additionally take a block in which any custom logic can be defined.
 
 #### Method definitons
 Any method defined in the parser file will also be used as a attribute for the resource, the difference being that you have access to the raw document or XML and the full power of ruby to extract the relevant data any way you want. 
@@ -40,9 +41,9 @@ To aid in the method definitions a set of methods are provided to acomplish comm
 * find_all_with
 * find_without
 * find_all_without
-* last
 * find_and_replace
 * add
+* select
 
 Overtime we can very easily expand this set of tools solve common problems across the different sources. 
 
