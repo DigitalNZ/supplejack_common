@@ -20,7 +20,7 @@ module DnzHarvester
       end
 
       def find_and_replace(regex, substitute_value)
-        Transformer.new(self, regex, substitute_value)
+        FindReplacer.new(self, regex, substitute_value)
       end
 
       def select(start_range, end_range=nil)

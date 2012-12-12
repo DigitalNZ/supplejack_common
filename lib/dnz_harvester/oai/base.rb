@@ -65,12 +65,19 @@ module DnzHarvester
         values
       end
 
+      def get_enrichment_url
+        @get_enrichment_url ||= begin
+          url = self.enrichment_url
+          url.is_a?(Array) ? url.first : url
+        end
+      end
+
       def enrichment_document
-        @enrichment_document ||= Nokogiri.parse(DnzHarvester::Utils.get(self.enrichment_url))
+        @enrichment_document ||= Nokogiri.parse(DnzHarvester::Utils.get(self.get_enrichment_url))
       end
 
       def enrich_record
-        url = self.enrichment_url
+        url = self.get_enrichment_url
         return nil if url.blank?
         
         self._enrichment_definitions.each do |name, options|
