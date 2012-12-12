@@ -29,7 +29,10 @@ class SitemapParser < DnzHarvester::Sitemap::Base
                           }
 
 
-  attribute :display_date,  xpath: "//div[@class='ehRepeatingLabelDescription']", if: {"span[@class='label']" => "Date Made"}, value: "span[@class='value']"
+  attribute :display_date,  xpath: "//div[@class='ehRepeatingLabelDescription']", 
+                            if: {"span[@class='label']" => "Date Made"}, 
+                            value: "span[@class='value']",
+                            date: true
 
   attribute :category do
     original_attributes[:thumbnail_url].present? ? "Images" : "Other"

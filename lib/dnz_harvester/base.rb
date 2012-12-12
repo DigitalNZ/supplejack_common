@@ -94,6 +94,7 @@ module DnzHarvester
       value = strip_html(value)
       value = strip_whitespace(value)
       value = truncate_value(value, options[:truncate]) if options[:truncate]
+      value = parse_date(value, options[:date]) if options[:date]
       value
     end
 

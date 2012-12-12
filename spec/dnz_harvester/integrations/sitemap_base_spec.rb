@@ -51,7 +51,7 @@ describe DnzHarvester::Sitemap::Base do
   end
 
   it "gets the display_date" do
-    record.display_date.should eq "1970"
+    record.display_date.should eq Time.utc(1970,1,1,12)
   end
 
   context "overriden methods" do

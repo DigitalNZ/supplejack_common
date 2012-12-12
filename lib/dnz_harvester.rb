@@ -5,6 +5,7 @@ require 'feedzirra'
 require 'oai'
 require 'rest_client'
 require 'jsonpath'
+require 'chronic'
 
 require "dnz_harvester/version"
 require "dnz_harvester/utils"

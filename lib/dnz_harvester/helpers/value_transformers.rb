@@ -21,6 +21,10 @@ module DnzHarvester
       def truncate_value(original_value, length, omission="")
         ValueTruncator.new(original_value, length, omission).value
       end
+
+      def parse_date(original_value, date_format)
+        DateParser.new(original_value, date_format).value
+      end
     end
   end
 end

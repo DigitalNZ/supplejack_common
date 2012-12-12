@@ -199,6 +199,11 @@ describe DnzHarvester::Base do
       record.stub(:attribute_value) { "Some random text longer that 10 charachters" }
       record.transformed_attribute_value({truncate: 10}).should eq "Some rando"
     end
+
+    it "parses a date" do
+      record.stub(:attribute_value) { "circa 1994" }
+      record.transformed_attribute_value({date: true}).should eq Time.utc(1994,1,1,12)
+    end
   end
 
   describe "#attributes" do
