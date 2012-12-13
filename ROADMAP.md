@@ -1,17 +1,14 @@
 Functionality to add
 
-- Specify what to do with a value when there are multiple ones (Append, Pick a specific one)
-- Implement date parsers that can handle different types of dates.
 - Rejecting records on specific rules.
-- Testing a subject of records/Specify the page or range of records to fetch
+- Have access to the original document through the fetch method
 
-Transformers we need to implement
+Transformers to implement
 
 Configurable
-- Truncation
 - Standarize rights/licence/usage/copyright
-- Standarize dates
+
+- Separator (Add option to split on a regular expression)
+- Change find_and_replace to use a hash instead of an array.
 
 Global
-- Striping whitespace
-- Remove HTML tags

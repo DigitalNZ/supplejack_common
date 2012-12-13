@@ -6,7 +6,7 @@ module DnzHarvester
     attr_reader :original_value, :format
 
     def initialize(original_value, format=nil)
-      @original_value = original_value
+      @original_value = original_value.to_s
       @format = format == true ? nil : format
     end
 

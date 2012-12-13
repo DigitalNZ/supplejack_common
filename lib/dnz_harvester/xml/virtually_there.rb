@@ -1,28 +1,29 @@
 class VirtuallyThere < DnzHarvester::Xml::Base
   
   base_url "file:///data/apps/harvester/resource_deployments/current/xml_files/virtually-there-xml.xml"
-  record_url_selector "//AllObjects"
+  # record_selector "//AllObjects"
 
-  attribute  :archive_title,       	  						default: "virtually-there"
-  attribute  :category,               						default: "Interactives"
-  attribute  :collection,             						default: ["Otago Museum Virtually There", "Matapihi"]
-  attributes :content_partner, :display_content_partner,    default: "Otago Museum"
+  attribute  :archive_title,       	  						        default: "virtually-there"
+  attribute  :category,               						        default: "Interactives"
+  attribute  :collection,             						        default: ["Otago Museum Virtually There", "Matapihi"]
+  attributes :content_partner, :display_content_partner,  default: "Otago Museum"
   attributes :display_collection, :primary_collection,		default: "Otago Museum Virtually There"
   
   attributes :landing_url, :identifier, 	xpath: "//URL"
   attribute  :title,                  		xpath: "//objectName"
   attribute  :dc_identifier,          		xpath: "//catalogueID"
   attribute  :subject,                		xpath: "//categoryName"
-  attribute  :dc_date,                		xpath: "//objectDate", get_date: "dc_date"
-  attribute  :display_date,           		xpath: "//objectDate", get_date: "display_date"
+  attribute  :dc_date,                		xpath: "//objectDate", date: true
+  attribute  :display_date,           		xpath: "//objectDate"
 
   # This need to be appended together and spaces transformed to %20's, + there are many more mappings to come on this one!
-  attribute :thumbnail_url,      ['http://www.omvirtuallythere.co.nz/objects/', xpath: "//catalogueID", xpath: "//objectName", '/thumb.jpg'],
-								  mappings: {
-									"\/Weta\/" => "/creepy/",
-									"\/Ground Beetle\/" => "/Ground Beatle/",
-									"\/Rutile\/" => "/Rutile-In-Quartz/"
-								  }
+  # attribute :thumbnail_url do
+  #   mapped_title = get(:title).find_and_replace(/Weta/ => 'creepy',
+  #                                               /Ground Beetle/ => 'Ground Beatle',
+  #                                               /Rutile/ => 'Rutile-In-Quartz')
+
+  #   compose("http://www.omvirtuallythere.co.nz/objects/", get(:dc_identifier).select(:first), mapped_title, "/thumb.jpg")
+  # end
   
   # def rights
 	  # some kind of method to bulk declare all the rights fields (in cases where it is possible).
@@ -39,6 +40,5 @@ class VirtuallyThere < DnzHarvester::Xml::Base
 	  # ', Classification:', xpath("//objectClassification"),
 	  # ', Location:', xpath("//objectLocation"),
   # end
-	
 
 end

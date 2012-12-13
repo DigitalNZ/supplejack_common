@@ -1,67 +1,61 @@
+# encoding: UTF-8
+
 class Repositoy < DnzHarvester::Xml::Base
   
   base_url "http://repository.digitalnz.org/public_records.xml"
-  record_url_selector "//records/record"
+  # record_selector "//records/record"
 
-  attribute  :archive_title,       	  								default: "repository"
-  attribute  :category,               								default: "Images"
-  attribute  :no_landing_page,         								default: "true"
+  attribute  :archive_title,       	  								              default: "repository"
+  attribute  :no_landing_page,         								              default: true
   attributes :collection, :display_collection, :primary_collection, default: "Shared Repository"
   
-  attribute  :dc_type,      				xpath: "//record-type"
+  attribute  :dc_type,      				      xpath: "//record-type"
   attributes :identifier, :dc_identifier,	xpath: "//id"
-  attributes :coverage, :placename,			xpath: "//places-covered"
+  attributes :coverage, :placename,			  xpath: "//places-covered"
   attribute  :title,                  		xpath: "//title"
-  attribute  :description,                  xpath: "//description"
+  attribute  :description,                xpath: "//description"
   attribute  :relation,                  	xpath: "//relation"
-  attribute  :subject,                		xpath: "//subject", separator: ",\s?"
-  attribute  :date,          				xpath: "//date", date: true
-  attribute  :display_date,          		xpath: "//date", date: "%d/%m/%Y"
-  attribute  :peer_reviewed,               	xpath: "//status"
-  
-  # some of these organisations have a space at the end that needs to be stripped
-  # also the first 'a' in Kawanatanga need to have a line above it
+  attribute  :subject,                		xpath: "//subject",   separator: ","
+  attribute  :date,          				      xpath: "//date",      date: true
+  attribute  :display_date,          		  xpath: "//date",      date: "%d/%m/%Y"
+  attribute  :peer_reviewed,              xpath: "//status"
+
   attributes :content_partner, :display_content_partner, :publisher,	xpath: "//organisation" do
-    find_and_replace(/^Archives New Zealand Te Rua Mahara o te.*$/, 'Archives New Zealand Te Rua Mahara o te Kawanatanga').within(:identifier)
+    find_and_replace(/^Archives New Zealand Te Rua Mahara o te.*$/, 'Archives New Zealand Te Rua Mahara o te Kāwanatanga').within(:identifier)
   end
   
   # def landing_url
     # has no www landing page so we use the dnz details.
 	# So it needs to point back at itself ie "http://www.digitalnz.org/records/{recordnumber}"
   # end
-  
-  def category
-    return "Images" if original_attributes[:dc_type] == "Still Image"
-    return "Audio" if original_attributes[:dc_type] == "Sound"
-    return "Other" if original_attributes[:dc_type] == ("General" or "Physical Object" or "Collection" or "Event" or "Service" or "Software")
-    return "Research papers" if original_attributes[:dc_type] == ("Text" or "Scholarly Text" or "Book Item" or "Conference Item" or "Journal Item" or "Journal Article" or "Report")
-    return "Videos" if original_attributes[:dc_type] == "Moving Image"
-    return "Books" if original_attributes[:dc_type] == "Book item"
-    return "Images" if original_attributes[:dc_type] == ("Interactive Resource" or "Inter Active item")
-    return "Data" if original_attributes[:dc_type] == "Dataset"
-    return "Other"
-  end  
-  
-  # only returns the attachment if the //state is published
-  # also there can be "'s (quote marks) in the name (//attachments)
+
+  attribute :category, xpath: "//record-type", mapping: {
+                          /^(Still Image)$/ => "Images",
+                          /^(Sound)$/ => "Audio",
+                          /^(General|Physical Object|Collection|Event|Service|Software)$/ => "Other",
+                          /^(Text|Scholarly Text|Book Item|Conference Item|Journal Item|Journal Article|Report)$/ => "Research papers",
+                          /^(Moving Image)$/ => "Videos",
+                          /^(Book item)$/ => "Books",
+                          /^(Interactive Resource|Inter Active item)$/ => "Images",
+                          /^(Dataset)$/ => "Data",
+                          // => "Other"
+                        }
+
   # def attachments
-    # return [{
-      # url: xpath: "//url",
-      # name: xpath: "//attachment",
-    # }] if xpath: "//state" == "published"
+  #   return [] unless fetch("//state") == "published"
+  #   [{
+  #     url: fetch("//url"),
+  #     name: fetch("//attachment"),
+  #   }]
   # end
 
-  def object_url
-    return xpath: "//url" if xpath: "//state" == "published"
-  end
+  # def object_url
+  #   return [] unless fetch("//state") == "published"
+  #   fetch("//url")
+  # end
   
-  # append the values from these xpaths
   # def contributor
-    # return append: 
-	# [
-	  # xpath: "//subject", separator: " / ",
-	  # xpath: "//funding-provider" unless xpath: "//funding-provider" == ("Other", "None")
-	# ]
+  #   get(:subject) + fetch("//funding-provider").find_all_without(/^(Other|None)$/)
   # end
 	  
   # def set_rights

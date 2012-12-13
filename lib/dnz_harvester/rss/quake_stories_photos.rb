@@ -1,11 +1,4 @@
 class QuakeStoriesPhotos < DnzHarvester::Rss::Base
-     
-  # Need to confirm:
-  # - rights and usage field names
-  # - is copyright single value
-  # - landing url "from: :url" or link
-  # - thumb transformer &amp; and $1
-  # - attachments
   
   base_url "http://www.quakestories.govt.nz/photos/feed"
 
@@ -26,7 +19,7 @@ class QuakeStoriesPhotos < DnzHarvester::Rss::Base
   attribute :creator,                   from: :author
   attributes :date, :display_date,      from: :published
   attributes :identifier, :landing_url, from: :url
-  attribute :thumbnail_url, :large_thumbnail_url, from: :enclosure
+  attributes :thumbnail_url, :large_thumbnail_url, from: :enclosure
 
   def thumbnail_url
     find_and_replace(/^.*\/stories\/(.*)\.\w\w\w\w?$/, 'http://www.quakestories.govt.nz/thumbnail.ashx?image=/images/stories/\1.jpg&width=150&constrain=true').within(:thumbnail_url)
@@ -36,17 +29,13 @@ class QuakeStoriesPhotos < DnzHarvester::Rss::Base
     find_and_replace(/^.*\/stories\/(.*)\.\w\w\w\w?$/, 'http://www.quakestories.govt.nz/thumbnail.ashx?image=/images/stories/\1.jpg&width=520&constrain=true').within(:thumbnail_url)
   end
   
-  def category
-    add("Images", to: :category).if_present(:thumbnail_url)
-  end
-  
-  def attachments
-    [{
-      name: original_attributes[:title],
-      url: original_attributes[:thumbnail_url],
-      dc_type: "Images",
-      thumbnail_url: self.thumbnail_url,
-      large_thumbnail_url: self.large_thumbnail_url
-    }]
-  end
+  # def attachments
+  #   [{
+  #     name: get(:title),
+  #     url: get(:thumbnail_url),
+  #     dc_type: "Images",
+  #     thumbnail_url: get(:thumbnail_url),
+  #     large_thumbnail_url: get(:large_thumbnail_url)
+  #   }]
+  # end
 end
