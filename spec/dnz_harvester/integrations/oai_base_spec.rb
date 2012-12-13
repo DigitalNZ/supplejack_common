@@ -30,7 +30,7 @@ describe DnzHarvester::Oai::Base do
     context "overriden methods" do
 
       it "finds a identifier without a 'http' stirng" do
-        record.identifier.should eq "Thesis (PhD--Electrical and Electronic Engineering)--University of Auckland, 2001."
+        record.identifier.should eq ["Thesis (PhD--Electrical and Electronic Engineering)--University of Auckland, 2001."]
       end
 
       it "generates a enrichment_url from the identifier" do

@@ -1,6 +1,6 @@
 module DnzHarvester
   module Modifiers
-    class FinderWith
+    class FinderWith < AbstractModifier
 
       attr_reader :original_value, :regexp, :scope
 

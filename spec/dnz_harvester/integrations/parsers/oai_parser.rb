@@ -3,7 +3,7 @@ class OaiParser < DnzHarvester::Oai::Base
   base_url "http://library.org"
 
   attribute :identifier do
-    find_without(/http/).within(:dc_identifier)
+    get(:dc_identifier).find_without(/http/)
   end
 
   attribute :category,                default: "Research papers"

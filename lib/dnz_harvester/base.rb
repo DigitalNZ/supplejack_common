@@ -1,9 +1,6 @@
 module DnzHarvester
   class Base
-    include DnzHarvester::Filters::Finders
-    include DnzHarvester::Filters::Modifiers
     include DnzHarvester::Helpers::ValueTransformers
-
     include DnzHarvester::Modifiers
 
     class_attribute :_base_urls
