@@ -34,7 +34,7 @@ describe DnzHarvester::Oai::Base do
       end
 
       it "generates a enrichment_url from the identifier" do
-        record.enrichment_url.should eq "https://researchspace.auckland.ac.nz/handle/2292/3?show=full"
+        record.enrichment_url.should eq ["https://researchspace.auckland.ac.nz/handle/2292/3?show=full"]
       end
 
     end

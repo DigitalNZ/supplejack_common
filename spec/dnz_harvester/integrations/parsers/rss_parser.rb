@@ -2,10 +2,6 @@ class RssParser < DnzHarvester::Rss::Base
   
   base_url "http://www.library.org/records"
 
-  attribute :category,                default: ["Newspapers"] do
-    add("Images", to: :category).if_present(:thumbnail_url)
-  end
-
   attribute :title,                   from: :title
   attribute :description,             from: :summary
   attribute :date,                    from: :published
@@ -13,7 +9,11 @@ class RssParser < DnzHarvester::Rss::Base
 
   attribute :thumbnail_url, from: :enclosure, value: :url, with: {type: "image/jpeg"}
 
+  attribute :category,                default: ["Newspapers"] do
+    get(:category).add("Images") if get(:thumbnail_url).present?
+  end
+
   attribute :large_thumbnail_url do
-    find_and_replace(/width=[\d]{1,4}/, "width=520").within(:thumbnail_url)
+    get(:thumbnail_url).find_and_replace(/width=[\d]{1,4}/, "width=520")
   end
 end

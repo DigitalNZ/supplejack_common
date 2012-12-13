@@ -14,14 +14,12 @@ class XmlParser < DnzHarvester::Xml::Base
   attribute :thumbnail_url,           xpath: "//thumbnail-image/title/path"
 
   attribute :contributor,             xpath: "//person", object: true do
-    if original_attributes[:contributor].respond_to?(:each)
-      original_attributes[:contributor].map do |person|
+    if get(:contributor).present?
+      get(:contributor).to_a.map do |person|
         first_name = person.xpath("first-name")
         last_name = person.xpath("last-name")
         [first_name, last_name].join(" ")
       end
-    else
-      nil
     end
   end
 end

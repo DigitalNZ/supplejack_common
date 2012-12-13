@@ -25,7 +25,7 @@ module DnzHarvester
         if end_range
           original_value[start_range..end_range]
         else
-          original_value[start_range]
+          Array(original_value[start_range])
         end
       end
     end

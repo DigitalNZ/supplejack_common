@@ -41,11 +41,11 @@ describe DnzHarvester::Modifiers::RangeSelector do
     let(:value) { ["1", "2", "3", "4"] }
 
     it "returns the first element" do
-      klass.new(value, :first).modify.should eq "1"
+      klass.new(value, :first).modify.should eq ["1"]
     end
 
     it "returns the last element" do
-      klass.new(value, :last).modify.should eq "4"
+      klass.new(value, :last).modify.should eq ["4"]
     end
 
     it "returns the first 3 elements " do

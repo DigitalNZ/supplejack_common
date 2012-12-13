@@ -52,7 +52,7 @@ describe DnzHarvester::Json::Base do
   context "overriden methods" do
 
     it "gets the landing_url" do
-      record.landing_url.should eq "http://www.europeana.eu/portal/record/08701/533BD2421E162B12D599BBCC3BF0BA3C516A8CFB"
+      record.landing_url.should eq ["http://www.europeana.eu/portal/record/08701/533BD2421E162B12D599BBCC3BF0BA3C516A8CFB"]
     end
 
   end

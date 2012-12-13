@@ -5,7 +5,7 @@ class SitemapParser < DnzHarvester::Sitemap::Base
   attribute :collection,          default: "NZMuseums"
 
   attribute :thumbnail_url, xpath: ["//div[@class='ehObjectSingleImage']/a/img/@src", "//div[@class='ehObjectImageMultiple']/a/img/@src"] do
-    find_and_replace(/m\.jpg$/, "s.jpg").within(:thumbnail_url)
+    get(:thumbnail_url).find_and_replace(/m\.jpg$/, "s.jpg")
   end
 
   with_options xpath: "//div[@class='ehFieldLabelDescription']", if: {"span[@class='label']" => :label_value}, value: "span[@class='value']" do |w|
@@ -35,7 +35,7 @@ class SitemapParser < DnzHarvester::Sitemap::Base
                             date: true
 
   attribute :category do
-    original_attributes[:thumbnail_url].present? ? "Images" : "Other"
+    get(:thumbnail_url).present? ? "Images" : "Other"
   end
 
 end

@@ -67,7 +67,7 @@ describe DnzHarvester::Sitemap::Base do
     end
 
     it "gets the thumbnail_url" do
-      record.thumbnail_url.should eq "http://f1.ehive.com/3700/1/ua25q7_2h4j_s.jpg"
+      record.thumbnail_url.should eq ["http://f1.ehive.com/3700/1/ua25q7_2h4j_s.jpg"]
     end
 
   end

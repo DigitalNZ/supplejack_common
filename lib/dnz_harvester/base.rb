@@ -4,6 +4,8 @@ module DnzHarvester
     include DnzHarvester::Filters::Modifiers
     include DnzHarvester::Helpers::ValueTransformers
 
+    include DnzHarvester::Modifiers
+
     class_attribute :_base_urls
     class_attribute :_attribute_definitions
     class_attribute :_basic_auth
@@ -127,11 +129,21 @@ module DnzHarvester
 
     def final_attribute_value(name)
       if block = self.class.attribute_definitions[name][:block] rescue nil
-        instance_eval(&block)
+        evaluate_attribute_block(&block)
       elsif self.class.custom_instance_methods.include?(name)
         self.send(name)
       else
         original_attributes[name]
+      end
+    end
+
+    def evaluate_attribute_block(&block)
+      block_result = instance_eval(&block)
+      return original_attributes[name] if block_result.nil?
+      if block_result.is_a?(DnzHarvester::AttributeValue)
+        block_result.to_a
+      else
+        block_result
       end
     end
 

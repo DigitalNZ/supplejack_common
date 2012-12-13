@@ -5,30 +5,43 @@ module DnzHarvester
     
     def initialize(original_value)
       @original_value = Array(original_value)
+      @original_value = @original_value.delete_if(&:blank?)
+    end
+
+    def to_a
+      original_value
+    end
+
+    def present?
+      original_value.present?
     end
 
     def find_with(regexp)
-      WithSelector.new(original_value, regexp, :first).value
+      DnzHarvester::Modifiers::FinderWith.new(original_value, regexp, :first).value
     end
 
     def find_all_with(regexp)
-      WithSelector.new(original_value, regexp, :all).value
+      DnzHarvester::Modifiers::FinderWith.new(original_value, regexp, :all).value
     end
 
     def find_without(regexp)
-      WithoutSelector.new(original_value, regexp, :first).value
+      DnzHarvester::Modifiers::FinderWithout.new(original_value, regexp, :first).value
     end
 
     def find_all_without(regexp)
-      WithoutSelector.new(original_value, regexp, :all).value
+      DnzHarvester::Modifiers::FinderWithout.new(original_value, regexp, :all).value
     end
 
     def find_and_replace(regex, substitute_value)
-      FindReplacer.new(original_value, regex, substitute_value).value
+      DnzHarvester::Modifiers::FindReplacer.new(original_value, regex, substitute_value).value
     end
 
     def select(start_range, end_range=nil)
-      RangeSelector.new(original_value, start_range, end_range).value
+      DnzHarvester::Modifiers::RangeSelector.new(original_value, start_range, end_range).value
+    end
+
+    def add(new_value)
+      DnzHarvester::Modifiers::Adder.new(original_value, new_value).value
     end
   end
 end
