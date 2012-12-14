@@ -20,12 +20,12 @@ class SitemapParser < DnzHarvester::Sitemap::Base
   attribute :tags,        xpath: "//a[@class='ehTagReadOnly']"
   attribute :license,     xpath: "//div[@class='ehObjectLicence']/a/@href",
                           mappings: {
-                            ".*Attribution$" => "CC-BY",
-                            ".*Attribution_-_Share_Alike$" => "CC-BY-SA",
-                            ".*Attribution_-_No_Derivatives$" => "CC-BY-ND",
-                            ".*Attribution_-_Non-commercial$" => "CC-BY-NC",
-                            ".*Attribution_-_Non-commercial_-_Share_Alike$" => "CC-BY-NC-SA",
-                            ".*Attribution_-_Non-Commercial_-_No_Derivatives$" => "CC-BY-NC-ND"
+                            /.*Attribution$/ => 'CC-BY',
+                            /.*Attribution_-_Share_Alike$/ => 'CC-BY-SA',
+                            /.*Attribution_-_No_Derivatives$/ => 'CC-BY-ND',
+                            /.*Attribution_-_Non-commercial$/ => 'CC-BY-NC',
+                            /.*Attribution_-_Non-commercial_-_Share_Alike$/ => 'CC-BY-NC-SA',
+                            /.*Attribution_-_Non-Commercial_-_No_Derivatives$/ => 'CC-BY-NC-ND'
                           }
 
 

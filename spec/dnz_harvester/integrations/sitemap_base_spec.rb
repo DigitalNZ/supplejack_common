@@ -17,29 +17,29 @@ describe DnzHarvester::Sitemap::Base do
   context "default values" do
 
     it "defaults the collection to NZMuseums" do
-      record.collection.should eq "NZMuseums"
+      record.collection.should eq ["NZMuseums"]
     end
 
   end
 
   it "gets the title" do
-    record.title.should eq "Attenhofer A15 'Swing Jet' ski."
+    record.title.should eq ["Attenhofer A15 'Swing Jet' ski."]
   end
 
   it "gets the record description" do
-    record.description.should eq "Attenhofer A15 'Swing Jet' ski. 195 cm. Attenhofer step-in release binding with RAMY brake."
+    record.description.should eq ["Attenhofer A15 'Swing Jet' ski. 195 cm. Attenhofer step-in release binding with RAMY brake."]
   end
 
   it "gets the coverage" do
-    record.coverage.should eq "Switzerland"
+    record.coverage.should eq ["Switzerland"]
   end
 
   it "gets the placename" do
-    record.placename.should eq "Switzerland"
+    record.placename.should eq ["Switzerland"]
   end
 
   it "gets the identifier" do
-    record.identifier.should eq "MHC 00003"
+    record.identifier.should eq ["MHC 00003"]
   end
 
   it "gets the tags" do
@@ -47,11 +47,11 @@ describe DnzHarvester::Sitemap::Base do
   end
 
   it "gets the license" do
-    record.license.should eq "CC-BY"
+    record.license.should eq ["CC-BY"]
   end
 
   it "gets the display_date" do
-    record.display_date.should eq Time.utc(1970,1,1,12)
+    record.display_date.should eq [Time.utc(1970,1,1,12)]
   end
 
   context "overriden methods" do

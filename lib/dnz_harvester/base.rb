@@ -1,7 +1,7 @@
 module DnzHarvester
   class Base
-    include DnzHarvester::Helpers::ValueTransformers
     include DnzHarvester::Modifiers
+    include DnzHarvester::OptionTransformers
 
     class_attribute :_base_urls
     class_attribute :_attribute_definitions
@@ -87,13 +87,14 @@ module DnzHarvester
     end
 
     def transformed_attribute_value(options, document=nil)
-      value = attribute_value(options, document)
-      value = split_value(value, options[:separator]) if options[:separator]
-      value = join_value(value, options[:join]) if options[:join]
-      value = strip_html(value)
-      value = strip_whitespace(value)
-      value = truncate_value(value, options[:truncate]) if options[:truncate]
-      value = parse_date(value, options[:date]) if options[:date]
+      value = DnzHarvester::Utils.array(attribute_value(options, document))
+      value = mapping_option(value, options[:mappings]) if options[:mappings]
+      value = split_option(value, options[:separator]) if options[:separator]
+      value = join_option(value, options[:join]) if options[:join]
+      value = strip_html_option(value)
+      value = strip_whitespace_option(value)
+      value = truncate_option(value, options[:truncate]) if options[:truncate]
+      value = parse_date_option(value, options[:date]) if options[:date]
       value
     end
 
@@ -101,7 +102,6 @@ module DnzHarvester
       return options[:default] if options[:default]
       return get_value_from(options[:from]) if options[:from]
       return DnzHarvester::ConditionalOption.new(document, options).value if options[:xpath] && options[:if]
-      return DnzHarvester::MappingOption.new(document, options).value if options[:xpath] && options[:mappings]
       return DnzHarvester::XpathOption.new(document, options).value if options[:xpath]
     end
 

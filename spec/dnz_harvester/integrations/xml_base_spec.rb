@@ -19,11 +19,11 @@ describe DnzHarvester::Xml::Base do
   context "default values" do
 
     it "defaults the collection to NZ On Screen" do
-      record.content_partner.should eq "NZ On Screen"
+      record.content_partner.should eq ["NZ On Screen"]
     end
 
     it "defaults the category to Videos" do
-      record.category.should eq "Videos"
+      record.category.should eq ["Videos"]
     end
 
   end

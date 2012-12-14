@@ -13,6 +13,7 @@ require "dnz_harvester/scope"
 require "dnz_harvester/helpers"
 require "dnz_harvester/attribute_value"
 require "dnz_harvester/modifiers"
+require "dnz_harvester/option_transformers"
 require "dnz_harvester/base"
 require "dnz_harvester/paginated_collection"
 

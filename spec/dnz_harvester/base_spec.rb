@@ -132,7 +132,7 @@ describe DnzHarvester::Base do
       klass.attribute :category, {default: "Value"}
       record.stub(:attribute_value) { "Value" }
       record.set_attribute_values
-      record.original_attributes.should include(category: "Value")
+      record.original_attributes.should include(category: ["Value"])
     end
 
     it "splits the values by the separator character" do
@@ -161,11 +161,6 @@ describe DnzHarvester::Base do
       record.attribute_value({xpath: "table/tr", if: {"td[1]" => "dc.date"}, value: "td[2]"}, document).should eq "Google"
     end
 
-    it "gets the value from the mapping option" do
-      DnzHarvester::MappingOption.should_receive(:new) { option_object }
-      record.attribute_value({xpath: "table/tr", mappings: {"Non commercial" => "CC-BY-NC", "Share" => "CC-BY-SA"}}, document).should eq "Google"
-    end
-
     it "gets the value from the xpath option" do
       DnzHarvester::XpathOption.should_receive(:new) { option_object }
       record.attribute_value({xpath: "table/tr"}, document).should eq "Google"
@@ -182,27 +177,32 @@ describe DnzHarvester::Base do
 
     it "joins the values" do
       record.stub(:attribute_value) { ["Value1", "Value2"] }
-      record.transformed_attribute_value({join: ", "}).should eq "Value1, Value2"
+      record.transformed_attribute_value({join: ", "}).should eq ["Value1, Value2"]
     end
 
     it "removes any trailing and leading characters" do
       record.stub(:attribute_value) { " Hi " }
-      record.transformed_attribute_value({}).should eq "Hi"
+      record.transformed_attribute_value({}).should eq ["Hi"]
     end
 
     it "removes any html" do
       record.stub(:attribute_value) { "<div id='top'>Stripped</div>" }
-      record.transformed_attribute_value({}).should eq "Stripped"
+      record.transformed_attribute_value({}).should eq ["Stripped"]
     end
 
     it "truncates the value to 10 charachters" do
       record.stub(:attribute_value) { "Some random text longer that 10 charachters" }
-      record.transformed_attribute_value({truncate: 10}).should eq "Some rando"
+      record.transformed_attribute_value({truncate: 10}).should eq ["Some rando"]
     end
 
     it "parses a date" do
       record.stub(:attribute_value) { "circa 1994" }
-      record.transformed_attribute_value({date: true}).should eq Time.utc(1994,1,1,12)
+      record.transformed_attribute_value({date: true}).should eq [Time.utc(1994,1,1,12)]
+    end
+
+    it "maps the value to another value" do
+      record.stub(:attribute_value) { "Some lucky squirrel" }
+      record.transformed_attribute_value({mappings: {/lucky/ => 'unlucky'}}).should eq ["Some unlucky squirrel"]
     end
   end
 
@@ -221,7 +221,7 @@ describe DnzHarvester::Base do
 
     it "executes the method with the name" do
       klass._attribute_definitions[klass.identifier][:category] = {default: "Video"}
-      record.final_attribute_value(:category).should eq "Video"
+      record.final_attribute_value(:category).should eq ["Video"]
     end
   end
 

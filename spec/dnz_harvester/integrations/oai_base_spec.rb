@@ -18,7 +18,7 @@ describe DnzHarvester::Oai::Base do
     context "default values" do
 
       it "defaults the category to Research papers" do
-        record.category.should eq "Research papers"
+        record.category.should eq ["Research papers"]
       end
 
     end

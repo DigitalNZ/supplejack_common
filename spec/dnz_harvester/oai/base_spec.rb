@@ -95,14 +95,14 @@ describe DnzHarvester::Oai::Base do
     it "sets the default values" do
       klass.attribute :category, {default: "Papers"}
       record.set_attribute_values
-      record.original_attributes.should include(category: "Papers")
+      record.original_attributes.should include(category: ["Papers"])
     end
 
     it "extracts the values from the root" do
       klass.attribute :title, {from: "dc:title"}
       record.should_receive(:attribute_value).with({from: "dc:title"}, nil).and_return("Dogs")
       record.set_attribute_values
-      record.original_attributes.should include(title: "Dogs")
+      record.original_attributes.should include(title: ["Dogs"])
     end
 
     it "sets the root to nil when metadata is not present" do

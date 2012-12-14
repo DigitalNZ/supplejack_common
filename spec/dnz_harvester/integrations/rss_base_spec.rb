@@ -22,23 +22,23 @@ describe DnzHarvester::Rss::Base do
   end
 
   it "gets the record title" do
-    record.title.should eq "Cottrell murder accused initially treated as witness"
+    record.title.should eq ["Cottrell murder accused initially treated as witness"]
   end
 
   it "gets the record description" do
-    record.description.should eq "One of two men charged with murdering Wellington journalist Phillip Cottrell was initially treated as a witness, a jury has heard."
+    record.description.should eq ["One of two men charged with murdering Wellington journalist Phillip Cottrell was initially treated as a witness, a jury has heard."]
   end
 
   it "gets the record date" do
-    record.date.should eq Time.parse("2012-12-05 03:52:00 UTC")
+    record.date.should eq [Time.parse("2012-12-05 03:52:00 UTC")]
   end
 
   it "gets the record landing_url" do
-    record.landing_url.should eq "http://www.3news.co.nz/Cottrell-murder-accused-initially-treated-as-witness/tabid/423/articleID/279322/Default.aspx"
+    record.landing_url.should eq ["http://www.3news.co.nz/Cottrell-murder-accused-initially-treated-as-witness/tabid/423/articleID/279322/Default.aspx"]
   end
 
   it "gets the record thumbnail_url" do
-    record.thumbnail_url.should eq "http://cdn.3news.co.nz/3news/AM/2012/12/5/279322/Manuel-Robinson-Nicho-Waipuka-1200.jpg?width=180"
+    record.thumbnail_url.should eq ["http://cdn.3news.co.nz/3news/AM/2012/12/5/279322/Manuel-Robinson-Nicho-Waipuka-1200.jpg?width=180"]
   end
 
   context "overriden methods" do
