@@ -34,12 +34,11 @@ module DnzHarvester
         super
       end
 
-      def attribute_value(options={}, document=nil)
-        return options[:default] if options[:default]
-        return get_value_from_path(options[:path]) if options[:path]
-      end
+      def strategy_value(options={})
+        options ||= {}
+        path = options[:path]
+        return nil unless path.present?
 
-      def get_value_from_path(path)
         if path.is_a?(Array)
           path.map {|p| json_attributes[p] }
         else

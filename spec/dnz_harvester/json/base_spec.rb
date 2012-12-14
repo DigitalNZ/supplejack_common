@@ -58,19 +58,19 @@ describe DnzHarvester::Json::Base do
     end
   end
 
-  describe "#attribute_value" do
+  describe "#strategy_value" do
     let(:record) { klass.new({"dc:creator" => "John", "dc:author" => "Fede"}) }
 
-    it "extracts a default value" do
-      record.attribute_value(default: "Hi").should eq "Hi"
-    end
-
     it "returns the value of a attribute" do
-      record.attribute_value(path: "dc:creator").should eq "John"
+      record.strategy_value(path: "dc:creator").should eq "John"
     end
 
     it "returns the values from multiple paths" do
-      record.attribute_value(path: ["dc:creator", "dc:author"]).should eq ["John", "Fede"]
+      record.strategy_value(path: ["dc:creator", "dc:author"]).should eq ["John", "Fede"]
+    end
+
+    it "returns nil without :path" do
+      record.strategy_value(path: nil).should be_nil
     end
   end
 end

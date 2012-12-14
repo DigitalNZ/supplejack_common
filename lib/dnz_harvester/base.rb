@@ -100,13 +100,13 @@ module DnzHarvester
 
     def attribute_value(options={}, document=nil)
       return options[:default] if options[:default]
-      return get_value_from(options[:from]) if options[:from]
       return DnzHarvester::ConditionalOption.new(document, options).value if options[:xpath] && options[:if]
       return DnzHarvester::XpathOption.new(document, options).value if options[:xpath]
+      return strategy_value(options)
     end
 
-    def get_value_from(name)
-      raise NotImplementedError.new("All subclasses of DnzHarvester::Base must override #get_value_from.")
+    def strategy_value(name)
+      raise NotImplementedError.new("All subclasses of DnzHarvester::Base must override #strategy_value.")
     end
 
     def document

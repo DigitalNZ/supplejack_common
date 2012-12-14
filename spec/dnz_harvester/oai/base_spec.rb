@@ -130,7 +130,7 @@ describe DnzHarvester::Oai::Base do
     end
   end
 
-  describe "#get_value_from" do
+  describe "#strategy_value" do
     let(:root) { mock(:rexml_element).as_null_object }
     let(:node) { mock(:node, texts: "Dogs and cats") }
 
@@ -140,12 +140,20 @@ describe DnzHarvester::Oai::Base do
 
     it "extracts a value for a given node name" do
       root.should_receive(:get_elements).with("dc:title") { [node] }
-      record.get_value_from("dc:title").should eq ["Dogs and cats"]
+      record.strategy_value(from: "dc:title").should eq ["Dogs and cats"]
+    end
+
+    it "returns nil when :from is empty" do
+      record.strategy_value(nil).should be_nil
+    end
+
+    it "returns nil when :from is empty" do
+      record.strategy_value(from: "").should be_nil
     end
 
     it "returns nil when root is nil" do
       record.stub(:root) { nil }
-      record.get_value_from("dc:title").should be_nil
+      record.strategy_value(from: "dc:title").should be_nil
     end
   end
 

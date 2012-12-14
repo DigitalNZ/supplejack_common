@@ -58,9 +58,10 @@ module DnzHarvester
         super + self._enrichment_definitions.keys
       end
 
-      def get_value_from(name)
-        return nil unless root
-        values = root.get_elements(name)
+      def strategy_value(options={})
+        options ||= {}
+        return nil if root.nil? || options[:from].blank?
+        values = root.get_elements(options[:from])
         values = values.map(&:texts).flatten.map(&:to_s) if values.try(:any?)
         values
       end

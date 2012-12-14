@@ -152,7 +152,7 @@ describe DnzHarvester::Base do
     end
 
     it "gets the value from another location" do
-      record.should_receive(:get_value_from).with(:some_path) { "Google" }
+      record.should_receive(:strategy_value).with(from: :some_path) { "Google" }
       record.attribute_value({from: :some_path}).should eq "Google"
     end
 

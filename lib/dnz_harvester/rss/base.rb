@@ -41,8 +41,10 @@ module DnzHarvester
         super
       end
 
-      def get_value_from(name)
-        rss_entry.send(name)
+      def strategy_value(options={})
+        options ||= {}
+        return nil unless options[:from]
+        rss_entry.send(options[:from])
       end
 
     end

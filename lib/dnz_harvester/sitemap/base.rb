@@ -36,6 +36,10 @@ module DnzHarvester
       def document
         @document ||= Nokogiri.parse(DnzHarvester::Utils.get(@url))
       end
+
+      def strategy_value(options={})
+        return nil
+      end
     end
   end
 end

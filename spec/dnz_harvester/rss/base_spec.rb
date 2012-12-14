@@ -35,13 +35,21 @@ describe DnzHarvester::Rss::Base do
     end
   end
 
-  describe "#get_value_from" do
+  describe "#strategy_value" do
     let(:rss_entry) { mock(:rss_entry).as_null_object }
     let(:record) { klass.new(rss_entry) }
 
     it "calls the appropiate method on the rss_entry" do
       rss_entry.should_receive(:thumbnail) { "http://google.com" }
-      record.get_value_from(:thumbnail).should eq "http://google.com"
+      record.strategy_value(from: :thumbnail).should eq "http://google.com"
+    end
+
+    it "returns nil when :from is not specified" do
+      record.strategy_value(from: nil).should be_nil
+    end
+
+    it "returns nil when :from is not specified" do
+      record.strategy_value(nil).should be_nil
     end
   end
 end
