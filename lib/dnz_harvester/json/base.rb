@@ -34,6 +34,10 @@ module DnzHarvester
         super
       end
 
+      def document
+        @json_attributes
+      end
+
       def strategy_value(options={})
         options ||= {}
         path = options[:path]

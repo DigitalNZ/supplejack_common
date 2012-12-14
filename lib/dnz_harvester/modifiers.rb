@@ -15,11 +15,29 @@ module DnzHarvester
     end
 
     def fetch(options={})
-      
+      if options[:xpath]
+        value = document ? document.xpath(options[:xpath]).text : nil
+      elsif options[:path]
+        value = document[options[:path]]
+      end
+
+      DnzHarvester::AttributeValue.new(value)
     end
 
     def compose(*args)
-      
+      options = args.extract_options!
+      options[:separator] ||= ""
+
+      values = []
+      args.each do |v|
+        if v.is_a?(DnzHarvester::AttributeValue) || v.is_a?(Array)
+          values += v.to_a
+        elsif v.is_a?(String)
+          values << v
+        end
+      end
+
+      DnzHarvester::AttributeValue.new(values.flatten.join(options[:separator]))
     end
   end
 end

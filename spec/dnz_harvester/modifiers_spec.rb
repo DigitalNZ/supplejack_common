@@ -19,10 +19,50 @@ describe DnzHarvester::Modifiers do
   end
 
   describe "#fetch" do
-    
+    context "XML document" do
+      let(:document) { Nokogiri::XML::Document.new }
+      before { record.stub(:document) { document } }
+
+      it "applies the xpath to the document and returns value object" do
+        node = mock(:node, text: "12345")
+        document.should_receive(:xpath).with("//dc:identifier") { node }
+        value = record.fetch(xpath: "//dc:identifier")
+        value.should be_a DnzHarvester::AttributeValue
+        value.to_a.should eq ["12345"]
+      end
+
+      it "returns an empty value object when document is not present" do
+        record.stub(:document) { nil }
+        value = record.fetch(xpath: "//dc:identifier")
+        value.should be_a DnzHarvester::AttributeValue
+        value.to_a.should eq []
+      end
+    end
+
+    context "JSON document" do
+      let(:document) { {"location" => 1234} }
+      before { record.stub(:document) { document } }
+
+      it "returns the value object" do
+        value = record.fetch(path: "location")
+        value.should be_a DnzHarvester::AttributeValue
+        value.to_a.should eq [1234]
+      end
+    end
   end
 
   describe "#compose" do
-    
+    let(:thumb) { DnzHarvester::AttributeValue.new("http://google.com/1") }
+    let(:extension) { DnzHarvester::AttributeValue.new("thumb.jpg") }
+
+    it "joins multiple attribute values and a string" do
+      value = record.compose(thumb, "/", extension)
+      value.to_a.should eq ["http://google.com/1/thumb.jpg"]
+    end
+
+    it "joins the values with a comma" do
+      value = record.compose("dogs", "cats", extension, {separator: ", "})
+      value.to_a.should eq ["dogs, cats, thumb.jpg"]
+    end
   end
 end
