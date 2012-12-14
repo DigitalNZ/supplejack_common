@@ -7,11 +7,11 @@ class NzMuseums < DnzHarvester::Sitemap::Base
   attribute :source,              default: "NZMuseums"
 
   attributes :thumbnail_url, xpath: ["//div[@class='ehObjectSingleImage']/a/img", "//div[@class='ehObjectImageMultiple']/a/img"], value: :src do
-    find_and_replace(/m\.jpg$/, "s.jpg").within(:thumbnail_url)
+    get(:thumbnail_url).find_and_replace(/m\.jpg$/ => "s.jpg")
   end
 
   attributes :large_thumbnail_url, xpath: ["//div[@class='ehObjectSingleImage']/a/img", "//div[@class='ehObjectImageMultiple']/a/img"], value: :src do
-    find_and_replace(/m\.jpg$/, "l.jpg").within(:thumbnail_url)
+    get(:thumbnail_url).find_and_replace(/m\.jpg$/ => "l.jpg")
   end
 
   with_options xpath: "//div[@class='ehFieldLabelDescription']", if: {"span[@class='label']" => :label_value}, value: "span[@class='value']" do |w|
@@ -28,7 +28,7 @@ class NzMuseums < DnzHarvester::Sitemap::Base
   end
 
   attribute :subject,     xpath: "//form[@class='ehTagForm']/span/a"
-  attribute :license,     xpath: "//div[@class='ehObjectLicence']/a", value: :href,
+  attribute :license,     xpath: "//div[@class='ehObjectLicence']/a/@href",
                           mappings: {
                             ".*Attribution$" => "CC-BY",
                             ".*Attribution_-_Share_Alike$" => "CC-BY-SA",
@@ -44,11 +44,11 @@ class NzMuseums < DnzHarvester::Sitemap::Base
   attribute :display_date,  xpath: "//div[@class='ehRepeatingLabelDescription']", if: {"span[@class='label']" => "Date Made"}, value: "span[@class='value']"
 
   attribute :category do
-    original_attributes[:thumbnail_url].present? ? "Images" : "Other"
+    get(:thumbnail_url).present? ? "Images" : "Other"
   end
 
   def usage
-    content_partners = *original_attributes[:content_partner]
+    content_partners = get(:content_partner).to_a
     return ["All rights reserved"] if content_partners & ["Shantytown", "Wanganui Collegiate School Museum", "Whanganui Regional Museum"]
       
     # TODO

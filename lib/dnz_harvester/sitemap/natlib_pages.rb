@@ -36,7 +36,7 @@ class NatlibPages < DnzHarvester::Sitemap::Base
   end
 
   # reject_if do
-  #   find([/search-stations/,
+  #   get(:landing_url).find_all_with([/search-stations/,
   #         /natlib.govt.nz\/$/,
   #         /digitalnz.org\/$/,
   #         /page-not-found$/,
@@ -49,7 +49,7 @@ class NatlibPages < DnzHarvester::Sitemap::Base
   #         /footer$/,
   #         /log-on-to-the-national-library$/,
   #         /manage-igovt$/
-  #       ]).within(:landing_url).present?
+  #       ]).present?
   # end
   
 end

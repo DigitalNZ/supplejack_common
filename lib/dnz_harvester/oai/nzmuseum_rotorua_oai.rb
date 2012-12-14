@@ -29,11 +29,11 @@ class NzmuseumsRotoruaOai < DnzHarvester::Oai::Base
   # end
   
   # attributes :landing_url, :identifier do
-  #   fetch("//dc:identifier[@linktype='fulltext']").find_and_replace(/http:\/\/ehive.com/, 'http://www.nzmuseums.co.nz')
+  #   fetch("//dc:identifier[@linktype='fulltext']").find_and_replace(/http:\/\/ehive.com/ => 'http://www.nzmuseums.co.nz')
   # end
   
   # def large_thumbnail_url
-  #   find_and_replace(/_m.(\w\w\w+)$/, '_l.\1').within(:thumbnail_url)
+  #   get(:thumbnail_url).find_and_replace(/_m.(\w\w\w+)$/ => '_l.\1')
   # end
   
   # def set_rights

@@ -24,6 +24,6 @@ class Tv3 < DnzHarvester::Rss::Base
   attribute :thumbnail_url, from: :enclosure, value: :url, with: {type: "image/jpeg"}
 
   attribute :large_thumbnail_url do
-    find_and_replace(/width=[\d]{1,4}/, "width=520").within(:thumbnail_url)
+    get(:thumbnail_url).find_and_replace(/width=[\d]{1,4}/ => "width=520")
   end
 end

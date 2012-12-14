@@ -24,15 +24,15 @@ class NgaManu < DnzHarvester::Xml::Base
   # end
   
   attribute :dc_identifier do
-    find_and_replace(/^.*\/([^\/\.]*)\.\w+\s*$/, '\1').within(:identifier)
+    get(:identifier).find_and_replace(/^.*\/([^\/\.]*)\.\w+\s*$/ => '\1')
   end
   
   attribute :thumbnail_url do
-    find_and_replace(/\/([^\/]*\.\w*)$/, '/sm_\1').within(:identifier)
+    get(:identifier).find_and_replace(/\/([^\/]*\.\w*)$/ => '/sm_\1')
   end
   
   attribute :large_thumbnail_url do
-    find_and_replace(/\/([^\/]*\.\w*)$/, '/lg_\1').within(:identifier)
+    get(:identifier).find_and_replace(/\/([^\/]*\.\w*)$/ => '/lg_\1')
   end
   
   # def rights

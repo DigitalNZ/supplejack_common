@@ -26,7 +26,7 @@ class Europeana < DnzHarvester::Json::Base
   attribute  :display_date,               path: "enrichment:period_label"
   
   attribute  :rights_url do
-    find_with("http").within(:dc_rights)
+    get(:dc_rights).find_with("http")
   end
    
   attribute  :contributing_partner,    		path: ["europeana:dataProvider", "europeana:provider"], join: ", "
@@ -57,6 +57,6 @@ class Europeana < DnzHarvester::Json::Base
   
   # something to enable rejecting records based on a criteria
   # def reject_record
-  #   reject_record if find(/\/rr-r\//).within(:dc_rights)
+  #   get(:dc_rights).reject_record if find(/\/rr-r\//)
   # end
 end

@@ -22,11 +22,11 @@ class QuakeStoriesPhotos < DnzHarvester::Rss::Base
   attributes :thumbnail_url, :large_thumbnail_url, from: :enclosure
 
   def thumbnail_url
-    find_and_replace(/^.*\/stories\/(.*)\.\w\w\w\w?$/, 'http://www.quakestories.govt.nz/thumbnail.ashx?image=/images/stories/\1.jpg&width=150&constrain=true').within(:thumbnail_url)
+    get(:thumbnail_url).find_and_replace(/^.*\/stories\/(.*)\.\w\w\w\w?$/ => 'http://www.quakestories.govt.nz/thumbnail.ashx?image=/images/stories/\1.jpg&width=150&constrain=true')
   end
   
   def large_thumbnail_url
-    find_and_replace(/^.*\/stories\/(.*)\.\w\w\w\w?$/, 'http://www.quakestories.govt.nz/thumbnail.ashx?image=/images/stories/\1.jpg&width=520&constrain=true').within(:thumbnail_url)
+    get(:thumbnail_url).find_and_replace(/^.*\/stories\/(.*)\.\w\w\w\w?$/ => 'http://www.quakestories.govt.nz/thumbnail.ashx?image=/images/stories/\1.jpg&width=520&constrain=true')
   end
   
   # def attachments

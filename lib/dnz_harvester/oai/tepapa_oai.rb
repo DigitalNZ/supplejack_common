@@ -24,15 +24,15 @@ class TepapaOai < DnzHarvester::Oai::Base
   attribute :contributor,   from: "dc:contributor"
   attribute :publisher,     from: "dc:publisher"
   attribute :dc_type,       from: "dc:type" do
-    find_and_replace(/([^\s])([A-Z])/, '\1 \2').within(:dc_type)
+    get(:dc_type).find_and_replace(/([^\s])([A-Z])/ => '\1 \2')
   end
 
   attributes :thumbnail_url,        from: "dc:relation" do
-    find_all_with(/digitalnzthumb\.jpg/).within(:thumbnail_url)
+    get(:thumbnail_url).find_all_with(/digitalnzthumb\.jpg/)
   end
 
   attributes :large_thumbnail_url,  from: "dc:relation" do
-    find_and_replace([/(width=\d*)/, 'width=640'], [/(height=\d*)/, 'height=640']).within(:large_thumbnail_url)
+    get(:large_thumbnail_url).find_and_replace(/(width=\d*)/ => 'width=640', /(height=\d*)/ => 'height=640')
   end
 
   # attribute :dc_identifier,  from: "dc:identifier" do
@@ -50,7 +50,7 @@ class TepapaOai < DnzHarvester::Oai::Base
   # end
 
   attribute :landing_url do
-    find_with(/http/).within(:dc_identifier)
+    get(:dc_identifier).find_with(/http/)
   end
   
 end

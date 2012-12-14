@@ -32,8 +32,8 @@ module DnzHarvester
       DnzHarvester::Modifiers::FinderWithout.new(original_value, regexp, :all).value
     end
 
-    def find_and_replace(regex, substitute_value)
-      DnzHarvester::Modifiers::FindReplacer.new(original_value, regex, substitute_value).value
+    def find_and_replace(replacement_rules)
+      DnzHarvester::Modifiers::FindReplacer.new(original_value, replacement_rules).value
     end
 
     def select(start_range, end_range=nil)

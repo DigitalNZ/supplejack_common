@@ -3,7 +3,7 @@ class AucklandUniLibrary < DnzHarvester::Oai::Base
   base_url "https://researchspace.auckland.ac.nz/dspace-oai/request"
 
   attribute :identifier do
-    find_without(/http/).within(:dc_identifier)
+    get(:dc_identifier).find_without(/http/)
   end
 
   attribute :archive_title,           default: "auck-uni-libraries-oai"
@@ -25,11 +25,11 @@ class AucklandUniLibrary < DnzHarvester::Oai::Base
   attribute :rights,        from: "dc:rights"
 
   attribute :landing_url do
-    find_with(/http/).within(:identifier)
+    get(:identifier).find_with(/http/)
   end
 
   attribute :enrichment_url do
-    find_and_replace(/.*handle.net(.*)/, 'https://researchspace.auckland.ac.nz/handle\1?show=full').within(:dc_identifier)
+    get(:dc_identifier).find_and_replace(/.*handle.net(.*)/ => 'https://researchspace.auckland.ac.nz/handle\1?show=full')
   end
 
   enrich_attribute :citation, xpath: "//table/tr", if: {"td[1]" => "dc.identifier.citation"}, value: "td[2]"

@@ -21,7 +21,7 @@ class Repositoy < DnzHarvester::Xml::Base
   attribute  :peer_reviewed,              xpath: "//status"
 
   attributes :content_partner, :display_content_partner, :publisher,	xpath: "//organisation" do
-    find_and_replace(/^Archives New Zealand Te Rua Mahara o te.*$/, 'Archives New Zealand Te Rua Mahara o te Kāwanatanga').within(:identifier)
+    get(:identifier).find_and_replace(/^Archives New Zealand Te Rua Mahara o te.*$/ => 'Archives New Zealand Te Rua Mahara o te Kāwanatanga')
   end
   
   # def landing_url
@@ -66,7 +66,7 @@ class Repositoy < DnzHarvester::Xml::Base
 
   # something to enable rejecting records based on a criteria
   # def reject_record
-    # reject_record if find_without(/(UCOL Universal College of Learning)|(Whitireia Community Polytechnic)|(Wellington City Council)|(Eastern Institute of Technology)|(Centre for Housing Research Aotearoa New Zealand\s*)|(Archives New Zealand Te Rua Mahara o te K.wanatanga)|(SPARC)|(Productivity Commission)|(Department of Building and Housing)/).within(:content_partner)
+    # reject_record if get(:content_partner).find_without(/(UCOL Universal College of Learning)|(Whitireia Community Polytechnic)|(Wellington City Council)|(Eastern Institute of Technology)|(Centre for Housing Research Aotearoa New Zealand\s*)|(Archives New Zealand Te Rua Mahara o te K.wanatanga)|(SPARC)|(Productivity Commission)|(Department of Building and Housing)/)
   # end
 
 end
