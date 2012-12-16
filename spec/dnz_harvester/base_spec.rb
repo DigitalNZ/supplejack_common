@@ -10,16 +10,16 @@ describe DnzHarvester::Base do
 
   describe "identifier" do
     before do
-      class LibraryParser < DnzHarvester::Sitemap::Base; end
+      class LibraryParser < DnzHarvester::Xml::Base; end
     end
 
     it "returns a unique identifier of the class" do
-      LibraryParser.identifier.should eq "sitemap_library_parser"
+      LibraryParser.identifier.should eq "xml_library_parser"
     end
 
     it "memoizes the identifier" do
       LibraryParser.instance_variable_set("@identifier", nil)
-      LibraryParser.should_receive(:ancestors).once { [nil, DnzHarvester::Sitemap::Base] }
+      LibraryParser.should_receive(:ancestors).once { [nil, DnzHarvester::Xml::Base] }
       LibraryParser.identifier
       LibraryParser.identifier
     end

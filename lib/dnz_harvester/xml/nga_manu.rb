@@ -1,7 +1,7 @@
 class NgaManu < DnzHarvester::Xml::Base
   
   base_url "http://dl.dropbox.com/u/63489205/imgmap.xml"
-  # record_selector "//items/item"
+  record_selector "//items/item"
 
   attribute  :archive_title,       	  								               default: "nga-manu-xml"
   attribute  :category,               								               default: "Images"
@@ -10,9 +10,9 @@ class NgaManu < DnzHarvester::Xml::Base
   
   attributes :identifier, :object_url,		xpath: "//img_url"
   attribute  :title,                  		xpath: "//title"
-  # attribute  :description,                xpath: "//description" do
-  #   compose(get(:description), " Creative Commons BY NC 3.0 NZ")
-  # end
+  attribute  :description,                xpath: "//description" do
+    compose(get(:description), "Creative Commons BY NC 3.0 NZ", separator: " ")
+  end
   attribute  :creator,                  	xpath: "//creator"
   attribute  :subject,                		xpath: "//categoryName"
   attribute  :dc_date,                		xpath: "//objectDate", date: true

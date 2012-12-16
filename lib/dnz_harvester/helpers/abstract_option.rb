@@ -14,10 +14,15 @@ module DnzHarvester
       @nodes = []
 
       xpath_expressions.each do |xpath|
-        @nodes += document.xpath("#{xpath}")
+        @nodes += document.xpath("#{xpath_value(xpath)}")
       end
 
       @nodes
+    end
+
+    def xpath_value(xpath)
+      xpath = ".#{xpath}" if document.is_a?(Nokogiri::XML::NodeSet) || document.is_a?(Nokogiri::XML::Element)
+      xpath
     end
   end
 end

@@ -1,6 +1,7 @@
-class NzMuseums < DnzHarvester::Sitemap::Base
+class NzMuseums < DnzHarvester::Xml::Base
   
-  base_url "/Users/fede/code/dnz/config/harvester-resources/dnz03/sitemaps/nzmuseums-sitemap-reservebank.xml"
+  base_url "file://Users/fede/code/dnz/config/harvester-resources/dnz03/sitemaps/nzmuseums-sitemap-reservebank.xml"
+  record_url_selector "//loc"
 
   attribute :archive_title,       default: "nzmuseums"
   attribute :collection,          default: "NZMuseums"

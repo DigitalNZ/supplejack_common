@@ -1,9 +1,8 @@
-class YoutubeArchivesnz < DnzHarvester::Sitemap::Base
+class YoutubeArchivesnz < DnzHarvester::Xml::Base
   
-  # base_url "file:///data/apps/harvester/resource_deployments/current/sitemaps/youtube-archivesnz-sitemap.xml"
   base_url "http://gdata.youtube.com/feeds/api/videos?author=archivesnz&orderby=published"
   # paginate page_parameter: "start-index", type: "item", per_page_parameter: "max-results", per_page: 50, start: 1
-  # record_selector "//entry"
+  record_selector "//entry"
 
   attribute  :archive_title,       									                 default: "youtube-archivesnz"
   attribute  :category,            									                 default: "Videos"

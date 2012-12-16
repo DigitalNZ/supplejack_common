@@ -1,7 +1,8 @@
-class NatlibPages < DnzHarvester::Sitemap::Base
+class NatlibPages < DnzHarvester::Xml::Base
   
-  base_url "/Users/fede/code/dnz/config/harvester-resources/dnz03/sitemaps/nzmuseums-sitemap-reservebank.xml"
+  base_url "file://Users/fede/code/dnz/config/harvester-resources/dnz03/sitemaps/nzmuseums-sitemap-reservebank.xml"
   basic_auth "preview", "IVa1ziet"
+  record_url_selector "//loc"
 
   attribute  :archive_title,       									                  default: "sfr-pages"
   attribute  :category,            									                  default: "Guides & factsheets"

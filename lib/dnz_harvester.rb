@@ -19,7 +19,6 @@ require "dnz_harvester/paginated_collection"
 
 require "dnz_harvester/oai"
 require "dnz_harvester/rss"
-require "dnz_harvester/sitemap"
 require "dnz_harvester/xml"
 require "dnz_harvester/json"
 

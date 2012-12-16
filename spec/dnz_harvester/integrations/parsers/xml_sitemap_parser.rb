@@ -1,6 +1,7 @@
-class SitemapParser < DnzHarvester::Sitemap::Base
+class SitemapParser < DnzHarvester::Xml::Base
   
-  base_url "/path/to/file/sitemap.xml"
+  base_url "file://dnz_harvester/integrations/source_data/sitemap_parser_urls.xml"
+  record_url_selector "//loc"
 
   attribute :collection,          default: "NZMuseums"
 

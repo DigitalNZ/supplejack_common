@@ -13,7 +13,6 @@ The following adapters have been implemented:
 
 * Open Archives Initiative
 * Really Simple Syndication
-* Sitemap
 * XML
 * JSON
 
