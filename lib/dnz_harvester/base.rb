@@ -6,10 +6,12 @@ module DnzHarvester
     class_attribute :_base_urls
     class_attribute :_attribute_definitions
     class_attribute :_basic_auth
+    class_attribute :_pagination_options
 
     self._base_urls = {}
     self._attribute_definitions = {}
     self._basic_auth = {}
+    self._pagination_options = {}
 
     attr_reader :original_attributes, :attributes
 
@@ -42,6 +44,14 @@ module DnzHarvester
 
       def basic_auth_credentials
         self._basic_auth[self.identifier]
+      end
+
+      def paginate(options={})
+        self._pagination_options[self.identifier] = options
+      end
+
+      def pagination_options
+        self._pagination_options[self.identifier]
       end
 
       def attribute(name, options={}, &block)

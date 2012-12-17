@@ -6,6 +6,8 @@ describe DnzHarvester::Base do
   before(:each) do
     klass._base_urls[klass.identifier] = []
     klass._attribute_definitions[klass.identifier] = {}
+    klass._basic_auth[klass.identifier] = nil
+    klass._pagination_options[klass.identifier] = nil
   end
 
   describe "identifier" do
@@ -65,6 +67,23 @@ describe DnzHarvester::Base do
     it "returns the basic auth credentials" do
       klass.basic_auth "username", "password"
       klass.basic_auth_credentials.should eq({username: "username", password: "password"})
+    end
+  end
+
+  describe ".paginate" do
+    let(:pagination) { mock(:pagination) }
+    let(:options) { {page_parameter: "start-index", type: "item", per_page_parameter: "max-results", per_page: 50, page: 1} }
+
+    it "initializes a pagination object" do
+      klass.paginate options
+      klass._pagination_options[klass.identifier].should eq options
+    end
+  end
+
+  describe ".pagination" do
+    it "returns the pagination object" do
+      klass._pagination_options[klass.identifier] = "Hi"
+      klass.pagination_options.should eq "Hi"
     end
   end
 

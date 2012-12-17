@@ -1,7 +1,7 @@
 class YoutubeArchivesnz < DnzHarvester::Xml::Base
   
   base_url "http://gdata.youtube.com/feeds/api/videos?author=archivesnz&orderby=published"
-  # paginate page_parameter: "start-index", type: "item", per_page_parameter: "max-results", per_page: 50, start: 1
+  paginate page_parameter: "start-index", type: "item", per_page_parameter: "max-results", per_page: 50, page: 1, total_selector: "//totalResults"
   record_selector "//entry"
 
   attribute  :archive_title,       									                 default: "youtube-archivesnz"
@@ -11,10 +11,12 @@ class YoutubeArchivesnz < DnzHarvester::Xml::Base
   attributes :is_catalog_record, :is_natlib_record,					         default: "true"
   attributes :usage, :copyright,									                   default: "All rights reserved"
 
-  attribute  :title,                     	  xpath: "//media:title"
-  attribute  :description,                  xpath: "//media:description"
+  attribute  :title,                     	  xpath: "//title" do
+    get(:title).select(:first)
+  end
+  attribute  :description,                  xpath: "//description"
   attribute  :creator,                  	  xpath: "//category/author/name"
-  attributes :landing_url, :identifier, 	  xpath: "//media:player/@url"
-  attribute  :thumbnail_url,                xpath: "//media:thumbnail"
+  attributes :landing_url, :identifier, 	  xpath: "//player/@url"
+  attribute  :thumbnail_url,                xpath: "//thumbnail"
     
 end

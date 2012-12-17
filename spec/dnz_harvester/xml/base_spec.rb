@@ -72,13 +72,13 @@ describe DnzHarvester::Xml::Base do
     end
   end
 
-  describe ".records" do
+  describe ".fetch_records" do
     context "with a record_url_selector" do
       before { klass.stub(:sitemap?) { true } }
 
       it "initializes a set of sitemap records" do
-        klass.should_receive(:sitemap_records).with({limit: nil}) { [] }
-        klass.records
+        klass.should_receive(:sitemap_records).with(nil) { [] }
+        klass.fetch_records
       end
     end
 
@@ -86,8 +86,8 @@ describe DnzHarvester::Xml::Base do
       before { klass.stub(:sitemap?) { false } }
 
       it "initializes a set of xml records" do
-        klass.should_receive(:xml_records).with({limit: nil}) { [] }
-        klass.records
+        klass.should_receive(:xml_records).with(nil) { [] }
+        klass.fetch_records
       end
     end
   end
@@ -104,12 +104,6 @@ describe DnzHarvester::Xml::Base do
       klass.should_receive(:new).once.with("http://www.nzonscreen.com/api/title/weekly-review-no-395-1949")
       klass.sitemap_records
     end
-
-    it "limits the number of records to 1" do
-      node = mock(:node, text: "http://google.com")
-      klass.stub(:index_document) { mock(:doc, xpath: [node, node, node]) }
-      klass.sitemap_records(limit: 1).size.should eq 1
-    end
   end
 
   describe "#.xml_records" do
@@ -125,12 +119,6 @@ describe DnzHarvester::Xml::Base do
     it "initializes a record with every section of the XML" do
       klass.should_receive(:new).once.with(xml_snippets.first) 
       klass.xml_records
-    end
-
-    it "limits the number of records to 1" do
-      node = mock(:node)
-      klass.stub(:index_document) { mock(:doc, xpath: [node, node, node]) }
-      klass.xml_records(limit: 1).size.should eq 1
     end
   end
 
