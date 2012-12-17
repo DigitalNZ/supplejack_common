@@ -18,9 +18,14 @@ module DnzHarvester
       def each
         client.list_records(options).each do |oai_record|
           record = klass.new(oai_record)
-          yield(record)
-          @counter += 1
-          @records << record
+
+          if klass.rejection_rules && record.instance_eval(&klass.rejection_rules)
+            next
+          else
+            yield(record)
+            @counter += 1
+            @records << record
+          end
           return @records if limit && limit == @counter
         end
         return @records

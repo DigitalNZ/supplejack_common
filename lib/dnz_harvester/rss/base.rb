@@ -28,7 +28,14 @@ module DnzHarvester
             entries += feed.entries
           end
 
-          @records = entries.map {|entry| new(entry) }
+          records = entries.map {|entry| new(entry) }
+          @records = records.map do |record|
+            if rejection_rules
+              record if !record.instance_eval(&rejection_rules)
+            else
+              record
+            end
+          end.compact
         end
 
         def feeds
