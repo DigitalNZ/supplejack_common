@@ -20,7 +20,7 @@ class OpenpolytechRepositoryOai < DnzHarvester::Oai::Base
   attribute  :description,                 from: "dc:description"
 
   # chaining? is it possible? and is order right?
-  attribute :identifier, :landing_url, from: "dc:identifier" do
+  attributes :identifier, :landing_url, from: "dc:identifier" do
     find_with(/^http/).select(:first).within(:identifier)
   end  
 
@@ -43,7 +43,7 @@ class OpenpolytechRepositoryOai < DnzHarvester::Oai::Base
     # the type field needs to be mapped according to the transformer in parser/conf/fragments/kris_transformers.frag 
   end
 
-  attribute :tag
+  attribute :tag do
     # this gathers its values from landing_url and dc_type
     # 1) if there is a tag that matches /^https?://hdl.handle.net.*$/ then that tag is mapped to "valid_handle" (leaving any other tags for the next step)
     # 2) if the type mapping has been successful then a tag is mapped to "valid_eprints"  (see parser/conf/fragments/kris_transformers.frag for more info)
