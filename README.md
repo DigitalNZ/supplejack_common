@@ -56,7 +56,7 @@ The vision of this proyect is to have something that change very easily since ha
 
 Add this line to your application's Gemfile:
 
-    gem 'dnz_harvester'
+    gem 'harvester_core'
 
 And then execute:
 
@@ -64,7 +64,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install dnz_harvester
+    $ gem install harvester_core
 
 ## Usage
 

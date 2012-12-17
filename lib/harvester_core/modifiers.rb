@@ -1,0 +1,43 @@
+require "harvester_core/modifiers/abstract_modifier"
+require "harvester_core/modifiers/find_replacer"
+require "harvester_core/modifiers/range_selector"
+require "harvester_core/modifiers/adder"
+require "harvester_core/modifiers/finder_with"
+require "harvester_core/modifiers/finder_without"
+
+module HarvesterCore
+  module Modifiers
+    extend ::ActiveSupport::Concern
+    
+    def get(attribute_name)
+      value = self.original_attributes[attribute_name]
+      HarvesterCore::AttributeValue.new(value)
+    end
+
+    def fetch(options={})
+      if options[:xpath]
+        value = document ? document.xpath(options[:xpath]).text : nil
+      elsif options[:path]
+        value = document[options[:path]]
+      end
+
+      HarvesterCore::AttributeValue.new(value)
+    end
+
+    def compose(*args)
+      options = args.extract_options!
+      options[:separator] ||= ""
+
+      values = []
+      args.each do |v|
+        if v.is_a?(HarvesterCore::AttributeValue) || v.is_a?(Array)
+          values += v.to_a
+        elsif v.is_a?(String)
+          values << v
+        end
+      end
+
+      HarvesterCore::AttributeValue.new(values.flatten.join(options[:separator]))
+    end
+  end
+end

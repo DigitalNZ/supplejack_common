@@ -17,5 +17,5 @@ test/version_tmp
 tmp
 
 .DS_Store
-/dnz_harvester.sublime-workspace
-/dnz_harvester.sublime-project
+/harvester_core.sublime-workspace
+/harvester_core.sublime-project

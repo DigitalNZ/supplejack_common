@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    dnz_harvester (0.0.1)
+    harvester_core (0.0.1)
       actionpack (~> 3.1)
       activesupport (~> 3.1)
       chronic (~> 0.8.0)
@@ -107,7 +107,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  dnz_harvester!
+  harvester_core!
   oai!
   rake
   rspec (~> 2.11.0)

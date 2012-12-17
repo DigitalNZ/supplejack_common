@@ -1,4 +1,4 @@
-require 'dnz_harvester'
+require 'harvester_core'
 require 'webmock/rspec'
 
 RSpec.configure do |config|
