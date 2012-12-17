@@ -19,10 +19,16 @@ describe DnzHarvester::Json::Base do
   end
 
   describe ".records" do
+    before { klass.stub(:records_json) { [{"title" => "Record1"}] } }
+
     it "initializes record for every json record" do
-      klass.stub(:records_json) { [{"title" => "Record1"}] }
       klass.should_receive(:new).once.with({"title" => "Record1"}) { record }
       klass.records.should eq [record]
+    end
+
+    it "removes any record that it's reject_if block evaluates to false" do
+      klass.reject_if { true }
+      klass.records.should eq []
     end
   end
 

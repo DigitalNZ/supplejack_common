@@ -18,5 +18,8 @@ class YoutubeArchivesnz < DnzHarvester::Xml::Base
   attribute  :creator,                  	  xpath: "//category/author/name"
   attributes :landing_url, :identifier, 	  xpath: "//player/@url"
   attribute  :thumbnail_url,                xpath: "//thumbnail"
-    
+
+  reject_if do
+    get(:title).to_a.first.match(/Weekly Review/)
+  end
 end

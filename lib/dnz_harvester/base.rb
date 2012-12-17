@@ -7,11 +7,13 @@ module DnzHarvester
     class_attribute :_attribute_definitions
     class_attribute :_basic_auth
     class_attribute :_pagination_options
+    class_attribute :_rejection_rules
 
     self._base_urls = {}
     self._attribute_definitions = {}
     self._basic_auth = {}
     self._pagination_options = {}
+    self._rejection_rules = {}
 
     attr_reader :original_attributes, :attributes
 
@@ -80,6 +82,14 @@ module DnzHarvester
 
       def custom_instance_methods
         self.instance_methods(false)
+      end
+
+      def reject_if(&block)
+        self._rejection_rules[self.identifier] = block
+      end
+
+      def rejection_rules
+        self._rejection_rules[self.identifier]
       end
     end
 

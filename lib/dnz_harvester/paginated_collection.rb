@@ -91,8 +91,14 @@ module DnzHarvester
 
     def yield_from_records(&block)
       @records.each do |record|
-        @counter += 1
-        yield(record)
+
+        if klass.rejection_rules && record.instance_eval(&klass.rejection_rules)
+          next
+        else
+          @counter += 1
+          yield(record)
+        end
+
         return nil if options[:limit] && @counter >= options[:limit]
       end
 

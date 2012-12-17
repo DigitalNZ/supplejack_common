@@ -114,7 +114,7 @@ describe DnzHarvester::Base do
     end
   end
 
-  describe "attributes" do
+  describe ".attributes" do
     it "adds multiple attribute definitions" do
       klass.attributes :category, :creator, option: true
       klass.attribute_definitions.should include(category: {option: true})
@@ -141,6 +141,20 @@ describe DnzHarvester::Base do
       end
 
       CustomMethodTest.custom_instance_methods.should include(:category)
+    end
+  end
+
+  describe ".reject_if" do
+    it "adds a new rejection rule" do
+      klass.reject_if { "value" }
+      klass._rejection_rules[klass.identifier].should be_a Proc
+    end
+  end
+
+  describe ".rejection_rules" do
+    it "returns the rejection_rules for the klass" do
+      klass._rejection_rules[klass.identifier] = Proc.new { "Hi" }
+      klass.rejection_rules.should be_a Proc
     end
   end
 

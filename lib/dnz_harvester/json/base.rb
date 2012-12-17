@@ -24,7 +24,14 @@ module DnzHarvester
         end
 
         def records
-          records_json.map {|attributes| self.new(attributes) }
+          records = records_json.map {|attributes| self.new(attributes) }
+          records.map do |record|
+            if rejection_rules
+              record if !record.instance_eval(&rejection_rules)
+            else
+              record
+            end
+          end.compact
         end
 
       end
