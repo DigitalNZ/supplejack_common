@@ -21,7 +21,7 @@ class Repositoy < DnzHarvester::Xml::Base
   attribute  :peer_reviewed,              xpath: "//status"
 
   attributes :content_partner, :display_content_partner, :publisher,	xpath: "//organisation" do
-    get(:identifier).find_and_replace(/^Archives New Zealand Te Rua Mahara o te.*$/ => 'Archives New Zealand Te Rua Mahara o te Kāwanatanga')
+    get(:content_partner).find_and_replace(/^Archives New Zealand Te Rua Mahara o te.*$/ => 'Archives New Zealand Te Rua Mahara o te Kāwanatanga')
   end
   
   # def landing_url
