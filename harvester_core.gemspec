@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Federico Gonzalez"]
   gem.email         = ["fedegl@gmail.com"]
   gem.description   = %q{DNZ Harvester project which provides a DSL to harvest records of different sources}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.summary       = %q{DNZ Harvester project which provides a DSL to harvest records of different sources}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
