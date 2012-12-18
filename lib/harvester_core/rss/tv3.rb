@@ -6,7 +6,9 @@ class Tv3 < HarvesterCore::Rss::Base
   attribute :archive_title,           default: "tv3-rss"
 
   attribute :category,                default: ["Newspapers"] do
-    add("Images", to: :category).if_present(:thumbnail_url)
+    if get(:thumbnail_url).present?
+      get(:thumbnail_url).add("Images")
+    end
   end
 
   attribute :content_partner,         default: ["TV3"]
