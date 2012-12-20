@@ -9,6 +9,7 @@ describe HarvesterCore::Json::Base do
   after do
     klass._base_urls[klass.identifier] = []
     klass._attribute_definitions[klass.identifier] = {}
+    klass._rejection_rules[klass.identifier] = nil
   end
 
   describe ".record_selector" do
@@ -29,6 +30,11 @@ describe HarvesterCore::Json::Base do
     it "removes any record that it's reject_if block evaluates to false" do
       klass.reject_if { true }
       klass.records.should eq []
+    end
+
+    it "limits the number of records" do
+      klass.stub(:records_json) { [{"title" => "Record1"}, {"title" => "Record2"}] }
+      klass.records(limit: 1).size.should eq 1
     end
   end
 

@@ -173,6 +173,14 @@ describe HarvesterCore::Base do
       record.set_attribute_values
       record.original_attributes.should include(category: ["Value1", "Value2"])
     end
+
+    it "rescues from a transformation error" do
+      klass.attribute :date, default: "1999/1/1", date: true
+      record.stub(:transformed_attribute_value).and_raise(HarvesterCore::TransformationError.new("Error"))
+      record.set_attribute_values
+      record.original_attributes.should include(date: nil)
+      record.errors.should include(date: ["Error"])
+    end
   end
 
   describe "#attribute_value" do
@@ -255,6 +263,13 @@ describe HarvesterCore::Base do
     it "executes the method with the name" do
       klass._attribute_definitions[klass.identifier][:category] = {default: "Video"}
       record.final_attribute_value(:category).should eq ["Video"]
+    end
+
+    it "rescues from errors in a block" do
+      record.stub(:strategy_value) { nil }
+      klass._attribute_definitions[klass.identifier][:category] = {block: Proc.new { raise StandardError.new("Error!") } }
+      record.final_attribute_value(:category).should be_nil
+      record.errors.should include(category: ["Error in the block: Error!"])
     end
   end
 

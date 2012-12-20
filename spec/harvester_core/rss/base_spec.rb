@@ -20,10 +20,18 @@ describe HarvesterCore::Rss::Base do
     let(:entry) { mock(:entry).as_null_object }
     let(:feed) { mock(:feed, entries: [entry]) }
 
-    it "initializes a new rss record for every rss entry" do
+    before do
       klass.stub(:feeds) { {"goo.gle" => feed} }
+    end
+
+    it "initializes a new rss record for every rss entry" do
       klass.should_receive(:new).once.with(entry)
       klass.records
+    end
+
+    it "limits the records to 1" do
+      feed.stub(:entries) { [entry, entry] }
+      klass.records(limit: 1).size.should eq 1
     end
   end
 

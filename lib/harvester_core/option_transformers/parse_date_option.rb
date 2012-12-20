@@ -4,11 +4,12 @@ module HarvesterCore
       Time.zone = "UTC"
       Chronic.time_class = Time.zone
 
-      attr_reader :original_value, :format
+      attr_reader :original_value, :format, :errors
 
       def initialize(original_value, format=nil)
         @original_value = Array(original_value)
         @format = format == true ? nil : format
+        @errors = []
       end
 
       def value
@@ -16,10 +17,16 @@ module HarvesterCore
       end
 
       def parse_date(v)
-        if format
-          DateTime.strptime(normalized(v), format).to_time
-        else
-          Chronic.parse(normalized(v), context: :past).try(:time)
+        return v if [Date, DateTime, Time].include?(v.class)
+        
+        begin
+          if format
+            DateTime.strptime(normalized(v), format).to_time
+          else
+            Chronic.parse(normalized(v), context: :past).try(:time)
+          end
+        rescue StandardError => e
+          @errors << "Cannot parse date: '#{normalized(v)}', #{e.message}"
         end
       end
 
@@ -28,14 +35,6 @@ module HarvesterCore
         date_string.gsub!(/^(\d{4})s?$/, '\1/1/1')
         date_string
       end
-
-      # def time_array?(array)
-      #   return false unless array.is_a?(Array)
-      #   return false unless array.size == 10
-      #   return false unless array.last == "UTC"
-      #   return true
-      # end
-      
     end
   end
 end

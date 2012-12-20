@@ -33,11 +33,26 @@ describe HarvesterCore::OptionTransformers::ParseDateOption do
       parse_date.stub(:original_value) { ["1940s"] }
       parse_date.value.should eq [Time.utc(1940, 1, 1, 12)]
     end
+  end
 
-    # it "returns a new time object when is a time array" do
-    #   parse_date.stub(:original_value) { [0, 52, 3, 5, 12, 2012, 3, 340, false, "UTC"] }
-    #   parse_date.value.should eq [Time.new()]
-    # end
+  describe "#parse_date" do
+    it "rescues from from a Chronic exception" do
+      Chronic.stub(:parse).and_raise(StandardError.new("ArgumentError - invalid date"))
+      parse_date.parse_date("2009/1/1")
+      parse_date.errors.should eq ["Cannot parse date: '2009/1/1', ArgumentError - invalid date"]
+    end
+
+    it "rescues from a DateTime exception" do
+      parse_date.stub(:format) { "%d %m %Y" }
+      DateTime.stub(:strptime).and_raise(StandardError.new("ArgumentError - invalid date"))
+      parse_date.parse_date("2009/1/1")
+      parse_date.errors.should eq ["Cannot parse date: '2009/1/1', ArgumentError - invalid date"]
+    end
+
+    it "returns the same time object" do
+      time = Time.now
+      parse_date.parse_date(time).should eq time
+    end
   end
 
   describe "#normalized" do
@@ -53,14 +68,4 @@ describe HarvesterCore::OptionTransformers::ParseDateOption do
       parse_date.normalized("1994").should eq "1994/1/1"
     end
   end
-
-  # describe "time_array?" do
-  #   it "returns true" do
-  #     parse_date.time_array?([0, 52, 3, 5, 12, 2012, 3, 340, false, "UTC"]).should be_true
-  #   end
-
-  #   it "returns false" do
-  #     parse_date.time_array?(["01/12/1997"]).should be_false
-  #   end
-  # end
 end

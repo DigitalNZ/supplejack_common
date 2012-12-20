@@ -15,8 +15,6 @@ module HarvesterCore
     self._pagination_options = {}
     self._rejection_rules = {}
 
-    attr_reader :original_attributes, :attributes
-
     class << self
       def identifier
         @identifier ||= begin
@@ -93,16 +91,25 @@ module HarvesterCore
       end
     end
 
+    attr_reader :original_attributes, :attributes, :errors
+
     def initialize(*args)
+      @errors = {}
       @original_attributes = {}
       self.set_attribute_values
     end
 
     def set_attribute_values
       self.class.attribute_definitions.each do |name, options|
-        value = transformed_attribute_value(options, document)
-        @original_attributes[name] ||= nil
-        @original_attributes[name] = value if value.present?
+        begin
+          value = transformed_attribute_value(options, document)
+          @original_attributes[name] ||= nil
+          @original_attributes[name] = value if value.present?
+        rescue StandardError => e
+          @original_attributes[name] = nil
+          self.errors[name] ||= []
+          self.errors[name] << e.message
+        end
       end
     end
 
@@ -146,7 +153,13 @@ module HarvesterCore
 
     def final_attribute_value(name)
       if block = self.class.attribute_definitions[name][:block] rescue nil
-        evaluate_attribute_block(&block)
+        begin
+          evaluate_attribute_block(name, &block)
+        rescue StandardError => e
+          self.errors[name] ||= []
+          self.errors[name] << "Error in the block: #{e.message}"
+          return nil
+        end
       elsif self.class.custom_instance_methods.include?(name)
         self.send(name)
       else
@@ -154,7 +167,7 @@ module HarvesterCore
       end
     end
 
-    def evaluate_attribute_block(&block)
+    def evaluate_attribute_block(name, &block)
       block_result = instance_eval(&block)
       return original_attributes[name] if block_result.nil?
       if block_result.is_a?(HarvesterCore::AttributeValue)

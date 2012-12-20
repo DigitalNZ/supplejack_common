@@ -43,7 +43,9 @@ module HarvesterCore
       end
 
       def set_attribute_values
-        @root = oai_record.metadata.try(:first)
+        metadata_nodes = oai_record.metadata || []
+        metadata_nodes = metadata_nodes.map {|node| node if node.to_s.present? }.compact
+        @root = metadata_nodes.try(:first)
         @original_attributes[:identifier] = oai_record.header.identifier
 
         super
@@ -61,15 +63,25 @@ module HarvesterCore
       def strategy_value(options={})
         options ||= {}
         return nil if root.nil? || options[:from].blank?
-        values = root.get_elements(options[:from])
+
+        values = []
+        selectors = Array(options[:from])
+        selectors.each do |selector|
+          values += root.get_elements(selector)
+        end
+
         values = values.map(&:texts).flatten.map(&:to_s) if values.try(:any?)
         values
       end
 
       def get_enrichment_url
         @get_enrichment_url ||= begin
-          url = self.enrichment_url
-          url.is_a?(Array) ? url.first : url
+          if self.respond_to?(:enrichment_url) || self.class.attribute_definitions.has_key?(:enrichment_url)
+            url = self.enrichment_url
+            url.is_a?(Array) ? url.first : url
+          else
+            nil
+          end
         end
       end
 

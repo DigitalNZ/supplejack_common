@@ -22,12 +22,15 @@ module HarvesterCore
           super(name, options)
         end
 
-        def records
+        def records(options={})
+          options = options.try(:symbolize_keys) || {}
+
           entries ||= []
           feeds.each do |url, feed|
             entries += feed.entries
           end
 
+          entries = entries[0..(options[:limit].to_i-1)]
           records = entries.map {|entry| new(entry) }
           @records = records.map do |record|
             if rejection_rules

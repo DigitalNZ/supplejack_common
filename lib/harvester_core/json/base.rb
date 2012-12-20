@@ -23,8 +23,10 @@ module HarvesterCore
           @records_json ||= JsonPath.on(document, self._record_selector).try(:first)
         end
 
-        def records
+        def records(options={})
+          options = options.try(:symbolize_keys) || {}
           records = records_json.map {|attributes| self.new(attributes) }
+          records = records[0..(options[:limit].to_i-1)] if options[:limit]
           records.map do |record|
             if rejection_rules
               record if !record.instance_eval(&rejection_rules)

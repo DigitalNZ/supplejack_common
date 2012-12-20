@@ -6,6 +6,7 @@ require 'jsonpath'
 require 'chronic'
 
 require "harvester_core/version"
+require "harvester_core/exceptions"
 require "harvester_core/utils"
 require "harvester_core/scope"
 require "harvester_core/helpers"

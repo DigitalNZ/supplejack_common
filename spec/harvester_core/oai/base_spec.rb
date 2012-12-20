@@ -99,8 +99,9 @@ describe HarvesterCore::Oai::Base do
     end
 
     it "extracts the values from the root" do
+      root.stub(:get_elements) { [mock(:node, texts: "Dogs")] }
       klass.attribute :title, {from: "dc:title"}
-      record.should_receive(:attribute_value).with({from: "dc:title"}, nil).and_return("Dogs")
+      record.should_receive(:attribute_value).with({from: "dc:title"}, nil).and_return(["Dogs"])
       record.set_attribute_values
       record.original_attributes.should include(title: ["Dogs"])
     end
@@ -154,6 +155,16 @@ describe HarvesterCore::Oai::Base do
     it "returns nil when root is nil" do
       record.stub(:root) { nil }
       record.strategy_value(from: "dc:title").should be_nil
+    end
+
+    context "array" do
+      let(:node2) { mock(:node, texts: "Boats") }
+
+      it "extracts multiple values" do
+        root.should_receive(:get_elements).with("dc:title") { [node] }
+        root.should_receive(:get_elements).with("dc:subject") { [node2] }
+        record.strategy_value(from: ["dc:title", "dc:subject"]).should eq ["Dogs and cats", "Boats"]
+      end
     end
   end
 
