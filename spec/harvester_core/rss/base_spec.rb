@@ -4,60 +4,35 @@ describe HarvesterCore::Rss::Base do
 
   let(:klass) { HarvesterCore::Rss::Base }
 
-  describe ".attribute" do
-    it "add a non standard element to feedzirra" do
-      Feedzirra::Feed.should_receive(:add_common_feed_entry_element).with(:enclosure, {value: :url, with: {type: "image/jpeg"}})
-      klass.attribute :thumbnail_url, from: :enclosure, value: :url, with: {type: "image/jpeg"}
-    end
-
-    it "doesn't add the element when it has a default value" do
-      Feedzirra::Feed.should_not_receive(:add_common_feed_entry_element)
-      klass.attribute :thumbnail_url, default: "http://google.com"
-    end
-  end
-
   describe ".records" do
-    let(:entry) { mock(:entry).as_null_object }
-    let(:feed) { mock(:feed, entries: [entry]) }
+    let(:record) { mock(:record).as_null_object }
 
     before do
-      klass.stub(:feeds) { {"goo.gle" => feed} }
-    end
-
-    it "initializes a new rss record for every rss entry" do
-      klass.should_receive(:new).once.with(entry)
-      klass.records
+      klass.stub(:xml_records) { [record, record] }
     end
 
     it "limits the records to 1" do
-      feed.stub(:entries) { [entry, entry] }
       klass.records(limit: 1).size.should eq 1
     end
   end
 
-  describe ".feeds" do
-    it "retrieves the feeds using feedzirra" do
-      klass.base_url "http://google.com"
-      Feedzirra::Feed.should_receive(:fetch_and_parse).with(["http://google.com"])
-      klass.feeds
-    end
-  end
+  describe "xml_records" do
+    let(:doc) { mock(:nokogiri).as_null_object }
+    let(:node) { mock(:node).as_null_object }
 
-  describe "#strategy_value" do
-    let(:rss_entry) { mock(:rss_entry).as_null_object }
-    let(:record) { klass.new(rss_entry) }
-
-    it "calls the appropiate method on the rss_entry" do
-      rss_entry.should_receive(:thumbnail) { "http://google.com" }
-      record.strategy_value(from: :thumbnail).should eq "http://google.com"
+    before(:each) do
+      klass.stub(:index_document) { doc }
+      doc.stub(:xpath).with("//item") { [node] }
     end
 
-    it "returns nil when :from is not specified" do
-      record.strategy_value(from: nil).should be_nil
+    it "splits the xml into nodes for each RSS entry" do
+      doc.should_receive(:xpath).with("//item") { [node] }
+      klass.xml_records
     end
 
-    it "returns nil when :from is not specified" do
-      record.strategy_value(nil).should be_nil
+    it "initializes a record with the RSS entry node" do
+      klass.should_receive(:new).with(node)
+      klass.xml_records
     end
   end
 end

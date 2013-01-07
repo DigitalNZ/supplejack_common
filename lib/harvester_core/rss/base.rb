@@ -2,36 +2,20 @@ module HarvesterCore
   module Rss
     class Base < HarvesterCore::Base
 
-      class_attribute :_default_elements
-      self._default_elements = [:title, :url, :author, :content, :summary, :published, :updated, :categories, :entry_id]
-
       self._base_urls[self.identifier] = []
       self._attribute_definitions[self.identifier] = {}
 
-      attr_reader :rss_entry
-
       class << self
-        def attribute(name, options={})
-          if !self._default_elements.include?(name) && options[:from] && options[:default].blank?
-            feedzirra_options = {}
-            feedzirra_options[:value] = options[:value] if options[:value]
-            feedzirra_options[:with] = options[:with] if options[:with]
-            Feedzirra::Feed.add_common_feed_entry_element(options[:from], feedzirra_options)
-          end
-
-          super(name, options)
+        def _record_selector
+          "//item"
         end
 
         def records(options={})
           options = options.try(:symbolize_keys) || {}
 
-          entries ||= []
-          feeds.each do |url, feed|
-            entries += feed.entries
-          end
+          records = xml_records
+          records = records[0..(options[:limit].to_i-1)]
 
-          entries = entries[0..(options[:limit].to_i-1)]
-          records = entries.map {|entry| new(entry) }
           @records = records.map do |record|
             if rejection_rules
               record if !record.instance_eval(&rejection_rules)
@@ -41,20 +25,27 @@ module HarvesterCore
           end.compact
         end
 
-        def feeds
-          @feeds ||= Feedzirra::Feed.fetch_and_parse(self.base_urls)
+        def index_document
+          Nokogiri.parse(HarvesterCore::Utils.get(base_urls.first))
+        end
+
+        def xml_records
+          xml_nodes = index_document.xpath(self._record_selector)
+          xml_nodes.map {|node | new(node) }
         end
       end
 
-      def initialize(rss_entry)
-        @rss_entry = rss_entry
+      def initialize(node)
+        @document = node
         super
       end
 
+      def document
+        @document
+      end
+
       def strategy_value(options={})
-        options ||= {}
-        return nil unless options[:from]
-        rss_entry.send(options[:from])
+        return nil
       end
 
     end

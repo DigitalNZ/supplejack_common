@@ -2,12 +2,12 @@ class RssParser < HarvesterCore::Rss::Base
   
   base_url "http://www.library.org/records"
 
-  attribute :title,                   from: :title
-  attribute :description,             from: :summary
-  attribute :date,                    from: :published
-  attribute :landing_url,             from: :url
+  attribute :title,                   xpath: "//title"
+  attribute :description,             xpath: "//description"
+  attribute :date,                    xpath: "//pubDate", date: true
+  attribute :landing_url,             xpath: "//guid"
 
-  attribute :thumbnail_url, from: :enclosure, value: :url, with: {type: "image/jpeg"}
+  attribute :thumbnail_url, xpath: "//enclosure/@url"
 
   attribute :category,                default: ["Newspapers"] do
     get(:category).add("Images") if get(:thumbnail_url).present?

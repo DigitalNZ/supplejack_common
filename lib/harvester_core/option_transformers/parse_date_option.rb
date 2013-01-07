@@ -20,13 +20,25 @@ module HarvesterCore
         return v if [Date, DateTime, Time].include?(v.class)
         
         begin
+          normalized_time = normalized(v)
+
           if format
-            DateTime.strptime(normalized(v), format).to_time
+            DateTime.strptime(normalized_time, format).to_time
           else
-            Chronic.parse(normalized(v), context: :past).try(:time)
+            time = Chronic.parse(normalized_time, context: :past).try(:time)
+
+            if time
+              return time
+            else
+              begin
+                Time.parse(normalized_time)
+              rescue ArgumentError => e
+                nil
+              end
+            end
           end
         rescue StandardError => e
-          @errors << "Cannot parse date: '#{normalized(v)}', #{e.message}"
+          @errors << "Cannot parse date: '#{normalized_time}', #{e.message}"
         end
       end
 

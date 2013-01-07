@@ -4,11 +4,13 @@ require_relative 'parsers/rss_parser'
 
 describe HarvesterCore::Rss::Base do
 
-  before do
+  before(:all) do
     rss_xml = File.read(File.dirname(__FILE__) + "/source_data/rss_parser.xml")
-    responses = {}
-    RssParser.base_urls.each {|url| responses[url] = Feedzirra::Parser::RSS.parse(rss_xml) }
-    Feedzirra::Feed.stub(:fetch_and_parse).with(RssParser.base_urls).and_return(responses)
+    @document = Nokogiri.parse(rss_xml)
+  end
+
+  before do
+    RssParser.stub(:index_document) { @document }
   end
 
   let!(:record) { RssParser.records.first }

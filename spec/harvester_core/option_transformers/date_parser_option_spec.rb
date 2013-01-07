@@ -53,6 +53,11 @@ describe HarvesterCore::OptionTransformers::ParseDateOption do
       time = Time.now
       parse_date.parse_date(time).should eq time
     end
+
+    it "parsers a standard time with time zone" do
+      time = Time.parse("Fri, 21 Dec 2012 12:12:00 +1300")
+      parse_date.parse_date("Fri, 21 Dec 2012 12:12:00 +1300").should eq time
+    end
   end
 
   describe "#normalized" do
