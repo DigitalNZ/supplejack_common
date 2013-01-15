@@ -41,5 +41,13 @@ module HarvesterCore
 
       HarvesterCore::AttributeValue.new(values.flatten.join(options[:separator]))
     end
+
+    def node(xpath)
+      if document
+        document.xpath(xpath)
+      else
+        HarvesterCore::AttributeValue.new(nil)
+      end
+    end
   end
 end

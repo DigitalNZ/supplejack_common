@@ -65,4 +65,25 @@ describe HarvesterCore::Modifiers do
       value.to_a.should eq ["dogs, cats, thumb.jpg"]
     end
   end
+
+  describe "#node" do
+    let(:document) { Nokogiri::XML::Document.new }
+    let(:xml_nodes) { mock(:xml_nodes) }
+    before { record.stub(:document) { document } }
+
+    it "extracts the XML nodes from the document" do
+      document.should_receive(:xpath).with("//locations") { xml_nodes }
+      record.node("//locations").should eq xml_nodes
+    end
+
+    context "xml document not available" do
+      before { record.stub(:document) {nil} }
+
+      it "returns an empty attribute_value" do
+        nodes = record.node("//locations")
+        nodes.should be_a(HarvesterCore::AttributeValue)
+        nodes.to_a.should eq []
+      end
+    end
+  end
 end

@@ -6,7 +6,6 @@ Modifiers to implement
 
 - Add inheritance to parsers
 - If condition and take multiple arguments
-- Add node getter to fetch a XML node
 
 Configurable
 - Standarize rights/licence/usage/copyright
