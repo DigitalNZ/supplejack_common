@@ -4,4 +4,3 @@ source 'https://rubygems.org'
 gemspec
 
 gem "oai", git: "https://github.com/code4lib/ruby-oai.git"
-gem "feedzirra", git: "https://github.com/pauldix/feedzirra.git"

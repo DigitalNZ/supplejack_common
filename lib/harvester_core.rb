@@ -1,5 +1,4 @@
 require 'active_support/all'
-require 'feedzirra'
 require 'oai'
 require 'rest_client'
 require 'jsonpath'

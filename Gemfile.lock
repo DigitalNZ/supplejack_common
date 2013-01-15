@@ -7,16 +7,6 @@ GIT
       faraday
       faraday_middleware
 
-GIT
-  remote: https://github.com/pauldix/feedzirra.git
-  revision: 9681b630e23ec604caac5411eddbd2dc71d70806
-  specs:
-    feedzirra (0.2.0.rc2)
-      curb (~> 0.8.0)
-      loofah (~> 1.2.1)
-      nokogiri (~> 1.5.3)
-      sax-machine (~> 0.2.0.rc1)
-
 PATH
   remote: .
   specs:
@@ -51,7 +41,6 @@ GEM
     builder (3.0.4)
     chronic (0.8.0)
     crack (0.3.1)
-    curb (0.8.3)
     diff-lcs (1.1.3)
     erubis (2.7.0)
     faraday (0.8.4)
@@ -63,12 +52,9 @@ GEM
     journey (1.0.4)
     jsonpath (0.5.0)
       multi_json
-    loofah (1.2.1)
-      nokogiri (>= 1.4.4)
     mime-types (1.19)
     multi_json (1.5.0)
     multipart-post (1.1.5)
-    nokogiri (1.5.5)
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -85,8 +71,6 @@ GEM
     rspec-expectations (2.11.3)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.11.3)
-    sax-machine (0.2.0.rc1)
-      nokogiri (~> 1.5.2)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -102,7 +86,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  feedzirra!
   harvester_core!
   oai!
   rake
