@@ -29,5 +29,41 @@ describe HarvesterCore::AttributeValue do
       value.present?.should be_false
     end
   end
+
+  describe "#+" do
+    it "adds the values of two AttributeValue objects" do
+      value1 = klass.new("Images")
+      value2 = klass.new(["Videos", "News"])
+      value3 = value1 + value2
+      value3.original_value.should eq ["Images", "Videos", "News"]
+    end
+  end
+
+  describe "#includes?" do
+    context "string matching" do
+      let(:value) { klass.new("Images") }
+
+      it "returns true" do
+        value.includes?("Images").should be_true
+        value.include?("Images").should be_true
+      end
+
+      it "returns false" do
+        value.includes?("Videos").should be_false
+      end
+    end
+
+    context "regexp matching" do
+      let(:value) { klass.new("Foxes and cats") }
+
+      it "returns true" do
+        value.includes?(/Fox/).should be_true
+      end
+
+      it "returns false" do
+        value.includes?(/Tiger/).should be_false
+      end
+    end
+  end
   
 end

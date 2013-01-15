@@ -16,6 +16,20 @@ module HarvesterCore
       original_value.present?
     end
 
+    def +(attribute_value)
+      self.class.new(self.original_value + attribute_value.original_value)
+    end
+
+    def includes?(value)
+      if value.is_a?(Regexp)
+        !!original_value.detect {|v| v.match(value) }
+      else
+        original_value.include?(value)
+      end
+    end
+
+    alias_method  :include?, :includes?
+
     def find_with(regexp)
       HarvesterCore::Modifiers::FinderWith.new(original_value, regexp, :first).value
     end
@@ -42,6 +56,14 @@ module HarvesterCore
 
     def add(new_value)
       HarvesterCore::Modifiers::Adder.new(original_value, new_value).value
+    end
+
+    def split(split_value)
+      HarvesterCore::Modifiers::Splitter.new(original_value, split_value).value
+    end
+
+    def truncate(length)
+      HarvesterCore::Modifiers::Truncator.new(original_value, length).value
     end
   end
 end
