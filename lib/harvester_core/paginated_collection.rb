@@ -91,6 +91,7 @@ module HarvesterCore
 
     def yield_from_records(&block)
       @records.each do |record|
+        record.set_attribute_values
 
         if klass.rejection_rules && record.instance_eval(&klass.rejection_rules)
           next

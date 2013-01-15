@@ -262,6 +262,7 @@ describe HarvesterCore::Base do
 
     it "executes the method with the name" do
       klass._attribute_definitions[klass.identifier][:category] = {default: "Video"}
+      record.set_attribute_values
       record.final_attribute_value(:category).should eq ["Video"]
     end
 

@@ -28,6 +28,7 @@ module HarvesterCore
           records = records_json.map {|attributes| self.new(attributes) }
           records = records[0..(options[:limit].to_i-1)] if options[:limit]
           records.map do |record|
+            record.set_attribute_values
             if rejection_rules
               record if !record.instance_eval(&rejection_rules)
             else

@@ -4,7 +4,7 @@ describe HarvesterCore::Json::Base do
   
   let(:klass) { HarvesterCore::Json::Base }
   let(:document) { mock(:document) }
-  let(:record) { mock(:record) }
+  let(:record) { mock(:record).as_null_object }
 
   after do
     klass._base_urls[klass.identifier] = []

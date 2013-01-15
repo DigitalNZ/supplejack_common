@@ -33,7 +33,7 @@ describe HarvesterCore::Oai::PaginatedCollection do
     end
 
     it "initializes a new TestSource record for every oai record" do
-      TestSource.should_receive(:new).twice
+      TestSource.should_receive(:new).twice { record }
       collection.each {|r| r}
     end
 

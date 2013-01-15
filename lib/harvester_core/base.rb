@@ -96,7 +96,6 @@ module HarvesterCore
     def initialize(*args)
       @errors = {}
       @original_attributes = {}
-      self.set_attribute_values
     end
 
     def set_attribute_values
