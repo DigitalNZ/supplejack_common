@@ -1,4 +1,5 @@
 require 'active_support/all'
+require 'nokogiri'
 require 'oai'
 require 'rest_client'
 require 'jsonpath'

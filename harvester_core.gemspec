@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "activesupport",   "~> 3.2"
   gem.add_runtime_dependency "actionpack",      "~> 3.2"
 
+  gem.add_runtime_dependency "nokogiri"
   gem.add_runtime_dependency "rest-client",     "~> 1.6.7"
   gem.add_runtime_dependency "jsonpath",        "~> 0.5.0"
   gem.add_runtime_dependency "chronic",         "~> 0.8.0"
