@@ -1,6 +1,6 @@
 Functionality to add
 
-- Implement document method for OAI and RSS
+- Implement document method for OAI
 
 Modifiers to implement
 
@@ -11,4 +11,3 @@ Configurable
 - Standarize rights/licence/usage/copyright
 
 Global
-- Always remove any duplicate values

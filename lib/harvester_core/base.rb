@@ -121,7 +121,7 @@ module HarvesterCore
       value = strip_whitespace_option(value)
       value = truncate_option(value, options[:truncate]) if options[:truncate]
       value = parse_date_option(value, options[:date]) if options[:date]
-      value
+      value.uniq
     end
 
     def attribute_value(options={}, document=nil)

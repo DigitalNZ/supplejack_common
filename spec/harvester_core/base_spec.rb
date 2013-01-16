@@ -245,6 +245,11 @@ describe HarvesterCore::Base do
       record.stub(:attribute_value) { "Some lucky squirrel" }
       record.transformed_attribute_value({mappings: {/lucky/ => 'unlucky'}}).should eq ["Some unlucky squirrel"]
     end
+
+    it "removes any duplicates" do
+      record.stub(:attribute_value) { ["Images", "Images", "Videos"] }
+      record.transformed_attribute_value({}).should eq ["Images", "Videos"]
+    end
   end
 
   describe "#attributes" do
