@@ -58,6 +58,14 @@ describe HarvesterCore::Json::Base do
     end
   end
 
+  describe ".clear_definitions" do
+    it "clears the _record_selector" do
+      klass.record_selector "path"
+      klass.clear_definitions
+      klass._record_selector.should be_nil
+    end
+  end
+
   describe "#initialize" do
     it "initializes the record's attributes" do
       record = klass.new({"title" => "Dos"})

@@ -87,6 +87,39 @@ describe HarvesterCore::Base do
     end
   end
 
+  describe ".clear_definitions" do
+    it "clears the base_urls" do
+      klass.base_url "http://google.com"
+      klass.clear_definitions
+      klass.base_urls.should be_nil
+    end
+
+    it "clears the attribute definitions" do
+      klass.attribute :subject, default: "Base"
+      klass.clear_definitions
+      klass.attribute_definitions.should be_empty
+    end
+
+    it "clears basic auth credentials" do
+      klass.basic_auth "fede", "secret"
+      klass.clear_definitions
+      klass.basic_auth_credentials.should be_nil
+    end
+
+    it "clears pagination options" do
+      klass.paginate page_parameter: "start", type: "item", per_page_parameter: "size"
+      klass.clear_definitions
+      klass.pagination_options.should be_nil
+    end
+
+    it "clears the rejection rules" do
+      klass.reject_if { puts "Hi" }
+      klass.clear_definitions
+      klass.rejection_rules.should be_nil
+    end
+    
+  end
+
   describe "#attribute_definitions" do
     it "returns the attributes defined" do
       klass.stub(:_attribute_definitions) { {klass.identifier => {category: {option: true}}} }

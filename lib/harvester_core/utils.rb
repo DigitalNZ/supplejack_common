@@ -19,6 +19,7 @@ module HarvesterCore
     end
 
     def get(url)
+      Rails.logger.info "GET: #{url}" if defined?(Rails)
       RestClient.get(url)
     end
   end

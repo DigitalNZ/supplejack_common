@@ -2,8 +2,7 @@ module HarvesterCore
   module Rss
     class Base < HarvesterCore::Base
 
-      self._base_urls[self.identifier] = []
-      self._attribute_definitions[self.identifier] = {}
+      self.clear_definitions
 
       class << self
         def _record_selector

@@ -62,6 +62,14 @@ describe HarvesterCore::Oai::Base do
     end
   end
 
+  describe ".clear_definitions" do
+    it "clears the _enrichment_definitions" do
+      klass.enrich_attribute :subject, default: "Hi"
+      klass.clear_definitions
+      klass._enrichment_definitions.should be_empty
+    end
+  end
+
   describe "#resumption_token" do
     it "returns the current resumption_token" do
       klass.stub(:response) { mock(:response, resumption_token: "123456") }

@@ -2,8 +2,7 @@ module HarvesterCore
   module Json
     class Base < HarvesterCore::Base
 
-      self._base_urls[self.identifier] = []
-      self._attribute_definitions[self.identifier] = {}
+      self.clear_definitions
 
       class_attribute :_record_selector
 
@@ -35,6 +34,11 @@ module HarvesterCore
               record
             end
           end.compact
+        end
+
+        def clear_definitions
+          super
+          self._record_selector = nil
         end
 
       end

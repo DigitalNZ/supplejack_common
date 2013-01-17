@@ -89,6 +89,14 @@ module HarvesterCore
       def rejection_rules
         self._rejection_rules[self.identifier]
       end
+
+      def clear_definitions
+        self._base_urls[self.identifier] = nil
+        self._attribute_definitions[self.identifier] = {}
+        self._basic_auth[self.identifier] = nil
+        self._pagination_options[self.identifier] = nil
+        self._rejection_rules[self.identifier] = nil
+      end
     end
 
     attr_reader :original_attributes, :attributes, :errors

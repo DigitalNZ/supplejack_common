@@ -6,8 +6,7 @@ describe HarvesterCore::Xml::Base do
   let(:document) { mock(:document) }
 
   after do
-    klass._base_urls[klass.identifier] = []
-    klass._attribute_definitions[klass.identifier] = {}
+    klass.clear_definitions
   end
 
   describe ".record_url_selector" do
@@ -92,7 +91,7 @@ describe HarvesterCore::Xml::Base do
     end
   end
 
-  describe "#.sitemap_records" do
+  describe ".sitemap_records" do
     let(:xml) { File.read("spec/harvester_core/integrations/source_data/xml_parser_urls.xml") }
 
     before do
@@ -106,7 +105,7 @@ describe HarvesterCore::Xml::Base do
     end
   end
 
-  describe "#.xml_records" do
+  describe ".xml_records" do
     let(:xml) { File.read("spec/harvester_core/integrations/source_data/xml_parser_records.xml") }
     let(:doc) { Nokogiri.parse(xml) }
     let!(:xml_snippets) { doc.xpath("//items/item") }
@@ -119,6 +118,26 @@ describe HarvesterCore::Xml::Base do
     it "initializes a record with every section of the XML" do
       klass.should_receive(:new).once.with(xml_snippets.first) 
       klass.xml_records
+    end
+  end
+
+  describe ".clear_definitions" do
+    it "clears the record_url_selector" do
+      klass.record_url_selector "//loc"
+      klass.clear_definitions
+      klass._record_url_selector.should be_nil
+    end
+
+    it "clears the record_selector" do
+      klass.record_selector "//item"
+      klass.clear_definitions
+      klass._record_selector.should be_nil
+    end
+
+    it "clears the total results" do
+      klass._total_results = 100
+      klass.clear_definitions
+      klass._total_results.should be_nil
     end
   end
 

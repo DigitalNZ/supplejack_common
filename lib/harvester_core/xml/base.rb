@@ -2,8 +2,7 @@ module HarvesterCore
   module Xml
     class Base < HarvesterCore::Base
 
-      self._base_urls[self.identifier] = []
-      self._attribute_definitions[self.identifier] = {}
+      self.clear_definitions
 
       class_attribute :_record_url_selector
       class_attribute :_record_selector
@@ -60,6 +59,13 @@ module HarvesterCore
           elsif base_urls.first.match(/^file/)
             File.read(base_urls.first.gsub(/file:\//, ""))
           end
+        end
+
+        def clear_definitions
+          super
+          self._record_url_selector = nil
+          self._record_selector = nil
+          self._total_results = nil
         end
       end
 

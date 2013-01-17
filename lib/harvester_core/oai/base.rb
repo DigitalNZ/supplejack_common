@@ -2,8 +2,7 @@ module HarvesterCore
   module Oai
     class Base < HarvesterCore::Base
 
-      self._base_urls[self.identifier] = []
-      self._attribute_definitions[self.identifier] = {}
+      self.clear_definitions
 
       class_attribute :_enrichment_definitions
       self._enrichment_definitions = {}
@@ -30,6 +29,11 @@ module HarvesterCore
 
         def resumption_token
           self.response.try(:resumption_token)
+        end
+
+        def clear_definitions
+          super
+          self._enrichment_definitions = {}
         end
       end
 
