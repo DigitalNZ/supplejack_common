@@ -153,6 +153,15 @@ describe HarvesterCore::Base do
       klass.attribute_definitions.should include(category: {option: true})
       klass.attribute_definitions.should include(creator: {option: true})
     end
+
+    it "adds multiple attributes with a block" do
+      klass.attributes :category, :creator do
+        puts "Hi"
+      end
+
+      klass.attribute_definitions[:category][:block].should be_a(Proc)
+      klass.attribute_definitions[:category][:block].should be_a(Proc)
+    end
   end
 
   describe ".with_options" do

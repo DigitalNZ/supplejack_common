@@ -61,11 +61,11 @@ module HarvesterCore
         self._attribute_definitions[self.identifier][name][:block] = block if block_given?
       end
 
-      def attributes(*args)
+      def attributes(*args, &block)
         options = args.extract_options!
 
         args.each do |attribute|
-          self.attribute(attribute, options)
+          self.attribute(attribute, options, &block)
         end
       end
 
