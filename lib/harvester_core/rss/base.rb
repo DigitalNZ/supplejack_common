@@ -44,6 +44,10 @@ module HarvesterCore
         @document
       end
 
+      def raw_data
+        @raw_data ||= document.to_xml
+      end
+
       def strategy_value(options={})
         return nil
       end

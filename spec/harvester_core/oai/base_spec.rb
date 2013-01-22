@@ -95,6 +95,8 @@ describe HarvesterCore::Oai::Base do
   end
 
   describe "#set_attribute_values" do
+    before { record.stub(:document) { nil }}
+
     it "sets the header identifier" do
       record.set_attribute_values
       record.original_attributes.should include(identifier: "123")
@@ -173,6 +175,15 @@ describe HarvesterCore::Oai::Base do
         root.should_receive(:get_elements).with("dc:subject") { [node2] }
         record.strategy_value(from: ["dc:title", "dc:subject"]).should eq ["Dogs and cats", "Boats"]
       end
+    end
+  end
+
+  describe "#raw_data" do
+    let(:oai_record) { mock(:oai_record, :element => "<record><id>1</id></record>") }
+
+    it "returns the raw xml" do
+      record = klass.new(oai_record)
+      record.raw_data.should eq "<?xml version=\"1.0\"?>\n<record>\n  <id>1</id>\n</record>\n"
     end
   end
 

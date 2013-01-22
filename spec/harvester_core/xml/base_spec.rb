@@ -185,4 +185,39 @@ describe HarvesterCore::Xml::Base do
       record.document
     end
   end
+
+  describe "raw_data" do
+    let(:xml) do
+<<-XML
+<?xml version="1.0"?>
+<document>
+<item><title>Hi</title></item>
+<item><title>Hi2</title></item>
+</document>
+XML
+    end
+    let(:document) { Nokogiri.parse(xml) }
+
+    context "full xml document" do
+      let(:record) { klass.new("http://google.com/1") }
+
+      before(:each) do
+        record.stub(:document) { document }
+      end
+
+      it "returns the full xml document" do
+        record.raw_data.should eq(xml)
+      end
+    end
+
+    context "node within xml document" do
+      let(:record) { klass.new(document.xpath("//item").first) }
+
+      it "returns the snippet corresponding to the record" do
+        record.raw_data.should eq("<item>
+  <title>Hi</title>
+</item>")
+      end
+    end
+  end
 end

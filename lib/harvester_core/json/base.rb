@@ -52,6 +52,10 @@ module HarvesterCore
         @json_attributes
       end
 
+      def raw_data
+        document
+      end
+
       def strategy_value(options={})
         options ||= {}
         path = options[:path]

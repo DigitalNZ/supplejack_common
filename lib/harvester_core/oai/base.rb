@@ -78,6 +78,14 @@ module HarvesterCore
         values
       end
 
+      def document
+        @document ||= Nokogiri.parse(oai_record.element.to_s)
+      end
+
+      def raw_data
+        @raw_data ||= document.to_xml
+      end
+
       def get_enrichment_url
         @get_enrichment_url ||= begin
           if self.respond_to?(:enrichment_url) || self.class.attribute_definitions.has_key?(:enrichment_url)
