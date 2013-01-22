@@ -1,3 +1,5 @@
+require 'benchmark'
+
 module HarvesterCore
   module Utils
     extend self
@@ -19,8 +21,19 @@ module HarvesterCore
     end
 
     def get(url)
-      Rails.logger.info "GET: #{url}" if defined?(Rails)
-      RestClient.get(url)
+      response = nil
+
+      measure = Benchmark.measure do
+        response = RestClient.get(url)
+      end
+
+      if defined?(Rails)
+        real_time = measure.real.round(4)
+        Rails.logger.info "GET (#{real_time}): #{url}"
+        puts "GET (#{real_time}): #{url}"
+      end
+
+      response
     end
   end
 end
