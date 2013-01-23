@@ -23,4 +23,8 @@ require "harvester_core/json"
 
 module HarvesterCore
   # Your code goes here...
+
+  class << self
+    attr_accessor :caching_enabled
+  end
 end

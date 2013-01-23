@@ -24,7 +24,11 @@ module HarvesterCore
       response = nil
 
       measure = Benchmark.measure do
-        response = RestClient.get(url)
+        if defined?(Rails) && ::HarvesterCore.caching_enabled
+          response = Rails.cache.fetch(url, :expires_in => 10.minutes) { RestClient.get(url) }
+        else
+          response = RestClient.get(url)
+        end
       end
 
       if defined?(Rails)
