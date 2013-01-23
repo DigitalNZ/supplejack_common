@@ -46,7 +46,6 @@ module HarvesterCore
 
         def index_document(url=nil)
           doc = Nokogiri.parse(self.index_xml(url))
-          doc.remove_namespaces!
           if pagination_options
             self._total_results ||= doc.xpath(self.pagination_options[:total_selector]).text.to_i
           end
