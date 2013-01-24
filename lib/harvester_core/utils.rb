@@ -39,5 +39,9 @@ module HarvesterCore
 
       response
     end
+
+    def remove_default_namespace(xml)
+      xml.gsub(/ xmlns='[A-Za-z0-9:\/\.\-]+'/, "")
+    end
   end
 end

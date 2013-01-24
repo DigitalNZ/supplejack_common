@@ -45,7 +45,8 @@ module HarvesterCore
         end
 
         def index_document(url=nil)
-          doc = Nokogiri.parse(self.index_xml(url))
+          xml = HarvesterCore::Utils.remove_default_namespace(self.index_xml(url))
+          doc = Nokogiri.parse(xml)
           if pagination_options
             self._total_results ||= doc.xpath(self.pagination_options[:total_selector]).text.to_i
           end
@@ -89,6 +90,7 @@ module HarvesterCore
       def document
         @document ||= begin
           xml = HarvesterCore::Utils.get(self.url)
+          xml = HarvesterCore::Utils.remove_default_namespace(xml)
           Nokogiri.parse(xml)
         end
       end

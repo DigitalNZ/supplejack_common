@@ -79,7 +79,11 @@ module HarvesterCore
       end
 
       def document
-        @document ||= Nokogiri.parse(oai_record.element.to_s)
+        @document ||= begin
+          xml = oai_record.element.to_s
+          xml = HarvesterCore::Utils.remove_default_namespace(xml)
+          Nokogiri.parse(xml)
+        end
       end
 
       def raw_data
