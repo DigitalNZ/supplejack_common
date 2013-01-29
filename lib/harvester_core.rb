@@ -20,6 +20,7 @@ require "harvester_core/oai"
 require "harvester_core/rss"
 require "harvester_core/xml"
 require "harvester_core/json"
+require "harvester_core/tapuhi"
 
 module HarvesterCore
   # Your code goes here...

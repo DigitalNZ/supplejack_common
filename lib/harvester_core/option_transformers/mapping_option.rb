@@ -15,8 +15,7 @@ module HarvesterCore
 
       def mapped_value(v)
         mappings.each do |regexp, substitution|
-          new_value = v.gsub!(regexp, substitution)
-          return new_value if new_value
+          return v.gsub(regexp, substitution) if v.match(regexp)
         end
 
         return v
