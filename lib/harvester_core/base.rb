@@ -8,6 +8,7 @@ module HarvesterCore
     class_attribute :_basic_auth
     class_attribute :_pagination_options
     class_attribute :_rejection_rules
+    class_attribute :_throttle
 
     self._base_urls = {}
     self._attribute_definitions = {}
@@ -96,6 +97,11 @@ module HarvesterCore
         self._basic_auth[self.identifier] = nil
         self._pagination_options[self.identifier] = nil
         self._rejection_rules[self.identifier] = nil
+      end
+
+      def throttle(options={})
+        self._throttle ||= []
+        self._throttle << options
       end
     end
 

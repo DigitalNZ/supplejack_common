@@ -26,7 +26,7 @@ module HarvesterCore
         end
 
         def index_document
-          xml = HarvesterCore::Utils.get(base_urls.first)
+          xml = HarvesterCore::Request.get(base_urls.first, self._throttle)
           xml = HarvesterCore::Utils.remove_default_namespace(xml)
           Nokogiri.parse(xml)
         end

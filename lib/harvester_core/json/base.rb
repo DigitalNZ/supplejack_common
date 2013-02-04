@@ -15,7 +15,7 @@ module HarvesterCore
         end
 
         def document
-          @document ||= HarvesterCore::Utils.get(self.base_urls.first)
+          @document ||= HarvesterCore::Request.get(self.base_urls.first, self._throttle)
         end
 
         def records_json

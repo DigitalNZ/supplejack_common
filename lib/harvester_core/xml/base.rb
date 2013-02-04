@@ -55,7 +55,7 @@ module HarvesterCore
 
         def index_xml(url=nil)
           if base_urls.first.match(/^https?/)
-            HarvesterCore::Utils.get(url || base_urls.first)
+            HarvesterCore::Request.get(url || base_urls.first, self._throttle)
           elsif base_urls.first.match(/^file/)
             File.read(base_urls.first.gsub(/file:\//, ""))
           end
@@ -89,7 +89,7 @@ module HarvesterCore
 
       def document
         @document ||= begin
-          xml = HarvesterCore::Utils.get(self.url)
+          xml = HarvesterCore::Request.get(self.url, self._throttle)
           xml = HarvesterCore::Utils.remove_default_namespace(xml)
           Nokogiri.parse(xml)
         end

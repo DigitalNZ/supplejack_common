@@ -10,6 +10,7 @@ describe HarvesterCore::Json::Base do
     klass._base_urls[klass.identifier] = []
     klass._attribute_definitions[klass.identifier] = {}
     klass._rejection_rules[klass.identifier] = nil
+    klass._throttle = {}
   end
 
   describe ".record_selector" do
@@ -53,7 +54,7 @@ describe HarvesterCore::Json::Base do
 
     it "stores the raw json" do
       klass.base_url "http://google.com"
-      HarvesterCore::Utils.should_receive(:get).with("http://google.com") { json }
+      HarvesterCore::Request.should_receive(:get).with("http://google.com", {}) { json }
       klass.document.should eq json
     end
   end

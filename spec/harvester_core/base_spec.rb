@@ -200,6 +200,23 @@ describe HarvesterCore::Base do
     end
   end
 
+  describe ".throttle" do
+    before do
+      klass._throttle = nil
+    end
+
+    it "should store the throttling information" do
+      klass.throttle :host => "gdata.youtube.com", :max_per_minute => 100
+      klass._throttle.should eq [{:host => "gdata.youtube.com", :max_per_minute => 100}]
+    end
+
+    it "should store multiple throttle options" do
+      klass.throttle :host => "www.google.com", :max_per_minute => 100
+      klass.throttle :host => "www.yahoo.com", :max_per_minute => 100
+      klass._throttle.should eq [{:host => "www.google.com", :max_per_minute => 100}, {:host => "www.yahoo.com", :max_per_minute => 100}]
+    end
+  end
+
   describe "#set_attribute_values" do
     let(:record) { klass.new }
 

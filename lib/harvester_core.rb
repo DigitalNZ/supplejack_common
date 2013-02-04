@@ -15,6 +15,7 @@ require "harvester_core/modifiers"
 require "harvester_core/option_transformers"
 require "harvester_core/base"
 require "harvester_core/paginated_collection"
+require "harvester_core/request"
 
 require "harvester_core/oai"
 require "harvester_core/rss"
@@ -27,5 +28,9 @@ module HarvesterCore
 
   class << self
     attr_accessor :caching_enabled
+
+    def redis
+      @redis ||= Redis.new
+    end
   end
 end

@@ -102,7 +102,7 @@ module HarvesterCore
       end
 
       def enrichment_document
-        @enrichment_document ||= Nokogiri.parse(HarvesterCore::Utils.get(self.get_enrichment_url))
+        @enrichment_document ||= Nokogiri.parse(HarvesterCore::Request.get(self.get_enrichment_url, self._throttle))
       end
 
       def enrich_record
