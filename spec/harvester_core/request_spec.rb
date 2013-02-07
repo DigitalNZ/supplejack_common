@@ -30,6 +30,11 @@ describe HarvesterCore::Request do
       request = klass.new("google.com", [{host: "google.com", max_per_minute: 5}, {host: "yahoo.com", max_per_minute: 10}])
       request.throttling_options.should eq({"google.com" => 5, "yahoo.com" => 10})
     end
+
+    it "handles nil options" do
+      request = klass.new("google.com", nil)
+      request.throttling_options.should eq({})
+    end
   end
 
   describe "#uri" do

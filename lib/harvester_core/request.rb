@@ -14,6 +14,8 @@ module HarvesterCore
 
     def initialize(url, options=[])
       @url = url
+
+      options ||= []
       @throttling_options = Hash[options.map {|option| [option[:host], option[:max_per_minute]] }]
     end
 
@@ -46,9 +48,9 @@ module HarvesterCore
     end
 
     def limit_exceeded?
+      return false if max_requests_per_minute.nil?
       return false unless start_time
       return false if Time.now > (start_time + 60.seconds)
-      return false if max_requests_per_minute.nil?
       current_count >= max_requests_per_minute
     end
 
