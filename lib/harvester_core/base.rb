@@ -103,6 +103,16 @@ module HarvesterCore
         self._throttle ||= []
         self._throttle << options
       end
+
+      def include_shared_module(name)
+        if defined?(SharedModule)
+          if shared_module = SharedModule.find_by_name(name)
+            self.class_eval <<-METHOD, __FILE__, __LINE__ + 1
+              #{shared_module.content}
+            METHOD
+          end
+        end
+      end
     end
 
     attr_reader :original_attributes, :attributes, :errors
