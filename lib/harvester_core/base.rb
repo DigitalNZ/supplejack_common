@@ -104,11 +104,11 @@ module HarvesterCore
         self._throttle << options
       end
 
-      def include_shared_module(name)
-        if defined?(SharedModule)
-          if shared_module = SharedModule.find_by_name(name)
+      def include_snippet(name)
+        if defined?(Snippet)
+          if snippet = Snippet.find_by_name(name)
             self.class_eval <<-METHOD, __FILE__, __LINE__ + 1
-              #{shared_module.content}
+              #{snippet.content}
             METHOD
           end
         end
