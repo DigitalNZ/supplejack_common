@@ -8,6 +8,7 @@ describe HarvesterCore::Base do
     klass._attribute_definitions[klass.identifier] = {}
     klass._basic_auth[klass.identifier] = nil
     klass._pagination_options[klass.identifier] = nil
+    klass.environment = nil
   end
 
   describe "identifier" do
@@ -54,6 +55,29 @@ describe HarvesterCore::Base do
       klass.basic_auth "username", "password"
       klass.base_urls.should include "http://username:password@google.com"
     end
+
+    it "returns a list of urls within a specific environment" do
+      klass.environment = "staging"
+      klass.base_url staging: "http://google.com"
+      klass.base_urls.should include "http://google.com"
+    end
+
+    it "returns nil when it doesn't match the environment" do
+      klass.environment = "staging"
+      klass.base_url production: "http://google.com"
+      klass.base_urls.should_not include "http://google.com"
+    end
+  end
+
+  describe ".environment_url" do
+    it "returns the url for the appropiate environment" do
+      klass.environment = "staging"
+      klass.environment_url({staging: "http://google.com"}).should eq "http://google.com"
+    end
+
+    it "returns the url no environment is specified" do
+      klass.environment_url("http://google.com").should eq "http://google.com"
+    end
   end
 
   describe ".basic_auth" do
@@ -91,7 +115,7 @@ describe HarvesterCore::Base do
     it "clears the base_urls" do
       klass.base_url "http://google.com"
       klass.clear_definitions
-      klass.base_urls.should be_nil
+      klass.base_urls.should be_empty
     end
 
     it "clears the attribute definitions" do

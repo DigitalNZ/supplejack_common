@@ -9,12 +9,14 @@ module HarvesterCore
     class_attribute :_pagination_options
     class_attribute :_rejection_rules
     class_attribute :_throttle
+    class_attribute :_environment
 
     self._base_urls = {}
     self._attribute_definitions = {}
     self._basic_auth = {}
     self._pagination_options = {}
     self._rejection_rules = {}
+    self._environment = {}
 
     class << self
       def identifier
@@ -32,11 +34,30 @@ module HarvesterCore
       def base_urls
         if self.basic_auth_credentials
           self._base_urls[self.identifier].map do |url|
-            url.gsub("http://", "http://#{self.basic_auth_credentials[:username]}:#{self.basic_auth_credentials[:password]}@")
-          end
+            url = self.environment_url(url)
+            url.gsub("http://", "http://#{self.basic_auth_credentials[:username]}:#{self.basic_auth_credentials[:password]}@") if url.present?
+          end.compact
         else
-          self._base_urls[self.identifier]
+          self._base_urls[self.identifier].map do |url|
+            self.environment_url(url)
+          end.compact
         end
+      end
+
+      def environment_url(url)
+        if url.is_a?(Hash)
+          return url[self.environment] if self.environment.present?
+        else
+          url
+        end
+      end
+
+      def environment=(env)
+        self._environment[self.identifier] = env.to_s.to_sym
+      end
+
+      def environment
+        self._environment[self.identifier]
       end
 
       def basic_auth(username, password)
@@ -92,7 +113,7 @@ module HarvesterCore
       end
 
       def clear_definitions
-        self._base_urls[self.identifier] = nil
+        self._base_urls[self.identifier] = []
         self._attribute_definitions[self.identifier] = {}
         self._basic_auth[self.identifier] = nil
         self._pagination_options[self.identifier] = nil
