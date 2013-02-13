@@ -180,8 +180,8 @@ describe HarvesterCore::Xml::Base do
     let(:record) { klass.new("http://google.com") }
 
     it "parses the record xml" do
-      HarvesterCore::Request.stub(:get) { "Some xml data" }
-      Nokogiri.should_receive(:parse).with("Some xml data") { document }
+      HarvesterCore::Request.stub(:get) { "<html>Some xml data</html>" }
+      Nokogiri.should_receive(:parse).with("<html>Some xml data</html>") { document }
       record.document
     end
   end

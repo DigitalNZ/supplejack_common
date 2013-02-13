@@ -91,6 +91,7 @@ module HarvesterCore
         @document ||= begin
           xml = HarvesterCore::Request.get(self.url, self._throttle)
           xml = HarvesterCore::Utils.remove_default_namespace(xml)
+          xml = HarvesterCore::Utils.add_html_tag(xml)
           Nokogiri.parse(xml)
         end
       end

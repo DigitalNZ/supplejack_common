@@ -6,7 +6,7 @@ class XmlParser < HarvesterCore::Xml::Base
   attribute :content_partner,         default: "NZ On Screen"
   attribute :category,                default: "Videos"
 
-  attribute :title,                   xpath: "title/name"
+  attribute :title,                   xpath: "//title/name"
   attribute :description,             xpath: "//synopsis"
   attribute :date,                    xpath: "//dc:date"
 
