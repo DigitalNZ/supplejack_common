@@ -24,12 +24,15 @@ describe HarvesterCore::Oai::PaginatedCollection do
     let(:collection) { HarvesterCore::Oai::PaginatedCollection.new(client, {}, TestSource) }
 
     before do
-      collection.stub(:client) { mock(:client, list_records: [record, record] ) }
+      list = mock(:list, full: [record, record])
+      collection.stub(:client) { mock(:client, list_records: list ) }
     end
 
     it "stops iterating when the limit is reached" do
       collection.stub(:limit) { 1 }
-      collection.each {|r| r}.size.should eq 1
+      records = [] 
+      collection.each {|r| records << r }
+      records.size.should eq 1
     end
 
     it "initializes a new TestSource record for every oai record" do
@@ -38,7 +41,8 @@ describe HarvesterCore::Oai::PaginatedCollection do
     end
 
     it "returns a array of TestSource records" do
-      records = collection.each {|r| r}
+      records = []
+      collection.each {|r| records << r }
       records.first.should be_a(TestSource)
     end
   end
