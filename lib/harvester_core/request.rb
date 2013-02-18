@@ -14,7 +14,7 @@ module HarvesterCore
 
     def initialize(url, options=[])
       @url = url
-
+      
       options ||= []
       @throttling_options = Hash[options.map {|option| [option[:host], option[:delay]] }]
     end

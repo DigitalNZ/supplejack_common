@@ -262,7 +262,7 @@ describe HarvesterCore::Base do
       record.stub(:transformed_attribute_value).and_raise(HarvesterCore::TransformationError.new("Error"))
       record.set_attribute_values
       record.original_attributes.should include(date: nil)
-      record.errors.should include(date: ["Error"])
+      record.field_errors.should include(date: ["Error"])
     end
   end
 
@@ -354,11 +354,11 @@ describe HarvesterCore::Base do
       record.final_attribute_value(:category).should eq ["Video"]
     end
 
-    it "rescues from errors in a block" do
+    it "rescues from field_errors in a block" do
       record.stub(:strategy_value) { nil }
       klass._attribute_definitions[klass.identifier][:category] = {block: Proc.new { raise StandardError.new("Error!") } }
       record.final_attribute_value(:category).should be_nil
-      record.errors.should include(category: ["Error in the block: Error!"])
+      record.field_errors.should include(category: ["Error in the block: Error!"])
     end
   end
 

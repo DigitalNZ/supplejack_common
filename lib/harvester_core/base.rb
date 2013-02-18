@@ -136,10 +136,10 @@ module HarvesterCore
       end
     end
 
-    attr_reader :original_attributes, :attributes, :errors
+    attr_reader :original_attributes, :attributes, :field_errors
 
     def initialize(*args)
-      @errors = {}
+      @field_errors = {}
       @original_attributes = {}
     end
 
@@ -151,8 +151,8 @@ module HarvesterCore
           @original_attributes[name] = value if value.present?
         rescue StandardError => e
           @original_attributes[name] = nil
-          self.errors[name] ||= []
-          self.errors[name] << e.message
+          self.field_errors[name] ||= []
+          self.field_errors[name] << e.message
         end
       end
     end
@@ -200,8 +200,8 @@ module HarvesterCore
         begin
           evaluate_attribute_block(name, &block)
         rescue StandardError => e
-          self.errors[name] ||= []
-          self.errors[name] << "Error in the block: #{e.message}"
+          self.field_errors[name] ||= []
+          self.field_errors[name] << "Error in the block: #{e.message}"
           return nil
         end
       elsif self.class.custom_instance_methods.include?(name)

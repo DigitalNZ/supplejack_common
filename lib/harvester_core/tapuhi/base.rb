@@ -49,14 +49,18 @@ module HarvesterCore
         fields = fields.map {|field| field.split(/\xFD/) }
       end
 
-      def raw_data
-        @raw_data ||= begin
+      def document
+        @document ||= begin
           hash = {}
           fields.each_with_index do |field, index|
             hash[index] = field if field.present?
           end
           hash
         end
+      end
+
+      def raw_data
+        document
       end
 
       def fetch(integer)
