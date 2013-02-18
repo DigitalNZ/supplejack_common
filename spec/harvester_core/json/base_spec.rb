@@ -94,4 +94,17 @@ describe HarvesterCore::Json::Base do
       record.strategy_value(path: nil).should be_nil
     end
   end
+
+  describe "#fetch" do
+    let(:record) { klass.new({"dc:creator" => "John", "dc:author" => "Fede"}) }
+    let(:document) { {"location" => 1234} }
+    
+    before { record.stub(:document) { document } }
+
+    it "returns the value object" do
+      value = record.fetch("location")
+      value.should be_a HarvesterCore::AttributeValue
+      value.to_a.should eq [1234]
+    end
+  end
 end

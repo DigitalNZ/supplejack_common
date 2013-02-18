@@ -1,6 +1,7 @@
 module HarvesterCore
   module Xml
     class Base < HarvesterCore::Base
+      include HarvesterCore::XmlMethods
 
       self.clear_definitions
 

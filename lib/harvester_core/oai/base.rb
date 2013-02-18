@@ -1,6 +1,7 @@
 module HarvesterCore
   module Oai
     class Base < HarvesterCore::Base
+      include HarvesterCore::XmlMethods
 
       self.clear_definitions
 

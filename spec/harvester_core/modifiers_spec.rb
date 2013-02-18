@@ -18,39 +18,6 @@ describe HarvesterCore::Modifiers do
     end
   end
 
-  describe "#fetch" do
-    context "XML document" do
-      let(:document) { Nokogiri::XML::Document.new }
-      before { record.stub(:document) { document } }
-
-      it "applies the xpath to the document and returns value object" do
-        node = mock(:node, text: "12345")
-        document.should_receive(:xpath).with("//dc:identifier") { node }
-        value = record.fetch(xpath: "//dc:identifier")
-        value.should be_a HarvesterCore::AttributeValue
-        value.to_a.should eq ["12345"]
-      end
-
-      it "returns an empty value object when document is not present" do
-        record.stub(:document) { nil }
-        value = record.fetch(xpath: "//dc:identifier")
-        value.should be_a HarvesterCore::AttributeValue
-        value.to_a.should eq []
-      end
-    end
-
-    context "JSON document" do
-      let(:document) { {"location" => 1234} }
-      before { record.stub(:document) { document } }
-
-      it "returns the value object" do
-        value = record.fetch(path: "location")
-        value.should be_a HarvesterCore::AttributeValue
-        value.to_a.should eq [1234]
-      end
-    end
-  end
-
   describe "#compose" do
     let(:thumb) { HarvesterCore::AttributeValue.new("http://google.com/1") }
     let(:extension) { HarvesterCore::AttributeValue.new("thumb.jpg") }
@@ -63,27 +30,6 @@ describe HarvesterCore::Modifiers do
     it "joins the values with a comma" do
       value = record.compose("dogs", "cats", extension, {separator: ", "})
       value.to_a.should eq ["dogs, cats, thumb.jpg"]
-    end
-  end
-
-  describe "#node" do
-    let(:document) { Nokogiri::XML::Document.new }
-    let(:xml_nodes) { mock(:xml_nodes) }
-    before { record.stub(:document) { document } }
-
-    it "extracts the XML nodes from the document" do
-      document.should_receive(:xpath).with("//locations") { xml_nodes }
-      record.node("//locations").should eq xml_nodes
-    end
-
-    context "xml document not available" do
-      before { record.stub(:document) {nil} }
-
-      it "returns an empty attribute_value" do
-        nodes = record.node("//locations")
-        nodes.should be_a(HarvesterCore::AttributeValue)
-        nodes.to_a.should eq []
-      end
     end
   end
 end

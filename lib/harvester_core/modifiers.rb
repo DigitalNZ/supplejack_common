@@ -16,16 +16,6 @@ module HarvesterCore
       HarvesterCore::AttributeValue.new(value)
     end
 
-    def fetch(options={})
-      if options[:xpath]
-        value = document ? document.xpath(options[:xpath]).text : nil
-      elsif options[:path]
-        value = document[options[:path]]
-      end
-
-      HarvesterCore::AttributeValue.new(value)
-    end
-
     def compose(*args)
       options = args.extract_options!
       options[:separator] ||= ""
@@ -40,14 +30,6 @@ module HarvesterCore
       end
 
       HarvesterCore::AttributeValue.new(values.flatten.join(options[:separator]))
-    end
-
-    def node(xpath)
-      if document
-        document.xpath(xpath)
-      else
-        HarvesterCore::AttributeValue.new(nil)
-      end
     end
   end
 end

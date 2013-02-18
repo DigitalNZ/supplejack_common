@@ -68,6 +68,11 @@ module HarvesterCore
         end
       end
 
+      def fetch(path)
+        value = document[path.to_s]
+        HarvesterCore::AttributeValue.new(value)
+      end
+
     end
   end
 end
