@@ -31,7 +31,9 @@ module HarvesterCore
 
       if paginated?
         while more_results? do
+          @records.clear
           @records = klass.fetch_records(next_url)
+
           unless yield_from_records(&block)
             return nil
           end
@@ -90,7 +92,7 @@ module HarvesterCore
     private
 
     def yield_from_records(&block)
-      @records.each do |record|
+      while record = @records.shift
         record.set_attribute_values
 
         if klass.rejection_rules && record.instance_eval(&klass.rejection_rules)
