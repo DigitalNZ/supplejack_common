@@ -6,7 +6,7 @@ module HarvesterCore
 
       def initialize(original_value, separator)
         @original_value = Array(original_value)
-        @separator = separator.to_s
+        @separator = separator
       end
 
       def value

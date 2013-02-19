@@ -21,5 +21,10 @@ describe HarvesterCore::OptionTransformers::SplitOption do
       split.stub(:original_value) { ["Dogs,cats", "fish,tiger"] }
       split.value.should eq ["Dogs", "cats", "fish", "tiger"]
     end
+
+    it "splits based on a regular expression" do
+      split = klass.new("Dogs, cats and elephants", /,|and/)
+      split.value.should eq ["Dogs", " cats ", " elephants"]
+    end
   end
 end
