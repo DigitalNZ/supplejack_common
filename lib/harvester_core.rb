@@ -1,4 +1,5 @@
 require 'active_support/all'
+require 'active_model'
 require 'nokogiri'
 require 'oai'
 require 'rest_client'

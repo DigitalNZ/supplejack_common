@@ -2,6 +2,7 @@ module HarvesterCore
   class Base
     include HarvesterCore::Modifiers
     include HarvesterCore::OptionTransformers
+    include ActiveModel::Validations
 
     class_attribute :_base_urls
     class_attribute :_attribute_definitions
@@ -98,10 +99,6 @@ module HarvesterCore
 
       def with_options(options={}, &block)
         yield(HarvesterCore::Scope.new(self, options))
-      end
-
-      def custom_instance_methods
-        self.instance_methods(false)
       end
 
       def reject_if(&block)
@@ -204,8 +201,6 @@ module HarvesterCore
           self.field_errors[name] << "Error in the block: #{e.message}"
           return nil
         end
-      elsif self.class.custom_instance_methods.include?(name)
-        self.send(name)
       else
         original_attributes[name]
       end
@@ -222,11 +217,15 @@ module HarvesterCore
     end
 
     def attribute_names
-      @attribute_names ||= self.class.attribute_definitions.keys + self.class.custom_instance_methods
+      @attribute_names ||= self.class.attribute_definitions.keys
     end
 
     def to_s
       "<#{self.class.to_s} @original_attributes=#{@original_attributes.inspect}>"
+    end
+
+    def read_attribute_for_validation(attribute)
+      final_attribute_value(attribute.to_sym)
     end
 
     def method_missing(symbol, *args, &block)

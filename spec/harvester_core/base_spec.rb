@@ -200,16 +200,6 @@ describe HarvesterCore::Base do
     end
   end
 
-  describe ".custom_instance_methods" do
-    it "returns any method defined in the class" do
-      class CustomMethodTest < HarvesterCore::Base
-        def category; "Hi"; end
-      end
-
-      CustomMethodTest.custom_instance_methods.should include(:category)
-    end
-  end
-
   describe ".reject_if" do
     it "adds a new rejection rule" do
       klass.reject_if { "value" }
@@ -366,11 +356,6 @@ describe HarvesterCore::Base do
     it "returns a list all attributes defined" do
       klass.attribute :content_partner, {default: "Google"}
       klass.new.attribute_names.should include(:content_partner)
-    end
-
-    it "returns any method defined in the class" do
-      klass.stub(:custom_instance_methods) { [:category] }
-      klass.new.attribute_names.should include(:category)
     end
   end
 end
