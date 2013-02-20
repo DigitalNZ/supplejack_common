@@ -70,11 +70,17 @@ module HarvesterCore
         end
       end
 
-      def initialize(url_or_node)
-        if url_or_node.is_a?(String)
-          @url = url_or_node
+      attr_accessor :original_xml
+
+      def initialize(url_or_node, from_raw=false)
+        if from_raw
+          @original_xml = url_or_node
         else
-          @document = url_or_node
+          if url_or_node.is_a?(String)
+            @url = url_or_node
+          else
+            @document = url_or_node
+          end
         end
 
         super
@@ -90,9 +96,14 @@ module HarvesterCore
 
       def document
         @document ||= begin
-          xml = HarvesterCore::Request.get(self.url, self._throttle)
-          xml = HarvesterCore::Utils.remove_default_namespace(xml)
-          xml = HarvesterCore::Utils.add_html_tag(xml)
+          if @url
+            xml = HarvesterCore::Request.get(self.url, self._throttle)
+            xml = HarvesterCore::Utils.remove_default_namespace(xml)
+            xml = HarvesterCore::Utils.add_html_tag(xml)
+          elsif @original_xml
+            xml = @original_xml
+          end
+
           Nokogiri.parse(xml)
         end
       end

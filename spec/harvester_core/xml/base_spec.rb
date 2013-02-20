@@ -148,9 +148,15 @@ describe HarvesterCore::Xml::Base do
     end
 
     it "initializes a xml record" do
-      node = mock(:node)
+      node = mock(:node, to_xml: "<record></record>")
       record = klass.new(node)
       record.document.should eq node
+    end
+
+    it "initializes from raw xml" do
+      xml = "<record></record>"
+      record = klass.new(xml, true)
+      record.original_xml.should eq xml
     end
   end
 
@@ -183,6 +189,12 @@ describe HarvesterCore::Xml::Base do
       HarvesterCore::Request.stub(:get) { "<html>Some xml data</html>" }
       Nokogiri.should_receive(:parse).with("<html>Some xml data</html>") { document }
       record.document
+    end
+
+    it "builds a document from original_xml" do
+      xml = "<record></record>"
+      record = klass.new(xml, true)
+      record.document.to_xml.should eq "<?xml version=\"1.0\"?>\n<record/>\n"
     end
   end
 

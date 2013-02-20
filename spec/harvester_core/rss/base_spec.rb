@@ -35,4 +35,31 @@ describe HarvesterCore::Rss::Base do
       klass.xml_records
     end
   end
+
+  describe "#initialize" do
+    let(:xml) { "<record><title>Hi</title></record>" }
+    let(:node) { mock(:node, to_xml: xml ).as_null_object }
+
+    it "initializes the record from xml" do
+      record = klass.new(xml)
+      record.original_xml.should eq xml
+    end
+
+    it "intializes the record from a node" do
+      record = klass.new(node)
+      record.original_xml.should eq xml
+    end
+  end
+
+  
+  describe "#document" do
+    let(:xml) { "<record><title>Hi</title></record>" }
+    let(:record) { klass.new(xml) }
+    let(:document) { mock(:document).as_null_object }
+
+    it "should parse the xml with Nokogiri" do
+      Nokogiri.should_receive(:parse).with(xml) { document }
+      record.document.should eq document
+    end
+  end
 end

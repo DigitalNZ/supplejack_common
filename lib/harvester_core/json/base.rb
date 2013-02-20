@@ -43,8 +43,8 @@ module HarvesterCore
 
       end
 
-      def initialize(*args)
-        @json_attributes = args.first || {}
+      def initialize(attributes, from_raw=false)
+        @json_attributes = attributes || {}
         super
       end
 

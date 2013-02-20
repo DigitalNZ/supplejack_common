@@ -31,8 +31,12 @@ module HarvesterCore
 
       attr_reader :tapuhi_source
 
-      def initialize(tapuhi_source)
-        @tapuhi_source = tapuhi_source.force_encoding("ISO-8859-1")
+      def initialize(source, from_raw=false)
+        if from_raw
+          @fields = JSON.parse(source)
+        else
+          @tapuhi_source = source.force_encoding("ISO-8859-1")
+        end
         super
       end
 

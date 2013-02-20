@@ -5,6 +5,8 @@ module HarvesterCore
 
       self.clear_definitions
 
+      attr_accessor :original_xml
+
       class << self
         def _record_selector
           "//item"
@@ -38,13 +40,17 @@ module HarvesterCore
         end
       end
 
-      def initialize(node)
-        @document = node
+      def initialize(xml, from_raw=false)
+        @original_xml = xml
+        @original_xml = xml.to_xml if xml.respond_to?(:to_xml)
         super
       end
 
       def document
-        @document
+        @document ||= begin
+          xml = HarvesterCore::Utils.remove_default_namespace(original_xml)
+          Nokogiri.parse(xml)
+        end
       end
 
     end

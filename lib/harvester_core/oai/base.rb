@@ -38,7 +38,7 @@ module HarvesterCore
         end
       end
 
-      def initialize(xml)
+      def initialize(xml, from_raw=false)
         @original_xml = xml
         @original_xml = xml.element.to_s if xml.respond_to?(:element)
         super

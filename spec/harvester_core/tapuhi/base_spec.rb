@@ -27,6 +27,12 @@ describe HarvesterCore::Tapuhi::Base do
       record = klass.new(source)
       record.tapuhi_source.should eq source
     end
+
+    it "initializes the record from a json array (raw)" do
+      json = ["title", "date"].to_json
+      record = klass.new(json, true)
+      record.fields.should eq ["title", "date"]
+    end
   end
 
   describe "#fields" do
