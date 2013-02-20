@@ -26,7 +26,7 @@ describe HarvesterCore::Json::Base do
   end
 
   it "gets the record description" do
-    record.description.should eq ["New Zealand Institute"]
+    record.description.should eq ["New Zealand Instit..."]
   end
 
   it "gets the creator" do

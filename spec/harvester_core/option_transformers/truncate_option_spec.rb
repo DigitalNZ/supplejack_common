@@ -15,7 +15,7 @@ describe HarvesterCore::OptionTransformers::TruncateOption do
 
   describe "#value" do
     it "truncates the string to 50 characters" do
-      truncator.value.should eq ["Some description that should be longer than 50 cha"]
+      truncator.value.should eq ["Some description that should be longer than 50 ..."]
     end
 
     it "should truncate non strings" do

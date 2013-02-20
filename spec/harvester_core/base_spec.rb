@@ -306,7 +306,7 @@ describe HarvesterCore::Base do
 
     it "truncates the value to 10 charachters" do
       record.stub(:attribute_value) { "Some random text longer that 10 charachters" }
-      record.transformed_attribute_value({truncate: 10}).should eq ["Some rando"]
+      record.transformed_attribute_value({truncate: 10}).should eq ["Some ra..."]
     end
 
     it "parses a date" do

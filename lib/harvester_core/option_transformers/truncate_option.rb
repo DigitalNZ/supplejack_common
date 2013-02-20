@@ -4,7 +4,7 @@ module HarvesterCore
       
       attr_reader :original_value, :length, :omission
 
-      def initialize(original_value, length, omission="")
+      def initialize(original_value, length, omission="...")
         @original_value = Array(original_value)
         @length = length.to_i
         @omission = omission.to_s

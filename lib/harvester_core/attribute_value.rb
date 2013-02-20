@@ -63,8 +63,8 @@ module HarvesterCore
       HarvesterCore::Modifiers::Splitter.new(original_value, split_value).value
     end
 
-    def truncate(length)
-      HarvesterCore::Modifiers::Truncator.new(original_value, length).value
+    def truncate(length, omission="...")
+      HarvesterCore::Modifiers::Truncator.new(original_value, length, omission).value
     end
   end
 end

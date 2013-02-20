@@ -14,8 +14,13 @@ describe HarvesterCore::Modifiers::Truncator do
 
   describe "modify" do
     it "truncates the text to 30 charachters" do
-      truncator = klass.new(["A string longer than 30 charachters"], 30)
+      truncator = klass.new(["A string longer than 30 charachters"], 30, "")
       truncator.modify.should eq ["A string longer than 30 charac"]
+    end
+
+    it "adds a ommission at the end" do
+      truncator = klass.new(["A string longer than 30 charachters"], 30, "...")
+      truncator.modify.should eq ["A string longer than 30 cha..."]
     end
   end
 

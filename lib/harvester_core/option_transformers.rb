@@ -26,7 +26,15 @@ module HarvesterCore
       StripWhitespaceOption.new(original_value).value
     end
 
-    def truncate_option(original_value, length, omission="")
+    def truncate_option(original_value, options)
+      omission = "..."
+      if options.is_a?(Hash)
+        omission = options[:omission].to_s
+        length = options[:length].to_i
+      elsif options.is_a?(Integer)
+        length = options
+      end
+
       TruncateOption.new(original_value, length, omission).value
     end
 
