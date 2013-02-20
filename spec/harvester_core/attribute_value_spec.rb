@@ -37,6 +37,18 @@ describe HarvesterCore::AttributeValue do
       value3 = value1 + value2
       value3.original_value.should eq ["Images", "Videos", "News"]
     end
+
+    it "adds the values of a array to a attribute value" do
+      value1 = klass.new("Images")
+      value2 = value1 + ["Videos"]
+      value2.original_value.should eq ["Images", "Videos"]
+    end
+
+    it "adds a string to a attribute value" do
+      value1 = klass.new("Images")
+      value2 = value1 + "Videos"
+      value2.original_value.should eq ["Images", "Videos"]
+    end
   end
 
   describe "#includes?" do

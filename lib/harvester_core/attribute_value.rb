@@ -17,7 +17,8 @@ module HarvesterCore
     end
 
     def +(attribute_value)
-      self.class.new(self.original_value + attribute_value.original_value)
+      attribute_value = attribute_value.original_value if attribute_value.is_a?(AttributeValue)
+      self.class.new(self.original_value + Array(attribute_value))
     end
 
     def includes?(value)
