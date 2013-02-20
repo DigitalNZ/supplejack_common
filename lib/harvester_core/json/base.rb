@@ -56,7 +56,7 @@ module HarvesterCore
         document
       end
 
-      def strategy_value(options={})
+      def strategy_value(options={}, document=nil)
         options ||= {}
         path = options[:path]
         return nil unless path.present?

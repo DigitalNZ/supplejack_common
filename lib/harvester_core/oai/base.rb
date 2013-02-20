@@ -10,7 +10,7 @@ module HarvesterCore
 
       VALID_RECORDS_OPTIONS = [:from, :limit]
 
-      attr_reader :oai_record, :root
+      attr_reader :original_xml
 
       class << self
         attr_reader :response
@@ -38,21 +38,9 @@ module HarvesterCore
         end
       end
 
-      def initialize(oai_record)
-        @oai_record = oai_record
-        super
-      end
-
-      def deleted?
-        self.oai_record.try(:deleted?)
-      end
-
-      def set_attribute_values
-        metadata_nodes = oai_record.metadata || []
-        metadata_nodes = metadata_nodes.map {|node| node if node.to_s.present? }.compact
-        @root = metadata_nodes.try(:first)
-        @original_attributes[:identifier] = oai_record.header.identifier
-
+      def initialize(xml)
+        @original_xml = xml
+        @original_xml = xml.element.to_s if xml.respond_to?(:element)
         super
       end
 
@@ -65,30 +53,13 @@ module HarvesterCore
         super + self._enrichment_definitions.keys
       end
 
-      def strategy_value(options={})
-        options ||= {}
-        return nil if root.nil? || options[:from].blank?
-
-        values = []
-        selectors = Array(options[:from])
-        selectors.each do |selector|
-          values += root.get_elements(selector)
-        end
-
-        values = values.map(&:texts).flatten.map(&:to_s) if values.try(:any?)
-        values
-      end
-
       def document
         @document ||= begin
-          xml = oai_record.element.to_s
-          xml = HarvesterCore::Utils.remove_default_namespace(xml)
-          Nokogiri.parse(xml)
+          xml = HarvesterCore::Utils.remove_default_namespace(original_xml)
+          doc = Nokogiri.parse(xml)
+          doc.remove_namespaces!
+          doc
         end
-      end
-
-      def raw_data
-        @raw_data ||= document.to_xml
       end
 
       def get_enrichment_url

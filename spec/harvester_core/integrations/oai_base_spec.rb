@@ -27,11 +27,11 @@ describe HarvesterCore::Oai::Base do
       record.title.should eq ["Selected resonant converters for IPT power supplies"]
     end
 
-    context "overriden methods" do
+    it "gets the record identifier" do
+      record.identifier.should eq ["oai:researchspace.auckland.ac.nz:2292/3"]
+    end
 
-      it "finds a identifier without a 'http' stirng" do
-        record.identifier.should eq ["Thesis (PhD--Electrical and Electronic Engineering)--University of Auckland, 2001."]
-      end
+    context "overriden methods" do
 
       it "generates a enrichment_url from the identifier" do
         record.enrichment_url.should eq ["https://researchspace.auckland.ac.nz/handle/2292/3?show=full"]

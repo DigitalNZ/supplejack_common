@@ -15,5 +15,14 @@ module HarvesterCore
         HarvesterCore::AttributeValue.new(nil)
       end
     end
+
+    def strategy_value(options={}, document=nil)
+      return HarvesterCore::ConditionalOption.new(document, options).value if options[:xpath] && options[:if]
+      return HarvesterCore::XpathOption.new(document, options).value if options[:xpath]
+    end
+
+    def raw_data
+      @raw_data ||= document.to_xml
+    end
   end
 end

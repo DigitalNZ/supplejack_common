@@ -266,18 +266,8 @@ describe HarvesterCore::Base do
     end
 
     it "gets the value from another location" do
-      record.should_receive(:strategy_value).with(from: :some_path) { "Google" }
+      record.should_receive(:strategy_value).with({from: :some_path}, nil) { "Google" }
       record.attribute_value({from: :some_path}).should eq "Google"
-    end
-
-    it "gets the value from the conditional options" do
-      HarvesterCore::ConditionalOption.should_receive(:new) { option_object }
-      record.attribute_value({xpath: "table/tr", if: {"td[1]" => "dc.date"}, value: "td[2]"}, document).should eq "Google"
-    end
-
-    it "gets the value from the xpath option" do
-      HarvesterCore::XpathOption.should_receive(:new) { option_object }
-      record.attribute_value({xpath: "table/tr"}, document).should eq "Google"
     end
   end
 

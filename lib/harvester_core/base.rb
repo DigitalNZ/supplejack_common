@@ -168,12 +168,10 @@ module HarvesterCore
 
     def attribute_value(options={}, document=nil)
       return options[:default] if options[:default]
-      return HarvesterCore::ConditionalOption.new(document, options).value if options[:xpath] && options[:if]
-      return HarvesterCore::XpathOption.new(document, options).value if options[:xpath]
-      return strategy_value(options)
+      return strategy_value(options, document)
     end
 
-    def strategy_value(name)
+    def strategy_value(options, document=nil)
       raise NotImplementedError.new("All subclasses of HarvesterCore::Base must override #strategy_value.")
     end
 

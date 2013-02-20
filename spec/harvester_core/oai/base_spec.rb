@@ -82,44 +82,19 @@ describe HarvesterCore::Oai::Base do
     end
   end
 
-  describe "#deleted?" do
-    it "returns true" do
-      oai_record.stub(:deleted?) { true }
-      record.deleted?.should be_true
+  describe "#initialize" do
+    let(:xml) { "<record><title>Hi</title></record>" }
+
+    it "initializes a record from XML" do
+      record = klass.new(xml)
+      record.original_xml.should eq xml
     end
 
-    it "returns false" do
-      oai_record.stub(:deleted?) { false }
-      record.deleted?.should be_false
-    end
-  end
-
-  describe "#set_attribute_values" do
-    before { record.stub(:document) { nil }}
-
-    it "sets the header identifier" do
-      record.set_attribute_values
-      record.original_attributes.should include(identifier: "123")
-    end
-
-    it "sets the default values" do
-      klass.attribute :category, {default: "Papers"}
-      record.set_attribute_values
-      record.original_attributes.should include(category: ["Papers"])
-    end
-
-    it "extracts the values from the root" do
-      root.stub(:get_elements) { [mock(:node, texts: "Dogs")] }
-      klass.attribute :title, {from: "dc:title"}
-      record.should_receive(:attribute_value).with({from: "dc:title"}, nil).and_return(["Dogs"])
-      record.set_attribute_values
-      record.original_attributes.should include(title: ["Dogs"])
-    end
-
-    it "sets the root to nil when metadata is not present" do
-      oai_record.stub(:metadata) { nil }
-      record.set_attribute_values
-      record.root.should be_nil
+    it "gets the XML from the OAI record" do
+      element = mock(:element, to_s: xml)
+      oai_record.stub(:element) { element }
+      record = klass.new(oai_record)
+      record.original_xml.should eq xml
     end
   end
 
@@ -141,40 +116,14 @@ describe HarvesterCore::Oai::Base do
     end
   end
 
-  describe "#strategy_value" do
-    let(:root) { mock(:rexml_element).as_null_object }
-    let(:node) { mock(:node, texts: "Dogs and cats") }
+  describe "#document" do
+    let(:xml) { "<record><title>Hi</title></record>" }
+    let(:record) { klass.new(xml) }
+    let(:document) { mock(:document).as_null_object }
 
-    before do
-      record.stub(:root) { root }
-    end
-
-    it "extracts a value for a given node name" do
-      root.should_receive(:get_elements).with("dc:title") { [node] }
-      record.strategy_value(from: "dc:title").should eq ["Dogs and cats"]
-    end
-
-    it "returns nil when :from is empty" do
-      record.strategy_value(nil).should be_nil
-    end
-
-    it "returns nil when :from is empty" do
-      record.strategy_value(from: "").should be_nil
-    end
-
-    it "returns nil when root is nil" do
-      record.stub(:root) { nil }
-      record.strategy_value(from: "dc:title").should be_nil
-    end
-
-    context "array" do
-      let(:node2) { mock(:node, texts: "Boats") }
-
-      it "extracts multiple values" do
-        root.should_receive(:get_elements).with("dc:title") { [node] }
-        root.should_receive(:get_elements).with("dc:subject") { [node2] }
-        record.strategy_value(from: ["dc:title", "dc:subject"]).should eq ["Dogs and cats", "Boats"]
-      end
+    it "should parse the xml with Nokogiri" do
+      Nokogiri.should_receive(:parse).with(xml) { document }
+      record.document.should eq document
     end
   end
 
@@ -183,7 +132,7 @@ describe HarvesterCore::Oai::Base do
 
     it "returns the raw xml" do
       record = klass.new(oai_record)
-      record.raw_data.should eq "<?xml version=\"1.0\"?>\n<record>\n  <id>1</id>\n</record>\n"
+      record.raw_data.should eq "<?xml version=\"1.0\" standalone=\"no\"?>\n<record>\n  <id>1</id>\n</record>\n"
     end
   end
 
