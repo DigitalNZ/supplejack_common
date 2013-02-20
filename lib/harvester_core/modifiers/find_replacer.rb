@@ -4,7 +4,7 @@ module HarvesterCore
       attr_reader :regexp, :replacement_rules
 
       def initialize(original_value, replacement_rules={})
-        @original_value = original_value
+        @original_value = original_value.map(&:dup)
         @replacement_rules = replacement_rules
       end
 
