@@ -77,6 +77,20 @@ describe HarvesterCore::Json::Base do
       record = klass.new(nil)
       record.json_attributes.should eq({})
     end
+
+    it "initializes from a json string" do
+      data = {"title" => "Hi"}.to_json
+      record = klass.new(data)
+      record.document.should eq({"title" => "Hi"})
+    end
+  end
+
+  describe "#full_raw_data" do
+    let(:record) { klass.new({"title" => "Hi"}) }
+
+    it "should convert the raw_data to json" do
+      record.full_raw_data.should eq({"title" => "Hi"}.to_json)
+    end
   end
 
   describe "#strategy_value" do

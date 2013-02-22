@@ -122,7 +122,7 @@ describe HarvesterCore::Oai::Base do
     let(:document) { mock(:document).as_null_object }
 
     it "should parse the xml with Nokogiri" do
-      Nokogiri.should_receive(:parse).with(xml) { document }
+      Nokogiri::XML.should_receive(:parse).with(xml) { document }
       record.document.should eq document
     end
   end

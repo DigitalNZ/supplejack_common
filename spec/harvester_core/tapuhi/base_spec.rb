@@ -55,6 +55,15 @@ describe HarvesterCore::Tapuhi::Base do
     end
   end
 
+  describe "#full_raw_data" do
+    let(:fields) { [[], ["Title"], ["Date"], [], ["Subject"]] }
+
+    it "should convert the raw data to json" do
+      record.stub(:fields) { fields }
+      record.full_raw_data.should eq fields.to_json
+    end
+  end
+
   describe "#fetch" do
     it "retrieves a value from the fields array" do
       record.stub(:fields) { [[], ["Title"], ["Date"], [], ["Subject"]] }

@@ -16,6 +16,13 @@ describe HarvesterCore::Xml::Base do
     end
   end
 
+  describe ".record_format" do
+    it "stores the format of the actual record" do
+      klass.record_format :xml
+      klass._record_format.should eq :xml
+    end
+  end
+
   describe ".record_selector" do
     it "stores the xpath to retrieve every record" do
       klass.record_selector "//items/item"
@@ -42,7 +49,7 @@ describe HarvesterCore::Xml::Base do
 
     it "reads the raw xml and created a nokogiri document" do
       klass.stub(:index_xml) { "Some xml" }
-      Nokogiri.should_receive(:parse).with("Some xml") { document }
+      Nokogiri::XML.should_receive(:parse).with("Some xml") { document }
       klass.index_document
     end
   end
@@ -160,6 +167,30 @@ describe HarvesterCore::Xml::Base do
     end
   end
 
+  describe "#format" do
+    context "sitemap records" do
+      it "defaults to HTML" do
+        klass.new("http://google.com/1").format.should eq :html
+      end
+
+      it "returns XML when format is explicit at the klass level" do
+        klass.record_format :xml
+        klass.new("http://google.com/1").format.should eq :xml
+      end
+    end
+
+    context "records from single XML" do
+      it "default to XML for a raw record" do
+        klass.new("<record/>", true).format.should eq :xml
+      end
+
+      it "returns HTML when format is explicit for raw records" do
+        klass.record_format :html
+        klass.new("<body/>", true).format.should eq :html
+      end
+    end
+  end
+
   describe "#url" do
     before do
       klass.any_instance.stub(:set_attribute_values) { nil }
@@ -185,16 +216,55 @@ describe HarvesterCore::Xml::Base do
     let(:document) { mock(:document) }
     let(:record) { klass.new("http://google.com") }
 
-    it "parses the record xml" do
-      HarvesterCore::Request.stub(:get) { "<html>Some xml data</html>" }
-      Nokogiri.should_receive(:parse).with("<html>Some xml data</html>") { document }
-      record.document
+    context "format is XML" do
+      let(:xml) { "<record>Some xml data</record>" }
+
+      before do
+        record.stub(:format) { :xml }
+        HarvesterCore::Request.stub(:get) { xml }
+        HarvesterCore::Utils.stub(:remove_default_namespace).with(xml) { xml }
+      end
+
+      it "requets a record and removes the default namespace" do
+        HarvesterCore::Request.should_receive(:get) { xml }
+        HarvesterCore::Utils.should_receive(:remove_default_namespace).with(xml) { xml }
+        Nokogiri::XML.should_receive(:parse).with(xml) { document }
+        record.document.should eq document
+      end
+
+      it "should not add a HTML tag" do
+        HarvesterCore::Utils.should_not_receive(:add_html_tag)
+        record.document
+      end
+
+      it "builds a document from original_xml" do
+        record = klass.new("<record>other data</record>", true)
+        record.document.to_xml.should eq "<?xml version=\"1.0\"?>\n<record>other data</record>\n"
+      end
     end
 
-    it "builds a document from original_xml" do
-      xml = "<record></record>"
-      record = klass.new(xml, true)
-      record.document.to_xml.should eq "<?xml version=\"1.0\"?>\n<record/>\n"
+    context "format is HTML" do
+      let(:html) { "<html>Some data</html>" }
+
+      before do
+        record.stub(:format) { :html }
+        HarvesterCore::Request.stub(:get) { html }
+      end
+
+      it "parses the requested HTML" do
+        HarvesterCore::Request.should_receive(:get) { html }
+        record.document
+      end
+
+      it "should not remove the default namespace" do
+        HarvesterCore::Utils.should_not_receive(:remove_default_namespace)
+        record.document
+      end
+
+      it "should parse the HTML document" do
+        Nokogiri::HTML.should_receive(:parse).with("<html>Some data</html>")
+        record.document
+      end
     end
   end
 
@@ -208,7 +278,7 @@ describe HarvesterCore::Xml::Base do
 </document>
 XML
     end
-    let(:document) { Nokogiri.parse(xml) }
+    let(:document) { Nokogiri::XML.parse(xml) }
 
     context "full xml document" do
       let(:record) { klass.new("http://google.com/1") }

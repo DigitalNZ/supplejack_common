@@ -30,5 +30,10 @@ module HarvesterCore
       end
       html
     end
+
+    def add_namespaces(xml, namespaces={})
+      namespaces_string = namespaces.map {|k,v| "#{k}='#{v}'" }.join(" ")
+      "<root #{namespaces_string}>#{xml}</root>"
+    end
   end
 end

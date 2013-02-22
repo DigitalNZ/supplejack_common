@@ -7,6 +7,7 @@ module HarvesterCore
 
       class_attribute :_record_url_selector
       class_attribute :_record_selector
+      class_attribute :_record_format
       class_attribute :_total_results
 
       class << self
@@ -29,12 +30,18 @@ module HarvesterCore
         end
 
         def xml_records(url=nil)
-          xml_nodes = index_document(url).xpath(self._record_selector)
+          document = index_document(url)
+          self._namespaces = document.namespaces
+          xml_nodes = document.xpath(self._record_selector)
           xml_nodes.map {|node | new(node) }
         end
 
         def record_url_selector(xpath)
           self._record_url_selector = xpath
+        end
+
+        def record_format(format)
+          self._record_format = format.to_sym
         end
 
         def record_selector(xpath)
@@ -47,7 +54,7 @@ module HarvesterCore
 
         def index_document(url=nil)
           xml = HarvesterCore::Utils.remove_default_namespace(self.index_xml(url))
-          doc = Nokogiri.parse(xml)
+          doc = Nokogiri::XML.parse(xml)
           if pagination_options
             self._total_results ||= doc.xpath(self.pagination_options[:total_selector]).text.to_i
           end
@@ -67,6 +74,7 @@ module HarvesterCore
           self._record_url_selector = nil
           self._record_selector = nil
           self._total_results = nil
+          self._record_format = nil
         end
       end
 
@@ -86,6 +94,11 @@ module HarvesterCore
         super
       end
 
+      def format
+        return self.class._record_format if self.class._record_format.present?
+        @url.present? ? :html : :xml
+      end
+
       def url
         if self.class.basic_auth_credentials
           @url.gsub("http://", "http://#{self.class.basic_auth_credentials[:username]}:#{self.class.basic_auth_credentials[:password]}@")
@@ -97,14 +110,18 @@ module HarvesterCore
       def document
         @document ||= begin
           if @url
-            xml = HarvesterCore::Request.get(self.url, self._throttle)
-            xml = HarvesterCore::Utils.remove_default_namespace(xml)
-            xml = HarvesterCore::Utils.add_html_tag(xml)
+            response = HarvesterCore::Request.get(self.url, self._throttle)
+            response = HarvesterCore::Utils.remove_default_namespace(response) if format == :xml
+            response = HarvesterCore::Utils.add_html_tag(response) if format == :html
           elsif @original_xml
-            xml = @original_xml
+            response = @original_xml
           end
 
-          Nokogiri.parse(xml)
+          if format == :html
+            Nokogiri::HTML.parse(response)
+          else
+            Nokogiri::XML.parse(response)
+          end
         end
       end
 

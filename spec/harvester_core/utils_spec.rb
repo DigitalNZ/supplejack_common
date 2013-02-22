@@ -73,4 +73,12 @@ describe HarvesterCore::Utils do
       end
     end
   end
+
+  describe "#add_namespaces" do
+    let(:xml) { "<record>Hi</record>" }
+
+    it "should enclose the XML in a root node with the namespaces" do
+      mod.add_namespaces(xml, "xmlns:media" => "http://search.yahoo.com/mrss/").should eq "<root xmlns:media='http://search.yahoo.com/mrss/'><record>Hi</record></root>"
+    end
+  end
 end

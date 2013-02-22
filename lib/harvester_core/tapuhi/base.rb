@@ -67,6 +67,10 @@ module HarvesterCore
         document
       end
 
+      def full_raw_data
+        fields.to_json
+      end
+
       def fetch(integer)
         HarvesterCore::AttributeValue.new(fields[integer.to_i])
       end

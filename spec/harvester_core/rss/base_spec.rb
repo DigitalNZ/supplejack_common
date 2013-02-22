@@ -51,14 +51,14 @@ describe HarvesterCore::Rss::Base do
     end
   end
 
-  
+
   describe "#document" do
     let(:xml) { "<record><title>Hi</title></record>" }
     let(:record) { klass.new(xml) }
     let(:document) { mock(:document).as_null_object }
 
     it "should parse the xml with Nokogiri" do
-      Nokogiri.should_receive(:parse).with(xml) { document }
+      Nokogiri::XML.should_receive(:parse).with(xml) { document }
       record.document.should eq document
     end
   end

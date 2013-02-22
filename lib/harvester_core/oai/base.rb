@@ -56,7 +56,7 @@ module HarvesterCore
       def document
         @document ||= begin
           xml = HarvesterCore::Utils.remove_default_namespace(original_xml)
-          doc = Nokogiri.parse(xml)
+          doc = Nokogiri::XML.parse(xml)
           doc.remove_namespaces!
           doc
         end
@@ -74,7 +74,7 @@ module HarvesterCore
       end
 
       def enrichment_document
-        @enrichment_document ||= Nokogiri.parse(HarvesterCore::Request.get(self.get_enrichment_url, self._throttle))
+        @enrichment_document ||= Nokogiri::HTML.parse(HarvesterCore::Request.get(self.get_enrichment_url, self._throttle))
       end
 
       def enrich_record

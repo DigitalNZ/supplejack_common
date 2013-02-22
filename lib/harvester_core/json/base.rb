@@ -44,7 +44,13 @@ module HarvesterCore
       end
 
       def initialize(attributes, from_raw=false)
-        @json_attributes = attributes || {}
+        if attributes.is_a?(Hash)
+          @json_attributes = attributes || {}
+        elsif attributes.is_a?(String)
+          @json_attributes = JSON.parse(attributes)
+        else
+          @json_attributes = {}
+        end
         super
       end
 
@@ -54,6 +60,10 @@ module HarvesterCore
 
       def raw_data
         document
+      end
+
+      def full_raw_data
+        raw_data.to_json
       end
 
       def strategy_value(options={}, document=nil)
