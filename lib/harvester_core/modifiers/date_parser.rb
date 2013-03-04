@@ -1,6 +1,6 @@
 module HarvesterCore
-  module OptionTransformers
-    class ParseDateOption
+  module Modifiers
+    class DateParser < AbstractModifier
       Time.zone = "UTC"
       Chronic.time_class = Time.zone
 
@@ -12,7 +12,7 @@ module HarvesterCore
         @errors = []
       end
 
-      def value
+      def modify
         original_value.map {|v| parse_date(v) }
       end
 

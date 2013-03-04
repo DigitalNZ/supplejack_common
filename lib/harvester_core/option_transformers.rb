@@ -3,8 +3,6 @@ require "harvester_core/option_transformers/join_option"
 require "harvester_core/option_transformers/strip_html_option"
 require "harvester_core/option_transformers/strip_whitespace_option"
 require "harvester_core/option_transformers/truncate_option"
-require "harvester_core/option_transformers/parse_date_option"
-require "harvester_core/option_transformers/mapping_option"
 
 module HarvesterCore
   module OptionTransformers
@@ -39,11 +37,11 @@ module HarvesterCore
     end
 
     def parse_date_option(original_value, date_format)
-      ParseDateOption.new(original_value, date_format).value
+      HarvesterCore::Modifiers::DateParser.new(original_value, date_format).modify
     end
 
     def mapping_option(original_value, mappings={})
-      MappingOption.new(original_value, mappings).value
+      HarvesterCore::Modifiers::Mapper.new(original_value, mappings).modify
     end
 
   end

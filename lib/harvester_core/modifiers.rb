@@ -6,6 +6,8 @@ require "harvester_core/modifiers/finder_with"
 require "harvester_core/modifiers/finder_without"
 require "harvester_core/modifiers/splitter"
 require "harvester_core/modifiers/truncator"
+require "harvester_core/modifiers/date_parser"
+
 
 module HarvesterCore
   module Modifiers

@@ -1,8 +1,8 @@
 require "spec_helper"
 
-describe HarvesterCore::OptionTransformers::ParseDateOption do
+describe HarvesterCore::Modifiers::DateParser do
 
-  let(:klass) { HarvesterCore::OptionTransformers::ParseDateOption }
+  let(:klass) { HarvesterCore::Modifiers::DateParser }
   let(:parse_date) { klass.new("2012-10-10", true) }
   
   describe "#initialize" do
@@ -12,26 +12,26 @@ describe HarvesterCore::OptionTransformers::ParseDateOption do
     end
   end
 
-  describe "#value" do
+  describe "#modify" do
     it "parses the date with Chronic" do
       parse_date.stub(:original_value) { ["1st of January 1997"] }
-      parse_date.value.should eq [Time.utc(1997, 1, 1, 12)]
+      parse_date.modify.should eq [Time.utc(1997, 1, 1, 12)]
     end
 
     it "parses the date with a specific format" do
       parse_date.stub(:original_value) { ["01/12/1997"] }
       parse_date.stub(:format) { "%d/%m/%Y" }
-      parse_date.value.should eq [Time.utc(1997, 12, 1)]
+      parse_date.modify.should eq [Time.utc(1997, 12, 1)]
     end
 
     it "parses a circa date" do
       parse_date.stub(:original_value) { ["circa 1994"] }
-      parse_date.value.should eq [Time.utc(1994, 1, 1, 12)]
+      parse_date.modify.should eq [Time.utc(1994, 1, 1, 12)]
     end
 
     it "parses a decade date (1940s)" do
       parse_date.stub(:original_value) { ["1940s"] }
-      parse_date.value.should eq [Time.utc(1940, 1, 1, 12)]
+      parse_date.modify.should eq [Time.utc(1940, 1, 1, 12)]
     end
   end
 

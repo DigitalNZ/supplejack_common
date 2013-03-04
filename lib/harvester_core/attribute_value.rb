@@ -66,5 +66,9 @@ module HarvesterCore
     def truncate(length, omission="...")
       HarvesterCore::Modifiers::Truncator.new(original_value, length, omission).value
     end
+
+    def to_date(format=nil)
+      HarvesterCore::Modifiers::DateParser.new(original_value, format).value
+    end
   end
 end
