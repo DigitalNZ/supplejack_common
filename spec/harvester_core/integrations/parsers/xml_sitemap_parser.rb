@@ -6,7 +6,7 @@ class SitemapParser < HarvesterCore::Xml::Base
   attribute :collection,          default: "NZMuseums"
 
   attribute :thumbnail_url, xpath: ["//div[@class='ehObjectSingleImage']/a/img/@src", "//div[@class='ehObjectImageMultiple']/a/img/@src"] do
-    get(:thumbnail_url).find_and_replace(/m\.jpg$/ => "s.jpg")
+    get(:thumbnail_url).mapping(/m\.jpg$/ => "s.jpg")
   end
 
   with_options xpath: "//div[@class='ehFieldLabelDescription']", if: {"span[@class='label']" => :label_value}, value: "span[@class='value']" do |w|

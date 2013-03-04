@@ -1,8 +1,8 @@
 require "spec_helper"
 
-describe HarvesterCore::Modifiers::FindReplacer do
+describe HarvesterCore::Modifiers::Mapper do
 
-  let(:klass) { HarvesterCore::Modifiers::FindReplacer }
+  let(:klass) { HarvesterCore::Modifiers::Mapper }
   let(:original_value) { ["http://google.com?width=100&height=200"] }
   let(:replacer) { klass.new(original_value, { /width=[\d]{1,4}/ => "width=520" }) }
   
@@ -24,9 +24,9 @@ describe HarvesterCore::Modifiers::FindReplacer do
       replacer.modify.should eq ["http://google.com?width=520&height=310"]
     end
 
-    it "returns only the values that matched" do
-      replacer.stub(:replacement_rules) { {/depth=[\d]{1,4}/ => 'depth=800'} }
-      replacer.modify.should eq []
+    it "returns the original value when it does not match any rule" do
+      replacer.stub(:replacement_rules) { {/microsoft=[\d]/ => 'anything'} }
+      replacer.modify.should eq original_value
     end
   end
 

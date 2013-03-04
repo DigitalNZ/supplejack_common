@@ -47,8 +47,8 @@ module HarvesterCore
       HarvesterCore::Modifiers::FinderWithout.new(original_value, regexp, :all).value
     end
 
-    def find_and_replace(replacement_rules)
-      HarvesterCore::Modifiers::FindReplacer.new(original_value, replacement_rules).value
+    def mapping(replacement_rules)
+      HarvesterCore::Modifiers::Mapper.new(original_value, replacement_rules).value
     end
 
     def select(start_range, end_range=nil)

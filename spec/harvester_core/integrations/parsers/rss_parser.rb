@@ -14,6 +14,6 @@ class RssParser < HarvesterCore::Rss::Base
   end
 
   attribute :large_thumbnail_url do
-    get(:thumbnail_url).find_and_replace(/width=[\d]{1,4}/ => "width=520")
+    get(:thumbnail_url).mapping(/width=[\d]{1,4}/ => "width=520")
   end
 end

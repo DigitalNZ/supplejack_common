@@ -40,7 +40,7 @@ To aid in the method definitions a set of methods are provided to acomplish comm
 * find_all_with
 * find_without
 * find_all_without
-* find_and_replace
+* mapping
 * add
 * select
 

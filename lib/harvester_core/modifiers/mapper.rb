@@ -1,6 +1,6 @@
 module HarvesterCore
   module Modifiers
-    class FindReplacer < AbstractModifier
+    class Mapper < AbstractModifier
       attr_reader :regexp, :replacement_rules
 
       def initialize(original_value, replacement_rules={})
@@ -10,11 +10,10 @@ module HarvesterCore
 
       def modify
         values = original_value.map do |value|
-          replaced = nil
           replacement_rules.each do |regexp, substitute_value|
-            replaced = value.gsub!(regexp, substitute_value)
+            value = value.gsub(regexp, substitute_value)
           end
-          replaced.present? ? value : nil
+          value
         end.compact
 
         values

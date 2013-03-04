@@ -1,5 +1,5 @@
 require "harvester_core/modifiers/abstract_modifier"
-require "harvester_core/modifiers/find_replacer"
+require "harvester_core/modifiers/mapper"
 require "harvester_core/modifiers/range_selector"
 require "harvester_core/modifiers/adder"
 require "harvester_core/modifiers/finder_with"
