@@ -1,15 +1,15 @@
 require 'action_controller/vendor/html-scanner'
 
 module HarvesterCore
-  module OptionTransformers
-    class StripHtmlOption        
+  module Modifiers
+    class HtmlStripper < AbstractModifier       
       attr_reader :original_value
 
       def initialize(original_value)
         @original_value = Array(original_value)
       end
 
-      def value
+      def modify
         original_value.map do |v|
           v.is_a?(String) ? strip_tags(v) : v
         end

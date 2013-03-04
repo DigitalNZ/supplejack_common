@@ -1,8 +1,8 @@
 require "spec_helper"
 
-describe HarvesterCore::OptionTransformers::JoinOption do
+describe HarvesterCore::Modifiers::Joiner do
 
-  let(:klass) { HarvesterCore::OptionTransformers::JoinOption }
+  let(:klass) { HarvesterCore::Modifiers::Joiner }
   let(:join) { klass.new(["cats", "dogs"], ",") }
 
   describe "#initialize" do
@@ -14,7 +14,7 @@ describe HarvesterCore::OptionTransformers::JoinOption do
 
   describe "value" do
     it "joins the multiple elements into one" do
-      join.value.should eq ["cats,dogs"]
+      join.modify.should eq ["cats,dogs"]
     end
   end
 end

@@ -1,6 +1,6 @@
 module HarvesterCore
-  module OptionTransformers
-    class StripWhitespaceOption
+  module Modifiers
+    class WhitespaceStripper < AbstractModifier
         
       attr_reader :original_value
 
@@ -8,7 +8,7 @@ module HarvesterCore
         @original_value = Array(original_value)
       end
 
-      def value
+      def modify
         original_value.map do |v|
           v.is_a?(String) ? v.strip : v
         end

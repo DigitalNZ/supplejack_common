@@ -1,8 +1,8 @@
 require "spec_helper"
 
-describe HarvesterCore::OptionTransformers::StripWhitespaceOption do
+describe HarvesterCore::Modifiers::WhitespaceStripper do
 
-  let(:klass) { HarvesterCore::OptionTransformers::StripWhitespaceOption }
+  let(:klass) { HarvesterCore::Modifiers::WhitespaceStripper }
   let(:whitespace) { klass.new(" cats ") }
 
   describe "#initialize" do
@@ -11,17 +11,17 @@ describe HarvesterCore::OptionTransformers::StripWhitespaceOption do
     end
   end
 
-  describe "#value" do
+  describe "#modify" do
     let(:node) { mock(:node) }
 
     it "returns a stripped array of values" do
       whitespace.stub(:original_value) { [" Dogs ", " cats "] }
-      whitespace.value.should eq ["Dogs", "cats"]
+      whitespace.modify.should eq ["Dogs", "cats"]
     end
 
     it "returns the same array when the elements are not string" do
       whitespace.stub(:original_value) { [ node, node ] }
-      whitespace.value.should eq [node, node]
+      whitespace.modify.should eq [node, node]
     end
   end
 end
