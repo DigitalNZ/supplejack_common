@@ -14,16 +14,6 @@ describe HarvesterCore::Oai::Base do
     klass._attribute_definitions[klass.identifier] = {}
   end
 
-  describe ".enrich_attribute" do
-    it "adds a enrichment definition" do
-      class OaiEnrich < HarvesterCore::Oai::Base
-        enrich_attribute :citation, xpath: "table/td"
-      end
-
-      OaiEnrich._enrichment_definitions.should include(citation: {xpath: "table/td"})
-    end
-  end
-
   describe ".client" do
     it "initializes a new OAI client" do
       klass.base_url "http://google.com"
@@ -62,14 +52,6 @@ describe HarvesterCore::Oai::Base do
     end
   end
 
-  describe ".clear_definitions" do
-    it "clears the _enrichment_definitions" do
-      klass.enrich_attribute :subject, default: "Hi"
-      klass.clear_definitions
-      klass._enrichment_definitions.should be_empty
-    end
-  end
-
   describe "#resumption_token" do
     it "returns the current resumption_token" do
       klass.stub(:response) { mock(:response, resumption_token: "123456") }
@@ -98,24 +80,6 @@ describe HarvesterCore::Oai::Base do
     end
   end
 
-  describe "#attributes" do
-    it "should enrich the record" do
-      record.stub(:attribute_names) { [] }
-      record.should_receive(:enrich_record)
-      record.attributes
-    end
-  end
-
-  describe "#attribute_names" do
-    it "should add the enrichment definitions" do
-      class OaiEnrich < HarvesterCore::Oai::Base
-        enrich_attribute :citation, xpath: "table/td"
-      end
-
-      OaiEnrich.new(oai_record).attribute_names.should include(:citation)
-    end
-  end
-
   describe "#document" do
     let(:xml) { "<record><title>Hi</title></record>" }
     let(:record) { klass.new(xml) }
@@ -133,40 +97,6 @@ describe HarvesterCore::Oai::Base do
     it "returns the raw xml" do
       record = klass.new(oai_record)
       record.raw_data.should eq "<?xml version=\"1.0\" standalone=\"no\"?>\n<record>\n  <id>1</id>\n</record>\n"
-    end
-  end
-
-  describe "#enrich_record" do
-    let(:enrichment_doc) { mock(:document) }
-    let(:options) { {xpath: "table/tr", if: {"td[1]" => "dc.identifier.citation"}, value: "td[2]"} }
-    before { record.stub(:enrichment_document) { enrichment_doc } }
-
-    context "without a enrichment url" do
-      it "returns nil" do
-        record.stub(:enrichment_url) { "" }
-        record.enrich_record.should be_nil
-      end
-    end
-
-    context "with a enrichment_url" do
-      before do
-        klass._enrichment_definitions = {citation: options}
-        record.stub(:enrichment_url) { "http://google.com" }
-      end
-
-      it "populates with the enrichment values" do
-        conditional_option = mock(:conditional_option, value: "Dogs")
-        HarvesterCore::ConditionalOption.should_receive(:new).with(enrichment_doc, options) { conditional_option }
-        record.enrich_record
-        record.original_attributes.should include(citation: "Dogs")
-      end
-
-      it "should not populate the value when blank" do
-        conditional_option = mock(:conditional_option, value: "")
-        HarvesterCore::ConditionalOption.should_receive(:new).with(enrichment_doc, options) { conditional_option }
-        record.enrich_record
-        record.original_attributes.should_not have_key(:citation)
-      end
     end
   end
 end

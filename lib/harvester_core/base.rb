@@ -1,7 +1,6 @@
 module HarvesterCore
   class Base
     include HarvesterCore::Modifiers
-    include HarvesterCore::OptionTransformers
     include ActiveModel::Validations
 
     class_attribute :_base_urls
@@ -133,42 +132,24 @@ module HarvesterCore
       end
     end
 
-    attr_reader :original_attributes, :attributes, :field_errors
+    attr_reader :attributes, :field_errors
 
     def initialize(*args)
       @field_errors = {}
-      @original_attributes = {}
+      @attributes = {}
     end
 
     def set_attribute_values
       self.class.attribute_definitions.each do |name, options|
-        begin
-          value = transformed_attribute_value(options, document)
-          @original_attributes[name] ||= nil
-          @original_attributes[name] = value if value.present?
-        rescue StandardError => e
-          @original_attributes[name] = nil
-          self.field_errors[name] ||= []
-          self.field_errors[name] << e.message
+        builder = AttributeBuilder.new(self, name, options)
+        value = builder.value
+        @attributes[name] ||= nil
+        if builder.errors.any?
+          self.field_errors[name] = builder.errors
+        else
+          @attributes[name] = value if value.present?
         end
       end
-    end
-
-    def transformed_attribute_value(options, document=nil)
-      value = HarvesterCore::Utils.array(attribute_value(options, document))
-      value = mapping_option(value, options[:mappings]) if options[:mappings]
-      value = split_option(value, options[:separator]) if options[:separator]
-      value = join_option(value, options[:join]) if options[:join]
-      value = strip_html_option(value)
-      value = strip_whitespace_option(value)
-      value = truncate_option(value, options[:truncate]) if options[:truncate]
-      value = parse_date_option(value, options[:date]) if options[:date]
-      value.uniq
-    end
-
-    def attribute_value(options={}, document=nil)
-      return options[:default] if options[:default]
-      return strategy_value(options, document)
     end
 
     def strategy_value(options, document=nil)
@@ -179,56 +160,21 @@ module HarvesterCore
       nil
     end
 
-    def attributes
-      return @attributes if @attributes
-      @attributes = {}
-
-      attribute_names.each do |name|
-        @attributes[name] = self.final_attribute_value(name)
-      end
-
-      @attributes
-    end
-
-    def final_attribute_value(name)
-      if block = self.class.attribute_definitions[name][:block] rescue nil
-        begin
-          evaluate_attribute_block(name, &block)
-        rescue StandardError => e
-          self.field_errors[name] ||= []
-          self.field_errors[name] << "Error in the block: #{e.message}"
-          return nil
-        end
-      else
-        original_attributes[name]
-      end
-    end
-
-    def evaluate_attribute_block(name, &block)
-      block_result = instance_eval(&block)
-      return original_attributes[name] if block_result.nil?
-      if block_result.is_a?(HarvesterCore::AttributeValue)
-        block_result.to_a
-      else
-        block_result
-      end
-    end
-
     def attribute_names
       @attribute_names ||= self.class.attribute_definitions.keys
     end
 
     def to_s
-      "<#{self.class.to_s} @original_attributes=#{@original_attributes.inspect}>"
+      "<#{self.class.to_s} @attributes=#{@attributes.inspect}>"
     end
 
     def read_attribute_for_validation(attribute)
-      final_attribute_value(attribute.to_sym)
+      attributes[attribute.to_sym]
     end
 
     def method_missing(symbol, *args, &block)
       raise NoMethodError, "undefined method '#{symbol.to_s}' for #{self.class.to_s}" unless attribute_names.include?(symbol)
-      final_attribute_value(symbol)
+      attributes[symbol]
     end
   end
 end

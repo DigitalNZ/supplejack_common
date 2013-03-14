@@ -238,107 +238,21 @@ describe HarvesterCore::Base do
       klass.attribute :category, {default: "Value"}
       record.stub(:attribute_value) { "Value" }
       record.set_attribute_values
-      record.original_attributes.should include(category: ["Value"])
+      record.attributes.should include(category: ["Value"])
     end
 
     it "splits the values by the separator character" do
       klass.attribute :category, {default: "Value1, Value2", separator: ","}
       record.set_attribute_values
-      record.original_attributes.should include(category: ["Value1", "Value2"])
+      record.attributes.should include(category: ["Value1", "Value2"])
     end
 
-    it "rescues from a transformation error" do
+    it "adds errors to field_errors" do
       klass.attribute :date, default: "1999/1/1", date: true
-      record.stub(:transformed_attribute_value).and_raise(HarvesterCore::TransformationError.new("Error"))
+      HarvesterCore::AttributeBuilder.stub(:new).with(record, :date, {default: "1999/1/1", date: true}) { mock(:builder, errors: ["Error"]).as_null_object }
       record.set_attribute_values
-      record.original_attributes.should include(date: nil)
+      record.attributes.should include(date: nil)
       record.field_errors.should include(date: ["Error"])
-    end
-  end
-
-  describe "#attribute_value" do
-    let(:record) { klass.new }
-    let(:document) { mock(:document) }
-    let(:option_object) { mock(:option, value: "Google") }
-
-    it "returns the default value" do
-      record.attribute_value({default: "Google"}).should eq "Google"
-    end
-
-    it "gets the value from another location" do
-      record.should_receive(:strategy_value).with({from: :some_path}, nil) { "Google" }
-      record.attribute_value({from: :some_path}).should eq "Google"
-    end
-  end
-
-  describe "#transformed_attribute_value" do
-    let(:record) { klass.new }
-
-    it "splits the value" do
-      record.stub(:attribute_value) { "Value1, Value2" }
-      record.transformed_attribute_value({separator: ","}).should eq ["Value1", "Value2"]
-    end
-
-    it "joins the values" do
-      record.stub(:attribute_value) { ["Value1", "Value2"] }
-      record.transformed_attribute_value({join: ", "}).should eq ["Value1, Value2"]
-    end
-
-    it "removes any trailing and leading characters" do
-      record.stub(:attribute_value) { " Hi " }
-      record.transformed_attribute_value({}).should eq ["Hi"]
-    end
-
-    it "removes any html" do
-      record.stub(:attribute_value) { "<div id='top'>Stripped</div>" }
-      record.transformed_attribute_value({}).should eq ["Stripped"]
-    end
-
-    it "truncates the value to 10 charachters" do
-      record.stub(:attribute_value) { "Some random text longer that 10 charachters" }
-      record.transformed_attribute_value({truncate: 10}).should eq ["Some ra..."]
-    end
-
-    it "parses a date" do
-      record.stub(:attribute_value) { "circa 1994" }
-      record.transformed_attribute_value({date: true}).should eq [Time.utc(1994,1,1,12)]
-    end
-
-    it "maps the value to another value" do
-      record.stub(:attribute_value) { "Some lucky squirrel" }
-      record.transformed_attribute_value({mappings: {/lucky/ => 'unlucky'}}).should eq ["Some unlucky squirrel"]
-    end
-
-    it "removes any duplicates" do
-      record.stub(:attribute_value) { ["Images", "Images", "Videos"] }
-      record.transformed_attribute_value({}).should eq ["Images", "Videos"]
-    end
-  end
-
-  describe "#attributes" do
-    let(:record) { klass.new }
-
-    it "returns hash with attribute definitions" do
-      record.stub(:attribute_names) { [:category] }
-      record.stub(:final_attribute_value).with(:category) { "Images" }
-      record.attributes.should eq(category: "Images")
-    end
-  end
-
-  describe "#final_attribute_value" do
-    let(:record) { klass.new }
-
-    it "executes the method with the name" do
-      klass._attribute_definitions[klass.identifier][:category] = {default: "Video"}
-      record.set_attribute_values
-      record.final_attribute_value(:category).should eq ["Video"]
-    end
-
-    it "rescues from field_errors in a block" do
-      record.stub(:strategy_value) { nil }
-      klass._attribute_definitions[klass.identifier][:category] = {block: Proc.new { raise StandardError.new("Error!") } }
-      record.final_attribute_value(:category).should be_nil
-      record.field_errors.should include(category: ["Error in the block: Error!"])
     end
   end
 

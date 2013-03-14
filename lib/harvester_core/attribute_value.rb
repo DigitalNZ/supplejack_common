@@ -12,6 +12,10 @@ module HarvesterCore
       original_value
     end
 
+    def first
+      original_value.first
+    end
+
     def present?
       original_value.present?
     end

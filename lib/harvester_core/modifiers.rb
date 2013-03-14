@@ -17,7 +17,7 @@ module HarvesterCore
     extend ::ActiveSupport::Concern
     
     def get(attribute_name)
-      value = self.original_attributes[attribute_name]
+      value = self.attributes[attribute_name]
       HarvesterCore::AttributeValue.new(value)
     end
 

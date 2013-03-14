@@ -8,7 +8,7 @@ describe HarvesterCore::Modifiers do
   let(:record) { TestParser.new }
 
   before(:each) do
-    record.stub(:original_attributes) { {category: "Images"} }
+    record.stub(:attributes) { {category: "Images"} }
   end
   
   describe "#get" do
