@@ -1,11 +1,18 @@
 module HarvesterCore
   class AbstractOption
       
-    attr_reader :document, :options
+    attr_reader :document, :options, :namespace_definitions
 
-    def initialize(document, options)
+    def initialize(document, options, namespace_definitions={})
       @document = document
       @options = options
+      @namespace_definitions = namespace_definitions || {}
+    end
+
+    def namespace
+      keys = Array(options[:namespaces]).map(&:to_sym)
+      return nil if keys.empty?
+      Hash[keys.map {|namespace| [namespace, namespace_definitions[namespace]]}]
     end
 
     def nodes
@@ -14,7 +21,7 @@ module HarvesterCore
       @nodes = []
 
       xpath_expressions.each do |xpath|
-        @nodes += document.xpath("#{xpath_value(xpath)}")
+        @nodes += document.xpath("#{xpath_value(xpath)}", namespace)
       end
 
       @nodes

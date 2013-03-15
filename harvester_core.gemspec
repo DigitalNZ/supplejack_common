@@ -26,6 +26,8 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "jsonpath",        "~> 0.5.0"
   gem.add_runtime_dependency "chronic",         "~> 0.8.0"
   gem.add_runtime_dependency "tzinfo"
+  gem.add_runtime_dependency "dimensions"
+  gem.add_runtime_dependency "mimemagic"
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec",      "~> 2.11.0"

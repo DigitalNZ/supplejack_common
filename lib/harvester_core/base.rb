@@ -5,6 +5,7 @@ module HarvesterCore
 
     class_attribute :_base_urls
     class_attribute :_attribute_definitions
+    class_attribute :_enrichment_definitions
     class_attribute :_basic_auth
     class_attribute :_pagination_options
     class_attribute :_rejection_rules
@@ -13,6 +14,7 @@ module HarvesterCore
 
     self._base_urls = {}
     self._attribute_definitions = {}
+    self._enrichment_definitions = {}
     self._basic_auth = {}
     self._pagination_options = {}
     self._rejection_rules = {}
@@ -96,6 +98,16 @@ module HarvesterCore
         self._attribute_definitions[self.identifier]
       end
 
+      def enrichment(name, &block)
+        self._enrichment_definitions[self.identifier] ||= {}
+        self._enrichment_definitions[self.identifier][name] = block
+      end
+
+      def enrichment_definitions
+        self._enrichment_definitions[self.identifier] ||= {}
+        self._enrichment_definitions[self.identifier]
+      end
+
       def with_options(options={}, &block)
         yield(HarvesterCore::Scope.new(self, options))
       end
@@ -150,9 +162,15 @@ module HarvesterCore
           @attributes[name] = value if value.present?
         end
       end
+
+      self.class.enrichment_definitions.each do |name, block|
+        enrichment = Enrichment.new(name, block, self)
+        enrichment.set_attribute_values
+        @attributes.merge!(enrichment.attributes)
+      end
     end
 
-    def strategy_value(options, document=nil)
+    def strategy_value(options)
       raise NotImplementedError.new("All subclasses of HarvesterCore::Base must override #strategy_value.")
     end
 

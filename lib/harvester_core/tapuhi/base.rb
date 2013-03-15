@@ -40,7 +40,7 @@ module HarvesterCore
         super
       end
 
-      def strategy_value(options={}, document=nil)
+      def strategy_value(options={})
         fields[options[:field_num].to_i]
       end
 

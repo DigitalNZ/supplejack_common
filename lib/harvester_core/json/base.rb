@@ -66,7 +66,7 @@ module HarvesterCore
         raw_data.to_json
       end
 
-      def strategy_value(options={}, document=nil)
+      def strategy_value(options={})
         options ||= {}
         path = options[:path]
         return nil unless path.present?

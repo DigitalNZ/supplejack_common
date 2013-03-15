@@ -2,12 +2,11 @@ module HarvesterCore
   
   class AttributeBuilder
 
-    attr_reader :record, :document, :options, :errors, :attribute_name
+    attr_reader :record, :attribute_name, :options, :errors
 
     def initialize(record, attribute_name, options)
       @record = record
       @attribute_name = attribute_name
-      @document = record.document
       @options = options
       @errors = []
     end
@@ -26,7 +25,7 @@ module HarvesterCore
 
     def attribute_value
       return options[:default] if options[:default]
-      return record.strategy_value(options, document)
+      return record.strategy_value(options)
     end
 
     def value

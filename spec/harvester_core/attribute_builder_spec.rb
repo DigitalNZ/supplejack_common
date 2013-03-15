@@ -3,8 +3,7 @@ require "spec_helper"
 describe HarvesterCore::AttributeBuilder do
 
   let(:klass) { HarvesterCore::AttributeBuilder }
-  let(:document) { mock(:document) }
-  let(:record) { mock(:record, document: document).as_null_object }
+  let(:record) { mock(:record).as_null_object }
   
   describe "#attribute_value" do
     let(:option_object) { mock(:option, value: "Google") }
@@ -16,7 +15,7 @@ describe HarvesterCore::AttributeBuilder do
 
     it "gets the value from another location" do
       builder = klass.new(record, :category, {xpath: "//category"})
-      record.should_receive(:strategy_value).with({xpath: "//category"}, document) { "Google" }
+      record.should_receive(:strategy_value).with({xpath: "//category"}) { "Google" }
       builder.attribute_value.should eq "Google"
     end
   end

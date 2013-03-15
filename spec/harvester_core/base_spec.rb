@@ -137,7 +137,7 @@ describe HarvesterCore::Base do
     end
 
     it "clears the rejection rules" do
-      klass.reject_if { puts "Hi" }
+      klass.reject_if { "Hi" }
       klass.clear_definitions
       klass.rejection_rules.should be_nil
     end
@@ -180,11 +180,21 @@ describe HarvesterCore::Base do
 
     it "adds multiple attributes with a block" do
       klass.attributes :category, :creator do
-        puts "Hi"
+        "Hi"
       end
 
       klass.attribute_definitions[:category][:block].should be_a(Proc)
       klass.attribute_definitions[:category][:block].should be_a(Proc)
+    end
+  end
+
+  describe ".enrichment" do
+    it "adds a enrichment definition" do
+      klass.enrichment :ndha_rights do
+        "Hi"
+      end
+
+      klass.enrichment_definitions[:ndha_rights].should be_a Proc
     end
   end
 
