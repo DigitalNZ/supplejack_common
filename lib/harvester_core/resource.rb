@@ -14,7 +14,7 @@ module HarvesterCore
       HarvesterCore::Request.get(url, throttling_options)
     end
 
-    def strategy_value
+    def strategy_value(options)
       nil
     end
   end

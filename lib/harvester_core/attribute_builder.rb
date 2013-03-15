@@ -32,7 +32,7 @@ module HarvesterCore
       if block = options[:block] rescue nil
         begin
           record.attributes[attribute_name] = transform
-          evaluate_attribute_block(&block)
+          return evaluate_attribute_block(&block)
         rescue StandardError => e
           self.errors ||= []
           self.errors << "Error in the block: #{e.message}"
