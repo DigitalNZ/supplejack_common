@@ -30,6 +30,13 @@ describe HarvesterCore::AttributeValue do
     end
   end
 
+  describe "#downcase" do
+    it "should downcase every value" do
+      value = klass.new(["Images", "Videos"])
+      value.downcase.original_value.should eq ["images", "videos"]
+    end
+  end
+
   describe "#+" do
     it "adds the values of two AttributeValue objects" do
       value1 = klass.new("Images")

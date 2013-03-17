@@ -74,5 +74,9 @@ module HarvesterCore
     def to_date(format=nil)
       HarvesterCore::Modifiers::DateParser.new(original_value, format).value
     end
+
+    def downcase
+      self.class.new(original_value.map(&:downcase))
+    end
   end
 end
