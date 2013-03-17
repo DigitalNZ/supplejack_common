@@ -123,6 +123,7 @@ module HarvesterCore
       def clear_definitions
         self._base_urls[self.identifier] = []
         self._attribute_definitions[self.identifier] = {}
+        self._enrichment_definitions[self.identifier] = {}
         self._basic_auth[self.identifier] = nil
         self._pagination_options[self.identifier] = nil
         self._rejection_rules[self.identifier] = nil

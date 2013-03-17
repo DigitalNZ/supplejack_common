@@ -141,6 +141,14 @@ describe HarvesterCore::Base do
       klass.clear_definitions
       klass.rejection_rules.should be_nil
     end
+
+    it "clears the enrichment definitions" do
+      klass.enrichment :ndha_rights do
+        "Hi"
+      end
+      klass.clear_definitions
+      klass.enrichment_definitions.should be_empty
+    end
     
   end
 
