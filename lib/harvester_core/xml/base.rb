@@ -8,7 +8,10 @@ module HarvesterCore
       class_attribute :_record_url_selector
       class_attribute :_record_selector
       class_attribute :_record_format
+      class_attribute :_sitemap_format
       class_attribute :_total_results
+
+      self._sitemap_format = :html
 
       class << self
         def records(options={})
@@ -26,7 +29,17 @@ module HarvesterCore
 
         def sitemap_records(url=nil)
           url_nodes = index_document(url).xpath(self._record_url_selector)
-          url_nodes.map {|node| new(node.text) }
+
+          if self._record_selector
+            url_nodes.map do |node|
+              document = sitemap_format_class.parse(HarvesterCore::Request.get(node.text))
+              document.xpath(self._record_selector).map do |entry_node|
+                new(entry_node)
+              end
+            end.flatten
+          else
+            url_nodes.map {|node| new(node.text) }
+          end
         end
 
         def xml_records(url=nil)
@@ -46,6 +59,15 @@ module HarvesterCore
 
         def record_selector(xpath)
           self._record_selector = xpath
+        end
+
+        def sitemap_format(format)
+          self._sitemap_format = format.to_sym
+        end
+
+        def sitemap_format_class
+          return Nokogiri::HTML unless [:xml, :html].include?(self._sitemap_format)
+          "Nokogiri::#{self._sitemap_format.to_s.upcase}".constantize
         end
 
         def sitemap?

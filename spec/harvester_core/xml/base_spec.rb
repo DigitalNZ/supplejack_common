@@ -30,6 +30,34 @@ describe HarvesterCore::Xml::Base do
     end
   end
 
+  describe ".sitemap_format" do
+    it "stores the format of the actual record" do
+      klass.sitemap_format :xml
+      klass._sitemap_format.should eq :xml
+    end
+  end
+
+  describe ".sitemap_format_class" do
+    it "should return the Nokogiri::XML class" do
+      klass.sitemap_format :xml
+      klass.sitemap_format_class.should eq Nokogiri::XML
+    end
+
+    it "should return the Nokogiri::HTML class" do
+      klass.sitemap_format :html
+      klass.sitemap_format_class.should eq Nokogiri::HTML
+    end
+
+    it "should default to Nokogiri::HTML" do
+      klass.sitemap_format_class.should eq Nokogiri::HTML
+    end
+
+    it "should fallback to Nokogiri::HTML when the format is invalid" do
+      klass.sitemap_format :json
+      klass.sitemap_format_class.should eq Nokogiri::HTML
+    end
+  end
+
   describe ".sitemap?" do
     it "returns true" do
       klass._record_selector = nil
