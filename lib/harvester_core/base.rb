@@ -2,23 +2,7 @@ module HarvesterCore
   class Base
     include HarvesterCore::Modifiers
     include ActiveModel::Validations
-
-    class_attribute :_base_urls
-    class_attribute :_attribute_definitions
-    class_attribute :_enrichment_definitions
-    class_attribute :_basic_auth
-    class_attribute :_pagination_options
-    class_attribute :_rejection_rules
-    class_attribute :_throttle
-    class_attribute :_environment
-
-    self._base_urls = {}
-    self._attribute_definitions = {}
-    self._enrichment_definitions = {}
-    self._basic_auth = {}
-    self._pagination_options = {}
-    self._rejection_rules = {}
-    self._environment = {}
+    include HarvesterCore::DSL
 
     class << self
       def identifier
@@ -28,21 +12,17 @@ module HarvesterCore
         end
       end
 
-      def base_url(url)
-        self._base_urls[self.identifier] ||= []
-        self._base_urls[self.identifier] += [url]
+      def base_urls
+        self._base_urls[self.identifier].map do |url|
+          self.basic_auth_url(environment_url(url))
+        end.compact
       end
 
-      def base_urls
+      def basic_auth_url(url)
         if self.basic_auth_credentials
-          self._base_urls[self.identifier].map do |url|
-            url = self.environment_url(url)
-            url.gsub("http://", "http://#{self.basic_auth_credentials[:username]}:#{self.basic_auth_credentials[:password]}@") if url.present?
-          end.compact
+          url.gsub("http://", "http://#{self.basic_auth_credentials[:username]}:#{self.basic_auth_credentials[:password]}@") if url.present?
         else
-          self._base_urls[self.identifier].map do |url|
-            self.environment_url(url)
-          end.compact
+          url
         end
       end
 
@@ -62,35 +42,12 @@ module HarvesterCore
         self._environment[self.identifier]
       end
 
-      def basic_auth(username, password)
-        self._basic_auth[self.identifier] = {username: username, password: password}
-      end
-
       def basic_auth_credentials
         self._basic_auth[self.identifier]
       end
 
-      def paginate(options={})
-        self._pagination_options[self.identifier] = options
-      end
-
       def pagination_options
         self._pagination_options[self.identifier]
-      end
-
-      def attribute(name, options={}, &block)
-        self._attribute_definitions[self.identifier] ||= {}
-        self._attribute_definitions[self.identifier][name] = options || {}
-
-        self._attribute_definitions[self.identifier][name][:block] = block if block_given?
-      end
-
-      def attributes(*args, &block)
-        options = args.extract_options!
-
-        args.each do |attribute|
-          self.attribute(attribute, options, &block)
-        end
       end
 
       def attribute_definitions
@@ -98,22 +55,9 @@ module HarvesterCore
         self._attribute_definitions[self.identifier]
       end
 
-      def enrichment(name, &block)
-        self._enrichment_definitions[self.identifier] ||= {}
-        self._enrichment_definitions[self.identifier][name] = block
-      end
-
       def enrichment_definitions
         self._enrichment_definitions[self.identifier] ||= {}
         self._enrichment_definitions[self.identifier]
-      end
-
-      def with_options(options={}, &block)
-        yield(HarvesterCore::Scope.new(self, options))
-      end
-
-      def reject_if(&block)
-        self._rejection_rules[self.identifier] = block
       end
 
       def rejection_rules
@@ -127,11 +71,6 @@ module HarvesterCore
         self._basic_auth[self.identifier] = nil
         self._pagination_options[self.identifier] = nil
         self._rejection_rules[self.identifier] = nil
-      end
-
-      def throttle(options={})
-        self._throttle ||= []
-        self._throttle << options
       end
 
       def include_snippet(name)
