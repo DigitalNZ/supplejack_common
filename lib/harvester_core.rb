@@ -20,6 +20,7 @@ require "harvester_core/request"
 require "harvester_core/attribute_builder"
 require "harvester_core/enrichment"
 require "harvester_core/resource"
+require "harvester_core/source_wrap"
 
 require "harvester_core/oai"
 require "harvester_core/rss"

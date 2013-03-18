@@ -166,8 +166,11 @@ module HarvesterCore
 
       self.class.enrichment_definitions.each do |name, block|
         enrichment = Enrichment.new(name, block, self)
-        enrichment.set_attribute_values
-        @attributes.merge!(enrichment.attributes)
+
+        if enrichment.enrichable?
+          enrichment.set_attribute_values
+          @attributes.merge!(enrichment.attributes)
+        end
       end
     end
 

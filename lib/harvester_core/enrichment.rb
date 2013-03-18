@@ -1,7 +1,10 @@
 module HarvesterCore
   class Enrichment
 
-    attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :errors
+    # Internal attribute accessors
+    attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes
+
+    attr_accessor :errors
     attr_reader :name, :block, :record, :attributes
 
     def initialize(name, block, record)
@@ -11,6 +14,7 @@ module HarvesterCore
       @attributes = {}
       @errors = {}
       @_attribute_definitions = {}
+      @_required_attributes = {}
       self.instance_eval(&block)
     end
 
@@ -20,6 +24,14 @@ module HarvesterCore
 
     def format(format)
       self._format = format.to_sym
+    end
+
+    def requires(name, &block)
+      self._required_attributes[name] = self.instance_eval(&block) rescue nil
+    end
+
+    def requirements
+      self._required_attributes
     end
 
     def namespaces(namespaces={})
@@ -39,6 +51,11 @@ module HarvesterCore
       @resource ||= resource_class.new(self._url, options)
     end
 
+    def primary
+      #@primary ||= HarvesterCore::SourceWrap.new(record.sources.where(priority: 0).first)
+      @primary ||= HarvesterCore::SourceWrap.new(record)
+    end
+
     def set_attribute_values
       self._attribute_definitions.each do |name, options|
         builder = AttributeBuilder.new(resource, name, options)
@@ -50,6 +67,13 @@ module HarvesterCore
           @attributes[name] = value if value.present?
         end
       end
+    end
+
+    def enrichable?
+      self._required_attributes.each do |attribute, value|
+        return false if value.blank?
+      end
+      true
     end
   end
 end

@@ -28,6 +28,24 @@ describe HarvesterCore::Enrichment do
     end
   end
 
+  describe "#requires" do
+    it "should store a requirement with a name and block" do
+      enrichment.requires :thumbnail_url do
+        "Hi"
+      end
+
+      enrichment._required_attributes.should include(thumbnail_url: "Hi")
+    end
+
+    it "rescues from any exception in the block" do
+      enrichment.requires :thumbnail_url do
+        raise StandardError.new("Error!!")
+      end
+
+      enrichment._required_attributes.should include(thumbnail_url: nil)
+    end
+  end
+
   describe "#namespaces" do
     it "stores the namespaces for the resource" do
       enrichment.namespaces dc: "http://purl.org/dc/elements/1.1/", xsi: "http://www.w3.org/2001/XMLSchema-instance"
@@ -86,6 +104,44 @@ describe HarvesterCore::Enrichment do
       record.stub(:class) { mock(:class, :_throttle => {host: "gdata.youtube.com", delay: 1}) }
       HarvesterCore::Resource.should_receive(:new).with("http://goo.gle/1", {throttling_options: {host: "gdata.youtube.com", delay: 1}})
       enrichment.resource
+    end
+  end
+
+  describe "#primary" do
+    let(:source) { mock(:source).as_null_object }
+
+    # before do
+    #   record.stub_chain(:sources, :where).with(priority: 0) { [source] }
+    # end
+
+    # it "returns a wrapped source" do
+    #   enrichment.primary.source.should eq source
+    # end
+
+    it "should initialize a SourceWrap object" do
+      enrichment.primary.should be_a HarvesterCore::SourceWrap
+    end
+  end
+
+  describe "#enrichable?" do
+    it "returns true when all required fields are present" do
+      enrichment._required_attributes = {thumbnail_url: "http://google.com/1", title: "Hi"}
+      enrichment.enrichable?.should be_true
+    end
+
+    it "returns false when a required field is not present" do
+      enrichment._required_attributes = {thumbnail_url: nil, title: "Hi"}
+      enrichment.enrichable?.should be_false
+    end
+  end
+
+  describe "#requirements" do
+    it "returns the value of the requirement block" do
+      enrichment.requires :tap_id do
+        12345
+      end
+
+      enrichment.requirements[:tap_id].should eq 12345
     end
   end
 
