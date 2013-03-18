@@ -13,32 +13,20 @@ module HarvesterCore
         end
 
         def records(options={})
-          options = options.try(:symbolize_keys) || {}
-
-          records = xml_records
-          records = records[0..(options[:limit].to_i-1)]
-
-          @records = records.map do |record|
-            record.set_attribute_values
-            if rejection_rules
-              record if !record.instance_eval(&rejection_rules)
-            else
-              record
-            end
-          end.compact
+          HarvesterCore::PaginatedCollection.new(self, {}, options)
         end
 
-        def index_document
-          xml = HarvesterCore::Request.get(base_urls.first, self._throttle)
-          xml = HarvesterCore::Utils.remove_default_namespace(xml)
-          Nokogiri::XML.parse(xml)
-        end
-
-        def xml_records
-          document = index_document
+        def fetch_records(url)
+          document = index_document(url)
           self._namespaces = document.namespaces
           xml_nodes = document.xpath(self._record_selector)
           xml_nodes.map {|node | new(node) }
+        end
+
+        def index_document(url)
+          xml = HarvesterCore::Request.get(url, self._throttle)
+          xml = HarvesterCore::Utils.remove_default_namespace(xml)
+          Nokogiri::XML.parse(xml)
         end
       end
 

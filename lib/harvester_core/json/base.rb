@@ -14,26 +14,20 @@ module HarvesterCore
           self._record_selector = path
         end
 
-        def document
-          @document ||= HarvesterCore::Request.get(self.base_urls.first, self._throttle)
+        def document(url)
+          HarvesterCore::Request.get(url, self._throttle)
         end
 
-        def records_json
-          @records_json ||= JsonPath.on(document, self._record_selector).try(:first)
+        def records_json(url)
+          JsonPath.on(document(url), self._record_selector).try(:first)
+        end
+
+        def fetch_records(url)
+          records_json(url).map {|attributes| self.new(attributes) }
         end
 
         def records(options={})
-          options = options.try(:symbolize_keys) || {}
-          records = records_json.map {|attributes| self.new(attributes) }
-          records = records[0..(options[:limit].to_i-1)] if options[:limit]
-          records.map do |record|
-            record.set_attribute_values
-            if rejection_rules
-              record if !record.instance_eval(&rejection_rules)
-            else
-              record
-            end
-          end.compact
+          HarvesterCore::PaginatedCollection.new(self, {}, options)
         end
 
         def clear_definitions

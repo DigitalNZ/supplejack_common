@@ -21,21 +21,9 @@ describe HarvesterCore::Json::Base do
   end
 
   describe ".records" do
-    before { klass.stub(:records_json) { [{"title" => "Record1"}] } }
-
-    it "initializes record for every json record" do
-      klass.should_receive(:new).once.with({"title" => "Record1"}) { record }
-      klass.records.should eq [record]
-    end
-
-    it "removes any record that it's reject_if block evaluates to false" do
-      klass.reject_if { true }
-      klass.records.should eq []
-    end
-
-    it "limits the number of records" do
-      klass.stub(:records_json) { [{"title" => "Record1"}, {"title" => "Record2"}] }
-      klass.records(limit: 1).size.should eq 1
+    it "returns a paginated collection" do
+      HarvesterCore::PaginatedCollection.should_receive(:new).with(klass, {}, {})
+      klass.records
     end
   end
 
@@ -45,7 +33,7 @@ describe HarvesterCore::Json::Base do
     it "returns an array of records with the parsed json" do
       klass.stub(:document) { json }
       klass.record_selector "$..items"
-      klass.records_json.should eq [{"title" => "Record1"}, {"title" => "Record2"}, {"title" => "Record3"}]
+      klass.records_json("http://goo.gle.com/1").should eq [{"title" => "Record1"}, {"title" => "Record2"}, {"title" => "Record3"}]
     end
   end
 
@@ -53,9 +41,17 @@ describe HarvesterCore::Json::Base do
     let(:json) { %q{"description": "Some json!"} }
 
     it "stores the raw json" do
-      klass.base_url "http://google.com"
       HarvesterCore::Request.should_receive(:get).with("http://google.com", {}) { json }
-      klass.document.should eq json
+      klass.document("http://google.com").should eq json
+    end
+  end
+
+  describe ".fetch_records" do
+    before { klass.stub(:records_json) { [{"title" => "Record1"}] } }
+
+    it "initializes record for every json record" do
+      klass.should_receive(:new).once.with({"title" => "Record1"}) { record }
+      klass.fetch_records("http://google.com").should eq [record]
     end
   end
 

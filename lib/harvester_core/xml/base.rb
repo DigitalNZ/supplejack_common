@@ -32,7 +32,7 @@ module HarvesterCore
 
           if self._record_selector
             url_nodes.map do |node|
-              document = sitemap_format_class.parse(HarvesterCore::Request.get(node.text))
+              document = sitemap_format_class.parse(HarvesterCore::Request.get(node.text, self._throttle))
               document.xpath(self._record_selector).map do |entry_node|
                 new(entry_node)
               end
