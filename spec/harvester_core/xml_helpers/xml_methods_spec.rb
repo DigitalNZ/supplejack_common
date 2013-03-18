@@ -23,6 +23,12 @@ describe HarvesterCore::XmlMethods do
     it "should be backwards compatible with xpath option" do
       record.fetch(xpath: "//item").to_a.should eq ["1", "2"]
     end
+
+    it "should fetch a value with a namespace" do
+      klass.namespaces dc: "http://purl.org/dc/elements/1.1/"
+      record.stub(:document) { Nokogiri.parse(%q{<doc><dc:item xmlns:dc="http://purl.org/dc/elements/1.1/">1</dc:item></doc>}) }
+      record.fetch("//dc:item", "dc").to_a.should eq ["1"]
+    end
   end
   
   describe "#node" do
