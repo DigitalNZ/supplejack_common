@@ -3,6 +3,7 @@ module HarvesterCore
     extend ActiveSupport::Concern
 
     included do
+      class_attribute :_source_id
       class_attribute :_base_urls
       class_attribute :_attribute_definitions
       class_attribute :_enrichment_definitions
@@ -12,6 +13,7 @@ module HarvesterCore
       class_attribute :_throttle
       class_attribute :_environment
 
+      self._source_id = {}
       self._base_urls = {}
       self._attribute_definitions = {}
       self._enrichment_definitions = {}
@@ -22,6 +24,10 @@ module HarvesterCore
     end
 
     module ClassMethods
+      def source_id(id)
+        self._source_id[self.identifier] = id
+      end
+
       def base_url(url)
         self._base_urls[self.identifier] ||= []
         self._base_urls[self.identifier] += [url]

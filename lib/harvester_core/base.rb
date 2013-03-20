@@ -12,6 +12,10 @@ module HarvesterCore
         end
       end
 
+      def get_source_id
+        self._source_id[self.identifier]
+      end
+
       def base_urls
         self._base_urls[self.identifier].map do |url|
           self.basic_auth_url(environment_url(url))
