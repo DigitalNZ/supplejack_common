@@ -272,6 +272,13 @@ describe HarvesterCore::Base do
       record.attributes.should include(date: nil)
       record.field_errors.should include(date: ["Error"])
     end
+
+    it "should rescue from exceptions and store it" do
+      klass.attribute :date
+      HarvesterCore::AttributeBuilder.stub(:new).and_raise(StandardError.new("Hi"))
+      record.set_attribute_values
+      record.request_error.should include({message: "Hi"})
+    end
   end
 
   describe "#attribute_names" do

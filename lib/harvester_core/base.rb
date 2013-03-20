@@ -84,7 +84,7 @@ module HarvesterCore
       end
     end
 
-    attr_reader :attributes, :field_errors
+    attr_reader :attributes, :field_errors, :request_error
 
     def initialize(*args)
       @field_errors = {}
@@ -92,24 +92,28 @@ module HarvesterCore
     end
 
     def set_attribute_values
-      self.class.attribute_definitions.each do |name, options|
-        builder = AttributeBuilder.new(self, name, options)
-        value = builder.value
-        @attributes[name] ||= nil
-        if builder.errors.any?
-          self.field_errors[name] = builder.errors
-        else
-          @attributes[name] = value if value.present?
+      begin
+        self.class.attribute_definitions.each do |name, options|
+          builder = AttributeBuilder.new(self, name, options)
+          value = builder.value
+          @attributes[name] ||= nil
+          if builder.errors.any?
+            self.field_errors[name] = builder.errors
+          else
+            @attributes[name] = value if value.present?
+          end
         end
-      end
 
-      self.class.enrichment_definitions.each do |name, block|
-        enrichment = Enrichment.new(name, block, self)
+        self.class.enrichment_definitions.each do |name, block|
+          enrichment = Enrichment.new(name, block, self)
 
-        if enrichment.enrichable?
-          enrichment.set_attribute_values
-          @attributes.merge!(enrichment.attributes)
+          if enrichment.enrichable?
+            enrichment.set_attribute_values
+            @attributes.merge!(enrichment.attributes)
+          end
         end
+      rescue StandardError => e
+        @request_error = {exception_class: e.class.to_s, message: e.message, backtrace: e.backtrace[0..30]}
       end
     end
 
