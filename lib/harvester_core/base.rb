@@ -96,6 +96,8 @@ module HarvesterCore
     end
 
     def set_attribute_values
+      @attributes[:source_id] = self.class.get_source_id
+
       begin
         self.class.attribute_definitions.each do |name, options|
           builder = AttributeBuilder.new(self, name, options)
