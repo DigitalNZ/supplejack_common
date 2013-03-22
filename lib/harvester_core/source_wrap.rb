@@ -8,7 +8,7 @@ module HarvesterCore
     end
 
     def [](attribute)
-      HarvesterCore::AttributeValue.new(source.attributes[attribute])
+      HarvesterCore::AttributeValue.new(source.attributes[attribute.to_s])
     end
   end
 end

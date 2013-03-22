@@ -2,15 +2,23 @@ require "spec_helper"
 
 describe HarvesterCore::Enrichment do
 
+  class TestParser; 
+    def self._throttle; nil; end
+  end
+
   let(:klass) { HarvesterCore::Enrichment }
   let(:block) { Proc.new {} }
   let(:record) { mock(:record, attributes: {}) }
-  let(:enrichment) { klass.new(:ndha_rights, block, record) }
+  let(:enrichment) { klass.new(:ndha_rights, block, record, TestParser) }
   
   describe "#initialize" do
     it "sets the name and block" do
       enrichment.name.should eq :ndha_rights
       enrichment.block.should eq block
+    end
+
+    it "sets the parser class" do
+      enrichment.parser_class.should eq TestParser
     end
   end
 
@@ -62,18 +70,18 @@ describe HarvesterCore::Enrichment do
 
   describe "#evaluate_block" do
     it "should evaluate the block" do
-      enrichment = klass.new(:rights, Proc.new { url "http://google.com" }, record)
+      enrichment = klass.new(:rights, Proc.new { url "http://google.com" }, record, TestParser)
       enrichment._url.should eq "http://google.com"
     end
 
     it "should evaluate the get and then the URL" do
-      enrichment = klass.new(:rights, Proc.new { url "http://google.com/#{record.dc_identifier}" }, mock(:record, dc_identifier: "1.jpg"))
+      enrichment = klass.new(:rights, Proc.new { url "http://google.com/#{record.dc_identifier}" }, mock(:record, dc_identifier: "1.jpg"), TestParser)
       enrichment._url.should eq "http://google.com/1.jpg"
     end
   end
 
   describe "#resource" do
-    let!(:enrichment) { klass.new(:ndha_rights, Proc.new { url "http://goo.gle/1"; format "xml" }, record) }
+    let!(:enrichment) { klass.new(:ndha_rights, Proc.new { url "http://goo.gle/1"; format "xml" }, record, TestParser) }
 
     before do
       record.stub(:class) { mock(:class, :_throttle => {}) }
@@ -85,13 +93,13 @@ describe HarvesterCore::Enrichment do
     end
 
     it "should initialize a json resource object" do
-      enrichment = klass.new(:ndha_rights, Proc.new { url "http://goo.gle/1"; format "json" }, record)
+      enrichment = klass.new(:ndha_rights, Proc.new { url "http://goo.gle/1"; format "json" }, record, TestParser)
       HarvesterCore::JsonResource.should_receive(:new).with("http://goo.gle/1", {})
       enrichment.resource
     end
 
     it "should initialize a file resource object" do
-      enrichment = klass.new(:ndha_rights, Proc.new { url "http://goo.gle/1"; format "file" }, record)
+      enrichment = klass.new(:ndha_rights, Proc.new { url "http://goo.gle/1"; format "file" }, record, TestParser)
       HarvesterCore::FileResource.should_receive(:new).with("http://goo.gle/1", {})
       enrichment.resource
     end
@@ -101,7 +109,7 @@ describe HarvesterCore::Enrichment do
     end
 
     it "initializes the resource with throttle options" do
-      record.stub(:class) { mock(:class, :_throttle => {host: "gdata.youtube.com", delay: 1}) }
+      TestParser.stub(:_throttle) { {host: "gdata.youtube.com", delay: 1} }
       HarvesterCore::Resource.should_receive(:new).with("http://goo.gle/1", {throttling_options: {host: "gdata.youtube.com", delay: 1}})
       enrichment.resource
     end
@@ -110,13 +118,13 @@ describe HarvesterCore::Enrichment do
   describe "#primary" do
     let(:source) { mock(:source).as_null_object }
 
-    # before do
-    #   record.stub_chain(:sources, :where).with(priority: 0) { [source] }
-    # end
+    before do
+      record.stub_chain(:sources, :where).with(priority: 0) { [source] }
+    end
 
-    # it "returns a wrapped source" do
-    #   enrichment.primary.source.should eq source
-    # end
+    it "returns a wrapped source" do
+      enrichment.primary.source.should eq source
+    end
 
     it "should initialize a SourceWrap object" do
       enrichment.primary.should be_a HarvesterCore::SourceWrap
@@ -145,11 +153,12 @@ describe HarvesterCore::Enrichment do
     end
   end
 
-  # describe "#set_attribute_values" do
-  #   let!(:enrichment) { klass.new(:ndha_rights, Proc.new { url "http://goo.gle/1"; attribute :dc_rights, xpath: "//dc:rights" }, record) }
+  describe "#set_attribute_values" do
+    # let!(:enrichment) { klass.new(:ndha_rights, Proc.new { url "http://goo.gle/1"; attribute :dc_rights, xpath: "//dc:rights" }, record) }
 
-  #   it "should initialize a attribute builder" do
-  #     HarvesterCore::AttributeBuilder.should_receive(:new).with(enrichment, )
-  #   end
-  # end
+    it "should add the source_id to the enrichment attributes" do
+      enrichment.set_attribute_values
+      enrichment.attributes.should include(source_id: "ndha_rights")
+    end
+  end
 end

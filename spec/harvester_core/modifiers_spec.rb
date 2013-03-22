@@ -2,10 +2,10 @@ require "spec_helper"
 
 describe HarvesterCore::Modifiers do
 
-  class TestParser < HarvesterCore::Base
+  class ModifiersTestParser < HarvesterCore::Base
   end
 
-  let(:record) { TestParser.new }
+  let(:record) { ModifiersTestParser.new }
 
   before(:each) do
     record.stub(:attributes) { {category: "Images"} }

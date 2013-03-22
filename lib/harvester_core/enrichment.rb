@@ -5,12 +5,13 @@ module HarvesterCore
     attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes
 
     attr_accessor :errors
-    attr_reader :name, :block, :record, :attributes
+    attr_reader :name, :block, :record, :attributes, :parser_class
 
-    def initialize(name, block, record)
+    def initialize(name, block, record, parser_class)
       @name = name
       @block = block
       @record = record
+      @parser_class = parser_class
       @attributes = {}
       @errors = {}
       @_attribute_definitions = {}
@@ -46,17 +47,18 @@ module HarvesterCore
     def resource
       resource_class = "HarvesterCore::#{_format.to_s.capitalize}Resource".constantize
       options = {}
-      options[:throttling_options] = record.class._throttle if record.class._throttle.present?
+      options[:throttling_options] = parser_class._throttle if parser_class._throttle.present?
       options[:namespaces] = self._namespaces if self._namespaces.present?
       @resource ||= resource_class.new(self._url, options)
     end
 
     def primary
-      #@primary ||= HarvesterCore::SourceWrap.new(record.sources.where(priority: 0).first)
-      @primary ||= HarvesterCore::SourceWrap.new(record)
+      @primary ||= HarvesterCore::SourceWrap.new(record.sources.where(priority: 0).first)
     end
 
     def set_attribute_values
+      @attributes[:source_id] = self.name.to_s
+
       self._attribute_definitions.each do |name, options|
         builder = AttributeBuilder.new(resource, name, options)
         value = builder.value

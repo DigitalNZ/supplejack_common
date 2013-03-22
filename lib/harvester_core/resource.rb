@@ -21,5 +21,6 @@ module HarvesterCore
 end
 
 require "harvester_core/resources/xml_resource"
+require "harvester_core/resources/html_resource"
 require "harvester_core/resources/json_resource"
 require "harvester_core/resources/file_resource"

@@ -110,14 +110,16 @@ module HarvesterCore
           end
         end
 
-        self.class.enrichment_definitions.each do |name, block|
-          enrichment = Enrichment.new(name, block, self)
+        # Still need to figure out how enrichments will be executed inline for the preview.
+        #
+        # self.class.enrichment_definitions.each do |name, block|
+        #   enrichment = Enrichment.new(name, block, self)
 
-          if enrichment.enrichable?
-            enrichment.set_attribute_values
-            @attributes.merge!(enrichment.attributes)
-          end
-        end
+        #   if enrichment.enrichable?
+        #     enrichment.set_attribute_values
+        #     @attributes.merge!(enrichment.attributes)
+        #   end
+        # end
       rescue StandardError => e
         @request_error = {exception_class: e.class.to_s, message: e.message, backtrace: e.backtrace[0..30]}
       end

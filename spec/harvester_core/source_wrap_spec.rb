@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe HarvesterCore::SourceWrap do
 
-  let(:source) { mock(:source, attributes: {title: "Hi"}) }
+  let(:source) { mock(:source, attributes: {"title" => "Hi"}) }
   let(:wrap) { HarvesterCore::SourceWrap.new(source) }
   
   describe "#[]" do
