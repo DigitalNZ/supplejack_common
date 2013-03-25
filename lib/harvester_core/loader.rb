@@ -1,7 +1,7 @@
 module HarvesterCore
   class Loader
 
-    attr_accessor :parser, :syntax_error
+    attr_accessor :parser, :load_error
 
     def initialize(parser)
       @parser = parser
@@ -37,8 +37,8 @@ module HarvesterCore
         clear_parser_class_definitions
         load(path)
         @loaded = true
-      rescue SyntaxError => e
-        @syntax_error = e.message
+      rescue StandardError, ScriptError => e
+        @load_error = e.message
         @loaded = false
       end
     end

@@ -76,10 +76,16 @@ describe HarvesterCore::Loader do
       loader.load_parser.should be_true
     end
 
-    it "rescues from any error" do
+    it "rescues from a syntax error" do
       loader.stub(:load).and_raise(SyntaxError.new("Error while loading"))
       loader.load_parser.should be_false
-      loader.syntax_error.should eq "Error while loading"
+      loader.load_error.should eq "Error while loading"
+    end
+
+    it "rescues from a NoMethodError" do
+      loader.stub(:load).and_raise(NoMethodError.new("No method error"))
+      loader.load_parser.should be_false
+      loader.load_error.should eq "No method error"
     end
   end
 
