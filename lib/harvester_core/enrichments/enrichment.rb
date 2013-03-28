@@ -1,19 +1,14 @@
 module HarvesterCore
-  class Enrichment
+  class Enrichment < AbstractEnrichment
 
     # Internal attribute accessors
     attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes
 
-    attr_accessor :errors
-    attr_reader :name, :block, :record, :attributes, :parser_class
+    attr_reader :block
 
-    def initialize(name, block, record, parser_class)
-      @name = name
-      @block = block
-      @record = record
-      @parser_class = parser_class
-      @attributes = {}
-      @errors = {}
+    def initialize(name, options, record, parser_class)
+      super
+      @block = options[:block]
       @_attribute_definitions = {}
       @_required_attributes = {}
       self.instance_eval(&block)
@@ -50,10 +45,6 @@ module HarvesterCore
       options[:throttling_options] = parser_class._throttle if parser_class._throttle.present?
       options[:namespaces] = self._namespaces if self._namespaces.present?
       @resource ||= resource_class.new(self._url, options)
-    end
-
-    def primary
-      @primary ||= HarvesterCore::SourceWrap.new(record.sources.where(priority: 0).first)
     end
 
     def set_attribute_values

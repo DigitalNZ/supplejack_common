@@ -84,12 +84,20 @@ describe HarvesterCore::DSL do
   end
 
   describe ".enrichment" do
-    it "adds a enrichment definition" do
-      klass.enrichment :ndha_rights do
-        "Hi"
-      end
+    context "with block" do
+      let!(:block) { Proc.new { "Hi" } }
 
-      klass.enrichment_definitions[:ndha_rights].should be_a Proc
+      it "adds a enrichment definition" do
+        klass.enrichment :ndha_rights, &block
+        klass.enrichment_definitions[:ndha_rights].should eq({block: block})
+      end
+    end
+
+    context "without block" do
+      it "adds a enrichment definition with options" do
+        klass.enrichment :tapuhi, type: "TapuhiRelationships"
+        klass.enrichment_definitions[:tapuhi].should eq({type: "TapuhiRelationships"})
+      end
     end
   end
 

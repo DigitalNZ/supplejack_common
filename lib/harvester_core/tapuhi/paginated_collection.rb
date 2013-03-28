@@ -25,9 +25,14 @@ module HarvesterCore
 
               record = klass.new(record_contents)
               record.set_attribute_values
-              yield record
 
-              count += 1
+              if klass.rejection_rules && record.instance_eval(&klass.rejection_rules)
+                next
+              else
+                count += 1
+                yield(record)
+              end
+              
               break if count == limit
             end
           end

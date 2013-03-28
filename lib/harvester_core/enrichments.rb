@@ -1,0 +1,4 @@
+require "harvester_core/enrichments/abstract_enrichment"
+require "harvester_core/enrichments/enrichment"
+require "harvester_core/enrichments/tapuhi_relationships_enrichment"
+require "harvester_core/enrichments/tapuhi_denormalize_enrichment"

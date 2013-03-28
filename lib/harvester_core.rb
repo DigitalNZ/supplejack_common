@@ -1,5 +1,6 @@
 require 'active_support/all'
 require 'active_model'
+require 'mongoid'
 require 'nokogiri'
 require 'oai'
 require 'rest_client'
@@ -18,8 +19,10 @@ require "harvester_core/dsl"
 require "harvester_core/base"
 require "harvester_core/paginated_collection"
 require "harvester_core/request"
+require "harvester_core/repository/record"
+require "harvester_core/repository/source"
 require "harvester_core/attribute_builder"
-require "harvester_core/enrichment"
+require "harvester_core/enrichments"
 require "harvester_core/resource"
 require "harvester_core/source_wrap"
 require "harvester_core/loader"

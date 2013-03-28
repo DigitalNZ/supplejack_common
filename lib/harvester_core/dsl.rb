@@ -56,9 +56,11 @@ module HarvesterCore
         end
       end
 
-      def enrichment(name, &block)
+      def enrichment(name, options={}, &block)
         self._enrichment_definitions[self.identifier] ||= {}
-        self._enrichment_definitions[self.identifier][name] = block
+        self._enrichment_definitions[self.identifier][name] = options || {}
+
+        self._enrichment_definitions[self.identifier][name][:block] = block if block_given?
       end
 
       def with_options(options={}, &block)

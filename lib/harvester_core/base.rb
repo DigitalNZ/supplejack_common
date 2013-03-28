@@ -111,9 +111,12 @@ module HarvesterCore
         end
 
         # Still need to figure out how enrichments will be executed inline for the preview.
-        #
-        # self.class.enrichment_definitions.each do |name, block|
-        #   enrichment = Enrichment.new(name, block, self)
+        
+        # self.class.enrichment_definitions.each do |name, options|
+        #   enrichment_klass = "HarvesterCore::#{options[:type]}Enrichment".constantize
+
+        #   record = Repository::Record.where(internal_identifier: @attributes[:identifier].first).first
+        #   enrichment = enrichment_klass.new(name, options, record, self.class)
 
         #   if enrichment.enrichable?
         #     enrichment.set_attribute_values
