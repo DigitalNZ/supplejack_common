@@ -6,6 +6,15 @@ describe Repository::Record do
   let!(:primary_source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 0, relation: ["tap:12345"]) }
   let(:source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 1) }
 
+  context "default scope status: active" do
+    let(:record_1) { FactoryGirl.create(:record, status: "active") }
+    let(:record_2) { FactoryGirl.create(:record, status: "deleted") }
+
+    it "should return only active records by default" do
+      Repository::Record.all.to_a.should eq [record_1]
+    end
+  end
+
   describe "#primary" do
     it "returns the primary source" do
       record.primary.should eq primary_source

@@ -8,6 +8,8 @@ module Repository
 
     delegate :title, to: :primary
 
+    default_scope where(status: "active")
+
     def primary
       self.sources.where(priority: 0).first
     end

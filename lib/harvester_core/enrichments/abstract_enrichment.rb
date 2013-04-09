@@ -27,6 +27,7 @@ module HarvesterCore
     
     private
 
+    #change to internal identifier?
     def find_record(tap_id)
       return nil unless tap_id.present?
       record.class.where("sources.dc_identifier" => "tap:#{tap_id}").first
