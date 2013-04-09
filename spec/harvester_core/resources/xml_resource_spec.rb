@@ -7,7 +7,7 @@ describe HarvesterCore::XmlResource do
   
   describe "#document" do
     it "should parse the resource as XML" do
-      resource.stub(:fetch) { "</xml>" }
+      resource.stub(:fetch_document) { "</xml>" }
       resource.document.should be_a Nokogiri::XML::Document
     end
   end

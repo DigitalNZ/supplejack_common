@@ -2,7 +2,7 @@ module HarvesterCore
   class JsonResource < Resource
     
     def document
-      @document ||= JSON.parse(fetch)
+      @document ||= JSON.parse(fetch_document)
     end
 
     def strategy_value(options)

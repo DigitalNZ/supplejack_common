@@ -10,12 +10,18 @@ module HarvesterCore
       @attributes = {}
     end
 
-    def fetch
-      HarvesterCore::Request.get(url, throttling_options)
+    def strategy_value(options)
+      raise NotImplementedError.new("All subclasses of HarvesterCore::Resource must override #strategy_value.")
     end
 
-    def strategy_value(options)
-      nil
+    def fetch(params)
+      raise NotImplementedError.new("All subclasses of HarvesterCore::Resource must override #fetch.")
+    end
+
+    protected
+    
+    def fetch_document
+      HarvesterCore::Request.get(url, throttling_options)
     end
   end
 end

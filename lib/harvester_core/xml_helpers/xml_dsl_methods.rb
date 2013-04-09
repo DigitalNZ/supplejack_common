@@ -1,5 +1,5 @@
 module HarvesterCore
-  module XmlMethods
+  module XmlDslMethods
     extend ::ActiveSupport::Concern
 
     included do
@@ -23,18 +23,6 @@ module HarvesterCore
     def strategy_value(options={})
       return HarvesterCore::ConditionalOption.new(self.document, options, self.class._namespaces).value if options[:xpath] && options[:if]
       return HarvesterCore::XpathOption.new(self.document, options, self.class._namespaces).value if options[:xpath]
-    end
-
-    def raw_data
-      @raw_data ||= self.document.to_xml
-    end
-
-    def full_raw_data
-      if self.class._namespaces.present?
-        HarvesterCore::Utils.add_namespaces(raw_data, self.class._namespaces)
-      else
-        self.raw_data
-      end
     end
 
     module ClassMethods

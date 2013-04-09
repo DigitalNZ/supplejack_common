@@ -1,5 +1,6 @@
 module HarvesterCore
   class XmlResource < Resource
+    include HarvesterCore::XmlDslMethods
 
     attr_reader :namespaces
 
@@ -10,7 +11,7 @@ module HarvesterCore
     
     def document
       @document ||= begin
-        xml = HarvesterCore::Utils.remove_default_namespace(fetch)
+        xml = HarvesterCore::Utils.remove_default_namespace(fetch_document)
         Nokogiri::XML.parse(xml)
       end
     end

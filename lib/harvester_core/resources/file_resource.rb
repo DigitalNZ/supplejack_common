@@ -8,7 +8,7 @@ module HarvesterCore
       @document ||= begin
         file = Tempfile.new('small_image')
         file.binmode
-        file.write(self.fetch)
+        file.write(self.fetch_document)
         file
       end
     end

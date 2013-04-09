@@ -7,7 +7,7 @@ describe HarvesterCore::JsonResource do
   
   describe "#document" do
     it "should parse the resource as JSON" do
-      resource.stub(:fetch) { {title: "Value"}.to_json }
+      resource.stub(:fetch_document) { {title: "Value"}.to_json }
       resource.document.should eq({"title" => "Value"})
     end
   end

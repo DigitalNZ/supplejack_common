@@ -7,12 +7,11 @@ describe HarvesterCore::FileResource do
   let(:file_contents) { File.read(File.dirname(__FILE__) + '/image.jpg') }
 
   before do
-    resource.stub(:fetch) { file_contents }
+    resource.stub(:fetch_document) { file_contents }
   end
 
   describe "#document" do
     it "should initialize a file object" do
-      resource.stub(:fetch) { file_contents }
       resource.document.should be_a Tempfile
     end
   end

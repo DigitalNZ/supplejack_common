@@ -1,7 +1,8 @@
 module HarvesterCore
   module Rss
     class Base < HarvesterCore::Base
-      include HarvesterCore::XmlMethods
+      include HarvesterCore::XmlDslMethods
+      include HarvesterCore::XmlDataMethods
 
       self.clear_definitions
 
