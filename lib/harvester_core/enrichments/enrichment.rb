@@ -48,8 +48,6 @@ module HarvesterCore
     end
 
     def set_attribute_values
-      @attributes[:source_id] = self.name.to_s
-
       self._attribute_definitions.each do |name, options|
         builder = AttributeBuilder.new(resource, name, options)
         value = builder.value

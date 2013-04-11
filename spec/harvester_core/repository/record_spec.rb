@@ -3,7 +3,7 @@ require "spec_helper"
 describe Repository::Record do
   
   let(:record) { Repository::Record.new }
-  let!(:primary_source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 0, is_part_of: ["tap:12345"]) }
+  let!(:primary_source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 0, is_part_of: ["tap:12345"], authorities: []) }
   let(:source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 1) }
 
   describe "#primary" do
@@ -31,6 +31,46 @@ describe Repository::Record do
     it "should return nil if there is no parent" do
       primary_source.is_part_of = nil
       record.parent_tap_id.should eq nil
+    end
+  end
+
+  describe "#authority_taps" do
+    it "should return the tap_id's of given authority_type" do
+      primary_source.authorities.build(authority_id: 1, name: "name_authority", text: "name")
+      primary_source.authorities.build(authority_id: 2, name: "place_authority", text: "place")
+
+      record.authority_taps(:name_authority).should eq [1]
+    end
+
+    it "should return [] if there are no matching authorities" do
+      primary_source.authorities = nil
+      record.authority_taps(:name_authority).should eq []
+    end
+  end
+
+  describe "#authorities" do
+    let(:source2) { record.sources.build(priority: -1) }
+
+    before(:each) do
+      @auth1 = primary_source.authorities.build(authority_id: 1, name: 'name_authority', text: '')
+      @auth2 = primary_source.authorities.build(authority_id: 2, name: 'name_authority', text: '')
+      @auth3 = source2.authorities.build(authority_id: 2, name: 'name_authority', text: 'John Doe')
+    end
+
+    it "merges authorities based on priority" do
+      record.authorities.count.should eq 2
+      record.authorities.should include(@auth1)
+      record.authorities.should include(@auth3)
+    end
+  end
+
+  describe "#sorted_sources" do
+    it "returns a list of sources sorted by priority" do
+      record.sources.build(priority: 10)
+      record.sources.build(priority: -1)
+      record.sources.build(priority: 5)
+
+      record.send(:sorted_sources).map(&:priority).should eq [-1,0,5,10] 
     end
   end
 end

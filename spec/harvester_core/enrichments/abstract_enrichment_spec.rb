@@ -46,4 +46,8 @@ describe HarvesterCore::AbstractEnrichment do
     end
   end
 
+  it "sets the source_id to the specified name" do
+    enrichment.attributes.should include(source_id: 'ndha_rights')
+  end
+
 end

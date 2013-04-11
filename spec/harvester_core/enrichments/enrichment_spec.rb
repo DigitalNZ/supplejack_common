@@ -152,13 +152,4 @@ describe HarvesterCore::Enrichment do
       enrichment.requirements[:tap_id].should eq 12345
     end
   end
-
-  describe "#set_attribute_values" do
-    # let!(:enrichment) { klass.new(:ndha_rights, Proc.new { url "http://goo.gle/1"; attribute :dc_rights, xpath: "//dc:rights" }, record) }
-
-    it "should add the source_id to the enrichment attributes" do
-      enrichment.set_attribute_values
-      enrichment.attributes.should include(source_id: "ndha_rights")
-    end
-  end
 end

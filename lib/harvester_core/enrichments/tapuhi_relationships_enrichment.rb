@@ -2,8 +2,6 @@ module HarvesterCore
   class TapuhiRelationshipsEnrichment < AbstractEnrichment
 
     def set_attribute_values
-      @attributes[:source_id] = self.name.to_s
-
       parent = find_record(record.parent_tap_id)
       
       intermediates = []

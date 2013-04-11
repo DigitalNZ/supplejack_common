@@ -11,6 +11,7 @@ module HarvesterCore
       @attributes = {}
       @errors = {}
       @attributes[:priority] = options[:priority] || 1
+      @attributes[:source_id] = self.name.to_s
     end
 
     def primary

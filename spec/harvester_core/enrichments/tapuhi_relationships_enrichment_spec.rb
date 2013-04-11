@@ -9,10 +9,6 @@ describe HarvesterCore::TapuhiRelationshipsEnrichment do
 	let(:enrichment) { klass.new(:tapuhi_relationships, {}, record, TestParser )}
 
 	describe "#set_attribute_values" do
-		it "should include a source id of tapuhi_relationships" do
-		  enrichment.set_attribute_values
-			enrichment.attributes.should include(source_id: "tapuhi_relationships")
-		end
 
 		context "record has no parent" do
 			it "should have no relationship authorities" do

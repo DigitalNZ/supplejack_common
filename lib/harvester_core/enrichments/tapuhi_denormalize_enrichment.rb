@@ -2,8 +2,6 @@ module HarvesterCore
   class TapuhiDenormalizeEnrichment < AbstractEnrichment
 
     def set_attribute_values
-      @attributes[:source_id] = self.name.to_s
-
       authorities = primary[:authorities]
 
       unless authorities.to_a.empty?

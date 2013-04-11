@@ -9,10 +9,6 @@ describe HarvesterCore::TapuhiDenormalizeEnrichment do
 	let(:enrichment) { klass.new(:tapuhi_denormalization, {}, record, TestParser )}
 
 	describe "#set_attribute_values" do
-		it "should set the source_id to tapuhi_denormalization " do
-		  enrichment.set_attribute_values
-			enrichment.attributes.should include(source_id: "tapuhi_denormalization")
-		end
 
 		context "has a record with a source" do
 			let(:record) { mock(:record, title: "Awesome Title")}
