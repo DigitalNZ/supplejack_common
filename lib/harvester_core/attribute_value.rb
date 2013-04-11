@@ -6,6 +6,11 @@ module HarvesterCore
     def initialize(original_value)
       @original_value = Array(original_value)
       @original_value = @original_value.delete_if(&:blank?)
+      @original_value = self.class.deep_clone(@original_value)
+    end
+
+    def self.deep_clone(original_value)
+      original_value.map { |v| v.duplicable? ? v.dup : v }
     end
 
     def to_a

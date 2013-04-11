@@ -16,6 +16,11 @@ describe HarvesterCore::AttributeValue do
       value = klass.new("")
       value.original_value.should eq []
     end
+
+    it "should deep clone th original_value" do
+      klass.should_receive(:deep_clone).with(["books"])
+      value = klass.new("books")
+    end
   end
 
   describe "present?" do
@@ -82,6 +87,21 @@ describe HarvesterCore::AttributeValue do
       it "returns false" do
         value.includes?(/Tiger/).should be_false
       end
+    end
+  end
+
+  describe ".deep_clone" do
+    it "deep clones the array of objects" do
+      obj1 = "ben"
+      obj2 = "bill"
+      original_array = [obj1, obj2]
+      cloned_array = klass.deep_clone(original_array)
+      cloned_array[0].object_id.should_not eq original_array[0].object_id
+      cloned_array[1].object_id.should_not eq original_array[1].object_id
+    end
+
+    it "handles fixnums" do
+      expect {klass.deep_clone([1,2])}.to_not raise_error(TypeError)
     end
   end
   
