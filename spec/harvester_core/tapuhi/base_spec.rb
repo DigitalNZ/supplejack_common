@@ -70,4 +70,15 @@ describe HarvesterCore::Tapuhi::Base do
       record.fetch(2).to_a.should eq ["Date"]
     end
   end
+
+  describe "#strategy_value" do
+    it "should return the field at the requested position" do
+      record.stub(:fields) { [[], ["Title"], ["Date"], [], ["Subject"]] }
+      record.strategy_value(field_num: 2).should eq ["Date"]
+    end
+
+    it "should return nil if there is no field_num requested" do
+      record.strategy_value().should eq nil
+    end
+  end
 end

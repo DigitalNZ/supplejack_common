@@ -41,7 +41,7 @@ module HarvesterCore
       end
 
       def strategy_value(options={})
-        fields[options[:field_num].to_i]
+        fields[options[:field_num].to_i] if options[:field_num].present?
       end
 
       def fields
