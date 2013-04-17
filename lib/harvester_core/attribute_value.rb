@@ -10,7 +10,7 @@ module HarvesterCore
     end
 
     def self.deep_clone(original_value)
-      original_value.map { |v| v.duplicable? ? v.dup : v }
+      original_value.map { |v| v.duplicable? ? v.dup : v }.uniq
     end
 
     def to_a
@@ -27,7 +27,7 @@ module HarvesterCore
 
     def +(attribute_value)
       attribute_value = attribute_value.original_value if attribute_value.is_a?(AttributeValue)
-      self.class.new(self.original_value + Array(attribute_value))
+      self.class.new(self.original_value + Array(attribute_value).uniq)
     end
 
     def includes?(value)

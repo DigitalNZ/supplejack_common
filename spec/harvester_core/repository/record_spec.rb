@@ -3,7 +3,7 @@ require "spec_helper"
 describe Repository::Record do
   
   let(:record) { Repository::Record.new }
-  let!(:primary_source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 0, relation: ["tap:12345"]) }
+  let!(:primary_source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 0, is_part_of: ["tap:12345"]) }
   let(:source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 1) }
 
   describe "#primary" do
@@ -29,7 +29,7 @@ describe Repository::Record do
     end
 
     it "should return nil if there is no parent" do
-      primary_source.relation = nil
+      primary_source.is_part_of = nil
       record.parent_tap_id.should eq nil
     end
   end

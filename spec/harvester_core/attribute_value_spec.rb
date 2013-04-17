@@ -21,6 +21,11 @@ describe HarvesterCore::AttributeValue do
       klass.should_receive(:deep_clone).with(["books"])
       value = klass.new("books")
     end
+
+    it "should act as a set" do
+      value = klass.new(["1","1"])
+      value.original_value.should eq ["1"]
+    end
   end
 
   describe "present?" do
