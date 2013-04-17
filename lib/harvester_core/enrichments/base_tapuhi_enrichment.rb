@@ -1,7 +1,8 @@
 module HarvesterCore
-  class TapuhiDenormalizeEnrichment < AbstractEnrichment
+  class BaseTapuhiEnrichment < AbstractEnrichment
 
-    def set_attribute_values
+    protected
+    def denormalise
       authorities = primary[:authorities]
 
       unless authorities.to_a.empty?
@@ -15,9 +16,6 @@ module HarvesterCore
         end
       end
     end
-
-    def enrichable?
-      !!record
-    end
+    
   end
 end

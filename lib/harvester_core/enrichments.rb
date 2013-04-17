@@ -1,6 +1,5 @@
 require "harvester_core/enrichments/abstract_enrichment"
 require "harvester_core/enrichments/enrichment"
-require "harvester_core/enrichments/tapuhi_relationships_enrichment"
-require "harvester_core/enrichments/tapuhi_denormalize_enrichment"
+require "harvester_core/enrichments/base_tapuhi_enrichment"
 require "harvester_core/enrichments/tapuhi_authorities_enrichment"
-require "harvester_core/enrichments/tapuhi_broad_related_authorities_enrichment"
+require "harvester_core/enrichments/tapuhi_records_enrichment"

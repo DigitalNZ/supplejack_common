@@ -8,11 +8,23 @@ describe HarvesterCore::TapuhiAuthoritiesEnrichment do
   let(:record) { mock(:record, attributes: {}).as_null_object }
   let(:enrichment) { klass.new(:tapuhi_authorities, {}, record, TestParser )}
 
-	describe "#set_attribute_values" do
+  describe "#set_attribute_values" do
+    it "should denormalise relationships" do
+      enrichment.should_receive(:denormalise)
+      enrichment.set_attribute_values
+    end
+
+    it "should add broad_related_authorities" do
+      enrichment.should_receive(:broad_related_authorities)
+      enrichment.set_attribute_values
+    end
+  end
+
+	describe "#broad_related_authorities" do
 
     context "record has no broader_term" do
       it "should not create a broader_related_authority" do
-        enrichment.set_attribute_values
+        enrichment.send(:broad_related_authorities)
         enrichment.attributes.keys.should_not include(:authorities)
       end
     end
@@ -28,7 +40,7 @@ describe HarvesterCore::TapuhiAuthoritiesEnrichment do
       end
 
       it "should not create a broader_related_authority" do
-        enrichment.set_attribute_values
+        enrichment.send(:broad_related_authorities)
         enrichment.attributes.keys.should_not include(:authorities)
       end
     end
@@ -49,7 +61,7 @@ describe HarvesterCore::TapuhiAuthoritiesEnrichment do
       end
 
       it "should create a broad_related_authority for each broader_term above the direct parent" do
-        enrichment.set_attribute_values
+        enrichment.send(:broad_related_authorities)
         enrichment.attributes[:authorities].should include({authority_id: 1234, name: "broad_related_authority", text: "mid"})
         enrichment.attributes[:authorities].should include({authority_id: 12345, name: "broad_related_authority", text: "root"})
       end
@@ -71,14 +83,14 @@ describe HarvesterCore::TapuhiAuthoritiesEnrichment do
       end
 
       it "should create a broad_related_authority for each broader_term above the direct parent" do
-        enrichment.set_attribute_values
+        enrichment.send(:broad_related_authorities)
         enrichment.attributes[:authorities].should include({authority_id: 21, name: "broad_related_authority", text: "mid_a"})
         enrichment.attributes[:authorities].should include({authority_id: 22, name: "broad_related_authority", text: "mid_b"})
         enrichment.attributes[:authorities].should include({authority_id: 1, name: "broad_related_authority", text: "root"})
       end
 
       it "should not create duplicate authorities" do
-        enrichment.set_attribute_values
+        enrichment.send(:broad_related_authorities)
         enrichment.attributes[:authorities].find_all{|a| a[:authority_id] == 1}.count.should eq 1
       end
     end
@@ -97,7 +109,7 @@ describe HarvesterCore::TapuhiAuthoritiesEnrichment do
       end
 
       it "should create one broader_related_authority for each ancestor above parent" do
-        enrichment.set_attribute_values
+        enrichment.send(:broad_related_authorities)
         enrichment.attributes[:authorities].should eq [{authority_id: 2, name: "broad_related_authority", text: "cyclic_root"}]
       end
     end

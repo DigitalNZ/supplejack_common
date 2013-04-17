@@ -1,7 +1,15 @@
 module HarvesterCore
-  class TapuhiRelationshipsEnrichment < AbstractEnrichment
+  class TapuhiRecordsEnrichment < BaseTapuhiEnrichment
 
     def set_attribute_values
+      denormalise
+      relationships
+      broad_related_authorities
+    end
+
+    protected
+
+    def relationships
       parent = find_record(record.parent_tap_id)
       
       intermediates = []
@@ -24,8 +32,23 @@ module HarvesterCore
       end
     end
 
-    def enrichable?
-      !!record
+    def broad_related_authorities
+      authorities = []
+      [:name_authority, :subject_authority, 
+       :iwihapu_authority, :place_authority, :recordtype_authority].each do |type|
+        authorities += record.authority_taps(type)
+      end
+      
+      authorities.each do |authority_tap|
+        authority = find_record(authority_tap)
+        authority.authorities.each do |a|
+          if ['broader_term', 'broad_related_authority'].include?(a.name)
+            @attributes[:authorities] ||= []
+            @attributes[:authorities] << {authority_id: a.authority_id, name: 'broad_related_authority', text: a.text}
+          end
+        end
+      end
+      @attributes[:authorities].uniq! if @attributes[:authorities].present?
     end
 
     private

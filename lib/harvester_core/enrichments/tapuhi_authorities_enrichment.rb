@@ -1,6 +1,18 @@
 module HarvesterCore
-  class TapuhiAuthoritiesEnrichment < AbstractEnrichment
+  class TapuhiAuthoritiesEnrichment < BaseTapuhiEnrichment
+
     def set_attribute_values
+      denormalise
+      broad_related_authorities
+    end
+
+    def enrichable?
+      !!record
+    end
+
+    protected
+    
+    def broad_related_authorities
       parents = record.authority_taps(:broader_term)
 
       parents.each do |parent_tap|
@@ -25,10 +37,6 @@ module HarvesterCore
           queued_ancestors -= (processed_ancestors+parents)
         end
       end
-    end
-
-    def enrichable?
-      !!record
     end
   end
 end
