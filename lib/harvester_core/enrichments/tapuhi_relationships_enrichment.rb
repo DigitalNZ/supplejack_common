@@ -18,14 +18,9 @@ module HarvesterCore
           root = parent
         end
 
-        @attributes[:authorities] = []
-        @attributes[:authorities] << {authority_id: parent.tap_id, name: "collection_parent", text: parent.title}
-
-        intermediates.each do |i|
-          @attributes[:authorities] << {authority_id: i.tap_id, name: "collection_mid", text: i.title}
-        end
-
-        @attributes[:authorities] << {authority_id: root.tap_id, name: "collection_root", text: root.title}
+        build_authorities(parent, intermediates, root)
+        build_relation(root)
+        build_is_part_of(parent)
       end
     end
 
@@ -33,5 +28,30 @@ module HarvesterCore
       !!record
     end
 
+    private
+    
+    def build_authorities(parent, intermediates, root)
+      @attributes[:authorities] = []
+
+      @attributes[:authorities] << {authority_id: parent.tap_id, name: "collection_parent", text: parent.title}
+      
+      intermediates.each do |i|
+        @attributes[:authorities] << {authority_id: i.tap_id, name: "collection_mid", text: i.title}
+      end
+
+      @attributes[:authorities] << {authority_id: root.tap_id, name: "collection_root", text: root.title}
+    end
+
+    def build_relation(parent)
+      @attributes[:relation] = []
+      @attributes[:relation] << parent.title
+      @attributes[:relation] << parent.shelf_location
+    end
+
+    def build_is_part_of(root)
+      @attributes[:is_part_of] = []
+      @attributes[:is_part_of] << root.title
+      @attributes[:is_part_of] << root.shelf_location
+    end
   end
 end

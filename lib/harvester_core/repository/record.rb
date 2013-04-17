@@ -6,7 +6,7 @@ module Repository
 
     store_in collection: "records", session: "api"
 
-    delegate :title, to: :primary
+    delegate :title, :shelf_location, to: :primary
 
     default_scope where(status: "active")
 
