@@ -3,11 +3,19 @@ module HarvesterCore
 
     def set_attribute_values
       denormalise
+      build_creator
       relationships
       broad_related_authorities
     end
 
     protected
+
+    def build_creator
+      @attributes[:authorities] ||= []
+      
+      name_authorities = @attributes[:authorities].find_all { |v| v[:name] == "name_authority" }
+      @attributes[:creator] = name_authorities.map { |v| v[:title] }
+    end
 
     def relationships
       parent = find_record(record.parent_tap_id)
@@ -54,7 +62,7 @@ module HarvesterCore
     private
     
     def build_authorities(parent, intermediates, root)
-      @attributes[:authorities] = []
+      @attributes[:authorities] ||= []
 
       @attributes[:authorities] << {authority_id: parent.tap_id, name: "collection_parent", text: parent.title}
       
@@ -66,13 +74,13 @@ module HarvesterCore
     end
 
     def build_relation(parent)
-      @attributes[:relation] = []
+      @attributes[:relation] ||= []
       @attributes[:relation] << parent.title
       @attributes[:relation] << parent.shelf_location
     end
 
     def build_is_part_of(root)
-      @attributes[:is_part_of] = []
+      @attributes[:is_part_of] ||= []
       @attributes[:is_part_of] << root.title
       @attributes[:is_part_of] << root.shelf_location
     end

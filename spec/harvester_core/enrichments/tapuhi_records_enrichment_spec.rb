@@ -18,6 +18,11 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       enrichment.set_attribute_values
     end
 
+    it "should build creator" do
+      enrichment.should_receive(:build_creator)
+      enrichment.set_attribute_values
+    end
+
     it "should build relationships" do
       enrichment.should_receive(:relationships)
       enrichment.set_attribute_values
@@ -29,11 +34,38 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
     end
   end
 
+  describe "build_creator" do
+    let(:authorities) {
+      [
+        {authority_id: "2234", name: "name_authority", role: "(Creator)", title: "Bill" },
+        {authority_id: "2235", name: "name_authority", role: "(Artist)", title: "Ben" },
+        {authority_id: "2236", name: "subject_authority", role: "", title: "Andy" }
+      ]
+    }
+
+    before do
+      enrichment.attributes[:authorities] = authorities
+      enrichment.send(:build_creator)
+    end
+
+    it "@attributes should have a key creator" do
+      enrichment.attributes.keys.should include(:creator)
+    end
+
+    it "should store the name authorities titles in the creator field." do
+      enrichment.attributes[:creator].should include("Bill")
+      enrichment.attributes[:creator].should include("Ben")
+      enrichment.attributes[:creator].should_not include("Andy")
+    end
+  end
+
   describe "#relationships" do
     context "record has no parent" do
       it "should have no relationship authorities" do
         enrichment.send(:relationships)
         enrichment.attributes.keys.should_not include(:authorities)
+        enrichment.attributes.keys.should_not include(:relation)
+        enrichment.attributes.keys.should_not include(:is_part_of)
       end
     end
 
