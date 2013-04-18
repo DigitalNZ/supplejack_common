@@ -106,7 +106,7 @@ module HarvesterCore
           if builder.errors.any?
             self.field_errors[name] = builder.errors
           else
-            @attributes[name] = value if value.present?
+            @attributes[name] = value unless value.nil? or value == ""
           end
         end
 

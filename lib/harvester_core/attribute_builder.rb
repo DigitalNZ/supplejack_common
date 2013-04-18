@@ -13,18 +13,18 @@ module HarvesterCore
 
     def transform
       value = HarvesterCore::Utils.array(attribute_value)
-      value = mapping_option(value, options[:mappings]) if options[:mappings]
-      value = split_option(value, options[:separator]) if options[:separator]
-      value = join_option(value, options[:join]) if options[:join]
+      value = mapping_option(value, options[:mappings]) if options.has_key? :mappings
+      value = split_option(value, options[:separator]) if options.has_key? :separator
+      value = join_option(value, options[:join]) if options.has_key? :join
       value = strip_html_option(value)
       value = strip_whitespace_option(value)
-      value = truncate_option(value, options[:truncate]) if options[:truncate]
-      value = parse_date_option(value, options[:date]) if options[:date]
+      value = truncate_option(value, options[:truncate]) if options.has_key? :truncate
+      value = parse_date_option(value, options[:date]) if options.has_key? :date
       value.uniq
     end
 
     def attribute_value
-      return options[:default] if options[:default]
+      return options[:default] if options.has_key? :default
       return record.strategy_value(options)
     end
 
