@@ -20,6 +20,45 @@ describe HarvesterCore::AttributeBuilder do
     end
   end
 
+  describe "#evaluate_attribute_block" do
+
+    let(:attr_builder){ klass.new(record, :authorities, {}) }
+
+    context "block does not return an attribute value object" do
+
+      it "should create an attribute value object from the block result" do
+        HarvesterCore::AttributeValue.should_receive(:new).with(["1", "2", "3", "1"])
+        attr_builder.evaluate_attribute_block do
+          ["1", "2", "3", "1"]
+        end
+      end
+
+      it "should return the attribute valueified array" do
+        attr_builder.evaluate_attribute_block do
+          ["1", "2", "3", "1"]
+        end.should eq ["1", "2", "3"]
+      end
+    end
+
+    context "block returns an attribute value object" do
+      it "should return the array from the attribute value object" do
+        value = HarvesterCore::AttributeValue.new(["1", "2", "3", "2"])
+        attr_builder.evaluate_attribute_block do
+          value
+        end.should eq value.to_a
+      end
+    end
+
+    context "block returns nil" do
+      it "should transform the value" do
+        attr_builder.stub(:attribute_value) { "Hi" }
+        attr_builder.evaluate_attribute_block do
+          nil
+        end.should eq attr_builder.transform
+      end
+    end
+  end
+
   describe "#transform" do
     let(:builder) { klass.new(record, :category, {}) }
 
