@@ -35,28 +35,47 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
   end
 
   describe "build_creator" do
-    let(:authorities) {
-      [
-        {authority_id: "2234", name: "name_authority", role: "(Creator)", title: "Bill" },
-        {authority_id: "2235", name: "name_authority", role: "(Artist)", title: "Ben" },
-        {authority_id: "2236", name: "subject_authority", role: "", title: "Andy" }
-      ]
-    }
+    context "has name_authorities" do
+      let(:authorities) {
+        [
+          {authority_id: "2234", name: "name_authority", role: "(Creator)", title: "Bill" },
+          {authority_id: "2235", name: "name_authority", role: "(Artist)", title: "Ben" },
+          {authority_id: "2236", name: "subject_authority", role: "", title: "Andy" }
+        ]
+      }
 
-    before do
-      enrichment.attributes[:authorities] = authorities
-      enrichment.send(:build_creator)
+      before do
+        enrichment.attributes[:authorities] = authorities
+        enrichment.send(:build_creator)
+      end
+
+      it "@attributes should have a key creator" do
+        enrichment.attributes.keys.should include(:creator)
+      end
+
+      it "should store the name authorities titles in the creator field." do
+        enrichment.attributes[:creator].should include("Bill")
+        enrichment.attributes[:creator].should include("Ben")
+        enrichment.attributes[:creator].should_not include("Andy")
+      end
     end
 
-    it "@attributes should have a key creator" do
-      enrichment.attributes.keys.should include(:creator)
+    context "has no name_authorities" do
+      let(:authorities) {[
+          {authority_id: "2236", name: "subject_authority", role: "", title: "Andy" },
+          {authority_id: "2230", name: "subject_authority", role: "", title: "Ben" }
+      ]}
+
+      before do
+        enrichment.attributes[:authorities] = authorities
+        enrichment.send(:build_creator)
+      end
+
+      it "the creator should be set to 'Not specified'" do
+        enrichment.attributes[:creator].should eq ["Not specified"]
+      end
     end
 
-    it "should store the name authorities titles in the creator field." do
-      enrichment.attributes[:creator].should include("Bill")
-      enrichment.attributes[:creator].should include("Ben")
-      enrichment.attributes[:creator].should_not include("Andy")
-    end
   end
 
   describe "#relationships" do

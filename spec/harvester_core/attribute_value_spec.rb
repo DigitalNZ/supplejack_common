@@ -26,6 +26,16 @@ describe HarvesterCore::AttributeValue do
       value = klass.new(["1","1"])
       value.original_value.should eq ["1"]
     end
+
+    it "should work with the boolean value false" do
+      value = klass.new(false)
+      value.original_value.should eq [false]
+    end
+
+    it "should work with the boolean value true" do
+      value = klass.new(true)
+      value.original_value.should eq [true]
+    end
   end
 
   describe "present?" do

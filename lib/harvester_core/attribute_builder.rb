@@ -51,6 +51,8 @@ module HarvesterCore
         block_result = HarvesterCore::AttributeValue.new(block_result)
       end
       
+      block_result = strip_html_option(block_result)
+      block_result = strip_whitespace_option(block_result)
       block_result.to_a
     end
 

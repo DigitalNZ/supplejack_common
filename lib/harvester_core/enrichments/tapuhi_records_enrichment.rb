@@ -15,6 +15,8 @@ module HarvesterCore
       
       name_authorities = @attributes[:authorities].find_all { |v| v[:name] == "name_authority" }
       @attributes[:creator] = name_authorities.map { |v| v[:title] }
+      
+      @attributes[:creator] = @attributes[:creator].empty? ? ["Not specified"] : @attributes[:creator]
     end
 
     def relationships

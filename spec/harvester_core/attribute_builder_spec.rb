@@ -24,6 +24,22 @@ describe HarvesterCore::AttributeBuilder do
 
     let(:attr_builder){ klass.new(record, :authorities, {}) }
 
+    context "result has redundant white space" do
+      it "strips the white space from the result" do
+        attr_builder.evaluate_attribute_block do
+          "   1   "
+        end.should eq ["1"]
+      end
+    end
+
+    context "result has redundant white space" do
+      it "strips the white space from the result" do
+        attr_builder.evaluate_attribute_block do
+          "   <b>1</b>   "
+        end.should eq ["1"]
+      end
+    end
+
     context "block does not return an attribute value object" do
 
       it "should create an attribute value object from the block result" do
