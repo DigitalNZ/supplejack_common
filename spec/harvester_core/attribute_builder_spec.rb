@@ -32,6 +32,14 @@ describe HarvesterCore::AttributeBuilder do
       end
     end
 
+    context "result is just white space" do
+      it "strips the white space from the result" do
+        attr_builder.evaluate_attribute_block do
+          ["      ", "   "]
+        end.should eq []
+      end
+    end
+
     context "result has redundant white space" do
       it "strips the white space from the result" do
         attr_builder.evaluate_attribute_block do

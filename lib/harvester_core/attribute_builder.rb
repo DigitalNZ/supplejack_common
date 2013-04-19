@@ -46,13 +46,13 @@ module HarvesterCore
     def evaluate_attribute_block(&block)
       block_result = record.instance_eval(&block)
       return transform if block_result.nil?
+
+      block_result = strip_html_option(block_result)
+      block_result = strip_whitespace_option(block_result)
     
       unless block_result.is_a?(HarvesterCore::AttributeValue)
         block_result = HarvesterCore::AttributeValue.new(block_result)
       end
-      
-      block_result = strip_html_option(block_result)
-      block_result = strip_whitespace_option(block_result)
       block_result.to_a
     end
 
