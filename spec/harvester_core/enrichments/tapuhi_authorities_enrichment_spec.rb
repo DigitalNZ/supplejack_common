@@ -1,4 +1,4 @@
-require "spec_helper"
+ require "spec_helper"
 
 class TestParser; def self._throttle; nil; end; end
 
@@ -110,7 +110,7 @@ describe HarvesterCore::TapuhiAuthoritiesEnrichment do
 
       it "should create one broader_related_authority for each ancestor above parent" do
         enrichment.send(:broad_related_authorities)
-        enrichment.attributes[:authorities].should eq [{authority_id: 2, name: "broad_related_authority", text: "cyclic_root"}]
+        enrichment.attributes[:authorities].should eq Set.new([{authority_id: 2, name: "broad_related_authority", text: "cyclic_root"}])
       end
     end
 	end

@@ -1,3 +1,5 @@
+
+
 module HarvesterCore
   class AbstractEnrichment
 
@@ -8,7 +10,7 @@ module HarvesterCore
       @name = name
       @record = record
       @parser_class = parser_class
-      @attributes = {}
+      @attributes = Hash.new {|hash, key| hash[key] = Set.new}
       @errors = {}
       @attributes[:priority] = options[:priority] || 1
       @attributes[:source_id] = self.name.to_s

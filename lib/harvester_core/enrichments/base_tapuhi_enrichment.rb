@@ -6,8 +6,6 @@ module HarvesterCore
       authorities = primary[:authorities]
 
       unless authorities.to_a.empty?
-        @attributes[:authorities] ||= []
-
         authorities.to_a.each do |authority|
           record = find_record(authority["authority_id"])
           if record

@@ -154,7 +154,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
     context "record has no authorities" do
       it "should not create any broad_related_authorities" do
         enrichment.send(:broad_related_authorities)
-        enrichment.attributes[:authorities].should be_nil
+        enrichment.attributes[:authorities].should be_empty
       end
     end
 
@@ -170,7 +170,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
         name_authority.stub(:authorities) { [] }
 
         enrichment.send(:broad_related_authorities)
-        enrichment.attributes[:authorities].should be_nil
+        enrichment.attributes[:authorities].should be_empty
       end
 
       it "should create a broad_related_authority for each broader_term" do
