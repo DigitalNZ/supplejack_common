@@ -85,6 +85,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
         enrichment.attributes.keys.should_not include(:authorities)
         enrichment.attributes.keys.should_not include(:relation)
         enrichment.attributes.keys.should_not include(:is_part_of)
+        enrichment.attributes.keys.should_not include(:library_collection)
       end
     end
 
@@ -96,22 +97,43 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
         record.stub(:parent_tap_id) { 1234 }
         enrichment.stub(:find_record).with(1234) { parent_record }
         enrichment.stub(:find_record).with(nil) { nil }
-        enrichment.send(:relationships)
       end
 
-      it "should have a collection_parent & collection_root" do
-        enrichment.attributes[:authorities].should include({authority_id: 1234, name: "collection_parent", text: "title"})
-        enrichment.attributes[:authorities].should include({authority_id: 1234, name: "collection_root", text: "title"})
+      context "library_collection found" do
+        before do
+          enrichment.stub(:get_library_collection) { "Corelli Collection" }
+          enrichment.send(:relationships)
+        end
+
+        it "should have a collection_parent & collection_root" do
+          enrichment.attributes[:authorities].should include({authority_id: 1234, name: "collection_parent", text: "title"})
+          enrichment.attributes[:authorities].should include({authority_id: 1234, name: "collection_root", text: "title"})
+        end
+
+        it "should set the relation field" do
+          enrichment.attributes[:relation].should include("title")
+          enrichment.attributes[:relation].should include("ms-1234-d")
+        end
+
+        it "should set the is_part_of field" do
+          enrichment.attributes[:is_part_of].should include("title")
+          enrichment.attributes[:is_part_of].should include("ms-1234-d")
+        end
+
+        it "should set the library_collection field" do
+          enrichment.attributes[:library_collection].should include("Corelli Collection")
+        end
       end
 
-      it "should have a relation field that represents the collection_root" do
-        enrichment.attributes[:relation].should include("title")
-        enrichment.attributes[:relation].should include("ms-1234-d")
-      end
+      context "library_collection not found" do
+        before do 
+          parent_record.stub(:get_library_collection) { nil } 
+          enrichment.send(:relationships)
+        end
 
-      it "should have a is_part_of field that represents the collection_parent" do
-        enrichment.attributes[:is_part_of].should include("title")
-        enrichment.attributes[:is_part_of].should include("ms-1234-d")
+        it "should not set the library_collection field" do
+          enrichment.attributes.keys.should_not include(:library_collection)
+        end
       end
     end
 
@@ -145,6 +167,36 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       it "should have a is_part_of field that represents the collection_parent" do
         enrichment.attributes[:is_part_of].should include("parent")
         enrichment.attributes[:is_part_of].should include("def-456")
+      end
+    end
+  end
+
+  describe "#get_library_collection" do
+    context "it finds a collection" do
+      it "returns Ranfurly Collection" do
+        enrichment.send(:get_library_collection, "PAColl-5745-1").should eq "Ranfurly Collection"
+      end
+
+      it "returns Sir Donald McLean Papers" do
+        enrichment.send(:get_library_collection, "MS-Group-1551").should eq "Sir Donald McLean Papers"
+      end
+
+      it "returns Corelli Collection" do
+        enrichment.send(:get_library_collection,"MS-Papers-0606").should eq "Corelli Collection"
+      end
+
+      it "returns Bible Society in New Zealand Collection" do
+        enrichment.send(:get_library_collection, "MS-Group-1776").should eq "Bible Society in New Zealand Collection"
+      end
+
+      it "returns Arthur Nelson Field Collection" do
+        enrichment.send(:get_library_collection,"PA11-194").should eq "Arthur Nelson Field Collection"
+      end      
+    end
+
+    context "collection not found" do
+      it "returns nil" do
+        enrichment.send(:get_library_collection,"unexisting shelf location").should be_nil
       end
     end
   end
