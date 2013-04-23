@@ -3,7 +3,7 @@ require "spec_helper"
 describe Repository::Record do
   
   let(:record) { Repository::Record.new }
-  let!(:primary_source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 0, is_part_of: ["tap:12345"], authorities: []) }
+  let!(:primary_source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 0, is_part_of: ["tap:12345"], relation: ["tap:123456"], authorities: []) }
   let(:source) { record.sources.build(dc_identifier: ["tap:1234"], priority: 1) }
 
   describe "#primary" do
@@ -24,12 +24,18 @@ describe Repository::Record do
   end
 
   describe "#parent_tap_id" do
-    it "should extract the tap_id from the relation" do
+    it "should extract the tap_id from the is_part_of" do
       record.parent_tap_id.should eq 12345
     end
 
-    it "should return nil if there is no parent" do
+    it "should return relation if there is no is_part_of" do
       primary_source.is_part_of = nil
+      record.parent_tap_id.should eq 123456
+    end
+
+    it "should return nil if there is no is_part_of or relation" do
+      primary_source.is_part_of = nil
+      primary_source.relation = nil
       record.parent_tap_id.should eq nil
     end
   end

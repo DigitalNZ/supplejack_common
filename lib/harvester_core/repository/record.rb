@@ -15,7 +15,7 @@ module Repository
     end
 
     def parent_tap_id
-      extract_tap_id(:is_part_of)
+      extract_tap_id(:is_part_of) || extract_tap_id(:relation)
     end
 
     def tap_id
