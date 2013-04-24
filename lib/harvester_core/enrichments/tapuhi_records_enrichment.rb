@@ -102,7 +102,9 @@ module HarvesterCore
         if authority.present?
           authority.authorities.each do |a|
             if ['broader_term', 'broad_related_authority'].include?(a.name)
-              @attributes[:authorities] << {authority_id: a.authority_id, name: 'broad_related_authority', text: a.text}
+              if a.text.present?
+                @attributes[:authorities] << {authority_id: a.authority_id, name: 'broad_related_authority', text: a.text}
+              end
             end
           end
         end

@@ -272,6 +272,13 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
         enrichment.attributes[:authorities].should include({authority_id: 3, name: "broad_related_authority", text: "broad related 2"})
       end
 
+      it "should not create a broad_related_authority if the authorities have no text" do
+        name_authority.stub(:authorities) { [ mock(:authority, authority_id: 2, name: "broad_related_authority", text: nil)] }
+
+        enrichment.send(:broad_related_authorities)
+        enrichment.attributes[:authorities].should_not include({authority_id: 2, name: "broad_related_authority", text: nil})
+      end
+
       it "should remove duplicate authorities" do
         name_authority.stub(:authorities) { [ mock(:authority, authority_id: 2, name: "broad_related_authority", text: "broad related")] }
         record.stub(:authority_taps).with(:name_authority) { [1,2] }
