@@ -2,7 +2,7 @@ module HarvesterCore
   class Enrichment < AbstractEnrichment
 
     # Internal attribute accessors
-    attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes
+    attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes, :_rejection_rules
 
     attr_reader :block
 
@@ -11,11 +11,20 @@ module HarvesterCore
       @block = options[:block]
       @_attribute_definitions = {}
       @_required_attributes = {}
+      @_rejection_rules = {}
       self.instance_eval(&block)
     end
 
     def url(url)
       self._url = url
+    end
+
+    def identifier
+      "#{@parser_class.name.underscore}_#{name}"
+    end
+
+    def reject_if(&block)
+      self._rejection_rules[self.identifier] = block
     end
 
     def format(format)
@@ -62,9 +71,13 @@ module HarvesterCore
 
     def enrichable?
       self._required_attributes.each do |attribute, value|
-        return false if value.blank?
+        return false if value.nil?
       end
-      true
+
+      rejection_block = self._rejection_rules[self.identifier]
+
+      return true if rejection_block.nil?
+      return !self.instance_eval(&rejection_block)
     end
   end
 end

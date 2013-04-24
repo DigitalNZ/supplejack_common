@@ -29,6 +29,19 @@ describe HarvesterCore::Enrichment do
     end
   end
 
+  describe "#identifier" do
+    it "should join the parser class name and the name of the enrichment." do
+      enrichment.identifier.should eq "test_parser_ndha_rights"
+    end
+  end
+
+  describe "#reject_if" do
+    it "adds a rejection rule" do
+      enrichment.reject_if { "text" }
+      enrichment._rejection_rules[enrichment.identifier].should be_a Proc
+    end
+  end
+
   describe "#format" do
     it "should store the enrichment format" do
       enrichment.format :xml
@@ -132,14 +145,33 @@ describe HarvesterCore::Enrichment do
   end
 
   describe "#enrichable?" do
-    it "returns true when all required fields are present" do
-      enrichment._required_attributes = {thumbnail_url: "http://google.com/1", title: "Hi"}
-      enrichment.enrichable?.should be_true
+    context "required attributes" do
+      it "returns true when all required fields are present" do
+        enrichment._required_attributes = {thumbnail_url: "http://google.com/1", title: "Hi"}
+        enrichment.enrichable?.should be_true
+      end
+
+      it "handles boolean values correctly" do
+        enrichment._required_attributes = { is_catalog_record: false }
+        enrichment.enrichable?.should be_true
+      end
+
+      it "returns false when a required field is not present" do
+        enrichment._required_attributes = {thumbnail_url: nil, title: "Hi"}
+        enrichment.enrichable?.should be_false
+      end
     end
 
-    it "returns false when a required field is not present" do
-      enrichment._required_attributes = {thumbnail_url: nil, title: "Hi"}
-      enrichment.enrichable?.should be_false
+    context "rejection block" do
+      it "returns false if the rejection block evaluates to true" do
+        enrichment.reject_if { true }
+        enrichment.enrichable?.should be_false
+      end
+
+      it "returns true if the rejection block evaluates to false" do
+        enrichment.reject_if { false }
+        enrichment.enrichable?.should be_true
+      end
     end
   end
 
