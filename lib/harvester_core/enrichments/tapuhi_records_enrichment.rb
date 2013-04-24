@@ -5,10 +5,19 @@ module HarvesterCore
       denormalise
       build_creator
       relationships
+      build_collection_title
       broad_related_authorities
     end
 
     protected
+
+    def build_collection_title
+      @attributes[:collection_title] += @attributes[:library_collection]
+
+      # Title is always the first value in the array
+      @attributes[:collection_title] << @attributes[:relation].first
+      @attributes[:collection_title] << @attributes[:is_part_of].first
+    end
 
     def build_creator
       name_authorities = @attributes[:authorities].find_all { |v| v[:name] == "name_authority" }

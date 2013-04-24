@@ -28,9 +28,38 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       enrichment.set_attribute_values
     end
 
+    it "should build the collection title" do
+      enrichment.should_receive(:build_collection_title)
+      enrichment.set_attribute_values
+    end
+
     it "should add broad_related_authorities" do
       enrichment.should_receive(:broad_related_authorities)
       enrichment.set_attribute_values
+    end
+  end
+
+  describe "build_collection_title" do
+    it "adds the library_collections to collection title" do
+      enrichment.attributes[:library_collection] = Set.new(["Bill", "Bob"])
+      enrichment.send(:build_collection_title)
+
+      enrichment.attributes[:collection_title].should include("Bill")
+      enrichment.attributes[:collection_title].should include("Bob")
+    end
+
+    it "adds the title of the relation field" do
+      enrichment.attributes[:relation] = Set.new(["root_title","shelf_location"])
+      enrichment.send(:build_collection_title)
+
+      enrichment.attributes[:collection_title].should include("root_title")
+    end
+
+    it "adds the title of the is_part_of field" do
+      enrichment.attributes[:is_part_of] = Set.new(["parent_title","shelf_location"])
+      enrichment.send(:build_collection_title)
+
+      enrichment.attributes[:collection_title].should include("parent_title")
     end
   end
 
