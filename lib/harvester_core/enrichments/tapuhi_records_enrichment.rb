@@ -21,9 +21,9 @@ module HarvesterCore
 
     def build_creator
       name_authorities = @attributes[:authorities].find_all { |v| v[:name] == "name_authority" }
-      @attributes[:creator] = name_authorities.map { |v| v[:title] }
+      @attributes[:creator] += name_authorities.map { |v| v[:title] }
       
-      @attributes[:creator] = @attributes[:creator].empty? ? ["Not specified"] : @attributes[:creator]
+      @attributes[:creator] <<  "Not specified" if @attributes[:creator].empty?
     end
 
     def relationships
@@ -49,7 +49,7 @@ module HarvesterCore
 
         library_collection = get_library_collection(root.shelf_location)
 
-        @attributes[:library_collection] = library_collection if library_collection.present?
+        @attributes[:library_collection] << library_collection if library_collection.present?
       end
     end
 

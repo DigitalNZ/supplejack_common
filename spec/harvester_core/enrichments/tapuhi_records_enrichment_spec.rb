@@ -101,7 +101,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       end
 
       it "the creator should be set to 'Not specified'" do
-        enrichment.attributes[:creator].should eq ["Not specified"]
+        enrichment.attributes[:creator].should eq Set.new(["Not specified"])
       end
     end
 
