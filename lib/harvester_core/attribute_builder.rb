@@ -18,6 +18,7 @@ module HarvesterCore
       value = join_option(value, options[:join]) if options.has_key? :join
       value = strip_html_option(value)
       value = strip_whitespace_option(value)
+      value = compact_whitespace(value)
       value = truncate_option(value, options[:truncate]) if options.has_key? :truncate
       value = parse_date_option(value, options[:date]) if options.has_key? :date
       value.uniq
@@ -90,6 +91,10 @@ module HarvesterCore
 
     def mapping_option(original_value, mappings={})
       HarvesterCore::Modifiers::Mapper.new(original_value, mappings).modify
+    end
+
+    def compact_whitespace(original_value)
+      HarvesterCore::Modifiers::WhitespaceCompactor.new(original_value).modify
     end
   end
 end

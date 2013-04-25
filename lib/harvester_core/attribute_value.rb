@@ -72,6 +72,10 @@ module HarvesterCore
       HarvesterCore::Modifiers::Splitter.new(original_value, split_value).value
     end
 
+    def compact_whitespace
+      HarvesterCore::Modifiers::WhitespaceStripper.new(original_value).value
+    end
+
     def truncate(length, omission="...")
       HarvesterCore::Modifiers::Truncator.new(original_value, length, omission).value
     end

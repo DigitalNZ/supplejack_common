@@ -130,6 +130,12 @@ describe HarvesterCore::AttributeBuilder do
       builder.stub(:attribute_value) { ["Images", "Images", "Videos"] }
       builder.transform.should eq ["Images", "Videos"]
     end
+
+    it "compacts whitespace" do
+      builder = klass.new(record, :category, {compact_whitespace: true})
+      builder.stub(:attribute_value) { "Whats   going on   with this     whitespace" }
+      builder.transform.should eq ["Whats going on with this whitespace"]
+    end
   end
 
   describe "#value" do
