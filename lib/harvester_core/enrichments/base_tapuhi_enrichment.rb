@@ -2,6 +2,11 @@ module HarvesterCore
   class BaseTapuhiEnrichment < AbstractEnrichment
 
     protected
+
+    def enrichable?
+      !!record
+    end
+    
     def denormalise
       authorities = primary[:authorities]
 

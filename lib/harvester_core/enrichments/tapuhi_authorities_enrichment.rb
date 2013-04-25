@@ -6,10 +6,6 @@ module HarvesterCore
       broad_related_authorities
     end
 
-    def enrichable?
-      !!record
-    end
-
     protected
     
     def broad_related_authorities
