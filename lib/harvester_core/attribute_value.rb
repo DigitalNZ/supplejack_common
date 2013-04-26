@@ -40,6 +40,10 @@ module HarvesterCore
 
     alias_method  :include?, :includes?
 
+    def join(joiner)
+      HarvesterCore::Modifiers::Joiner.new(original_value, joiner).value
+    end
+
     def find_with(regexp)
       HarvesterCore::Modifiers::FinderWith.new(original_value, regexp, :first).value
     end

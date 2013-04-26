@@ -3,6 +3,7 @@ module HarvesterCore
 
     def set_attribute_values
       denormalise
+      build_format
       build_creator
       relationships
       build_collection_title
@@ -10,6 +11,11 @@ module HarvesterCore
     end
 
     protected
+
+    def build_format
+      recordtype_authorities = @attributes[:authorities].find_all { |v| v[:name] == "recordtype_authority"}
+      @attributes[:format] += recordtype_authorities.map { |v| v[:text] }
+    end
 
     def build_collection_title
       @attributes[:collection_title] += @attributes[:library_collection]

@@ -18,6 +18,11 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       enrichment.set_attribute_values
     end
 
+    it "should build format" do
+      enrichment.should_receive(:build_format)
+      enrichment.set_attribute_values
+    end
+
     it "should build creator" do
       enrichment.should_receive(:build_creator)
       enrichment.set_attribute_values
@@ -39,7 +44,25 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
     end
   end
 
-  describe "build_collection_title" do
+  describe "#build_format" do
+    let(:authorities) {
+      [
+        {authority_id: "2234", name: "recordtype_authority", role: "", text: "Bill" },
+        {authority_id: "2235", name: "recordtype_authority", role: "", text: "Ben" },
+        {authority_id: "2236", name: "name_authority", role: "", text: "Andy" }
+      ]
+    }
+
+    it "adds all the record type authorities text fields to @attributes[:format]" do
+      enrichment.attributes[:authorities] = Set.new(authorities)
+      enrichment.send(:build_format)
+      enrichment.attributes[:format].should include("Bill")
+      enrichment.attributes[:format].should include("Ben")
+      enrichment.attributes[:format].should_not include("Andy")
+    end
+  end
+
+  describe "#build_collection_title" do
     it "adds the library_collections to collection title" do
       enrichment.attributes[:library_collection] = Set.new(["Bill", "Bob"])
       enrichment.send(:build_collection_title)
@@ -63,7 +86,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
     end
   end
 
-  describe "build_creator" do
+  describe "#build_creator" do
     context "has name_authorities" do
       let(:authorities) {
         [
