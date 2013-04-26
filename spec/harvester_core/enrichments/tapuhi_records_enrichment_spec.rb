@@ -90,10 +90,10 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
     context "has name_authorities" do
       let(:authorities) {
         [
-          {authority_id: "2234", name: "name_authority", role: "(Creator)", title: "Bill" },
-          {authority_id: "2235", name: "name_authority", role: "(Artist)", title: "Ben" },
-          {authority_id: "2235", name: "name_authority", role: "(Subject)", title: "Billy" },
-          {authority_id: "2236", name: "subject_authority", role: "", title: "Andy" }
+          {authority_id: "2234", name: "name_authority", role: "(Creator)", text: "Bill" },
+          {authority_id: "2235", name: "name_authority", role: "(Artist)", text: "Ben" },
+          {authority_id: "2235", name: "name_authority", role: "(Subject)", text: "Billy" },
+          {authority_id: "2236", name: "subject_authority", role: "", text: "Andy" }
         ]
       }
 
@@ -119,8 +119,8 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
 
     context "has no name_authorities" do
       let(:authorities) {[
-          {authority_id: "2236", name: "subject_authority", role: "", title: "Andy" },
-          {authority_id: "2230", name: "subject_authority", role: "", title: "Ben" }
+          {authority_id: "2236", name: "subject_authority", role: "", text: "Andy" },
+          {authority_id: "2230", name: "subject_authority", role: "", text: "Ben" }
       ]}
 
       before do
