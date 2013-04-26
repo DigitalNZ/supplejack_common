@@ -20,7 +20,7 @@ module HarvesterCore
 
         while ancestor_tap = queued_ancestors.shift
           iteration_count += 1
-          raise "Iteration is too deep (#{iteration_count}) for record #{record.record_id}" if iteration_count >= 50
+          raise "Iteration is too deep (#{iteration_count}) for record #{record.record_id}" if iteration_count >= 100
           
           ancestor = find_record(ancestor_tap)
 
