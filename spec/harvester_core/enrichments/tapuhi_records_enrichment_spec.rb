@@ -23,6 +23,11 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       enrichment.set_attribute_values
     end
 
+    it "should build subject" do
+      enrichment.should_receive(:build_subject)
+      enrichment.set_attribute_values
+    end
+
     it "should build creator" do
       enrichment.should_receive(:build_creator)
       enrichment.set_attribute_values
@@ -59,6 +64,51 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       enrichment.attributes[:format].should include("Bill")
       enrichment.attributes[:format].should include("Ben")
       enrichment.attributes[:format].should_not include("Andy")
+    end
+  end
+
+  describe "#build_subject" do
+    let(:authorities) {
+      [
+        {authority_id: "2235", name: "subject_authority", role: "", text: "Ben" },
+        {authority_id: "2236", name: "subject_authority", role: "", text: "Bob" },
+        {authority_id: "2237", name: "name_authority", role: "", text: "Andy" },
+        {authority_id: "2238", name: "name_authority", role: "(Subject)", text: "Greg" },
+        {authority_id: "2239", name: "place_authority", role: "", text: "Kiwiland" },
+        {authority_id: "2240", name: "subject_authority", role: "", text: "Joe - Jim" },
+        {authority_id: "2241", name: "iwihapu_authority", role: "", text: "Ngati Poe" }
+      ]
+    }
+
+    before { enrichment.attributes[:authorities] = Set.new(authorities) }
+
+    it "should store all the subject_authorities text fields" do
+      enrichment.send(:build_subject)
+      enrichment.attributes[:subject].should include("Ben")
+      enrichment.attributes[:subject].should include("Bob")
+      enrichment.attributes[:subject].should_not include("Andy")
+    end
+
+    it "should store all the name_authorities with the role '(subject)'" do
+      enrichment.send(:build_subject)
+      enrichment.attributes[:subject].should include("Greg")
+    end
+
+    it "should store all the place_authorities text fields" do
+      enrichment.send(:build_subject)
+      enrichment.attributes[:subject].should include("Kiwiland")
+    end
+
+    it "should store all the iwi hapu authorities" do
+      enrichment.send(:build_subject)
+      enrichment.attributes[:subject].should include("Ngati Poe")
+    end
+
+    it "should tokenize values that contain ' - '" do
+      enrichment.send(:build_subject)
+      enrichment.attributes[:subject].should include("Joe")
+      enrichment.attributes[:subject].should include("Jim")
+      enrichment.attributes[:subject].should_not include("Joe - Jim")
     end
   end
 

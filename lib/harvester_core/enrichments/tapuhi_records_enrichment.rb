@@ -4,6 +4,7 @@ module HarvesterCore
     def set_attribute_values
       denormalise
       build_format
+      build_subject
       build_creator
       relationships
       build_collection_title
@@ -15,6 +16,19 @@ module HarvesterCore
     def build_format
       recordtype_authorities = @attributes[:authorities].find_all { |v| v[:name] == "recordtype_authority"}
       @attributes[:format] += recordtype_authorities.map { |v| v[:text] }
+    end
+
+    def build_subject
+      subject_authorities = []
+
+      subject_authorities += @attributes[:authorities].find_all { |v| v[:name] == "subject_authority" }
+      subject_authorities += @attributes[:authorities].find_all { |v| v[:name] == "name_authority" and v[:role] == "(Subject)" }
+      subject_authorities += @attributes[:authorities].find_all { |v| v[:name] == "place_authority" }
+      subject_authorities += @attributes[:authorities].find_all { |v| v[:name] == "iwihapu_authority" }
+      
+      subjects = subject_authorities.map { |v| v[:text] }
+
+      @attributes[:subject] += subjects.map { |v| v.split(" - ") }.flatten
     end
 
     def build_collection_title
