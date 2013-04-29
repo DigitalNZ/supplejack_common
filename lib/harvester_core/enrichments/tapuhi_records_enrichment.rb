@@ -41,7 +41,7 @@ module HarvesterCore
     end
 
     def build_creator
-      name_authorities = @attributes[:authorities].find_all { |v| v[:name] == "name_authority" and v[:role] != "(Subject)" }
+      name_authorities = @attributes[:authorities].find_all { |v| v[:name] == "name_authority" and not ["(Subject)", "(as a related subject)"].include?(v[:role]) }
       
       @attributes[:creator] += name_authorities.map { |v| v[:text] }
       @attributes[:creator] <<  "Not specified" if @attributes[:creator].empty?

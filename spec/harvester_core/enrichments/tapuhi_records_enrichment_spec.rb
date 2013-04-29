@@ -149,6 +149,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
           {authority_id: "2234", name: "name_authority", role: "(Creator)", text: "Bill" },
           {authority_id: "2235", name: "name_authority", role: "(Artist)", text: "Ben" },
           {authority_id: "2235", name: "name_authority", role: "(Subject)", text: "Billy" },
+          {authority_id: "2237", name: "name_authority", role: "(as a related subject)", text: "John" },
           {authority_id: "2236", name: "subject_authority", role: "", text: "Andy" }
         ]
       }
@@ -168,8 +169,9 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
         enrichment.attributes[:creator].should_not include("Andy")
       end
 
-      it "should not include name authorities that are subjects." do
+      it "should not include name authorities that are subjects or related subjects." do
         enrichment.attributes[:creator].should_not include("Billy")
+        enrichment.attributes[:creator].should_not include("John")
       end
     end
 
