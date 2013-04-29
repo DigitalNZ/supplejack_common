@@ -23,6 +23,7 @@ module HarvesterCore
 
       subject_authorities += @attributes[:authorities].find_all { |v| v[:name] == "subject_authority" }
       subject_authorities += @attributes[:authorities].find_all { |v| v[:name] == "name_authority" and v[:role] == "(Subject)" }
+      subject_authorities += @attributes[:authorities].find_all { |v| v[:name] == "name_authority" and v[:role] == "(as a related subject)" }
       subject_authorities += @attributes[:authorities].find_all { |v| v[:name] == "place_authority" }
       subject_authorities += @attributes[:authorities].find_all { |v| v[:name] == "iwihapu_authority" }
       

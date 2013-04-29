@@ -74,6 +74,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
         {authority_id: "2236", name: "subject_authority", role: "", text: "Bob" },
         {authority_id: "2237", name: "name_authority", role: "", text: "Andy" },
         {authority_id: "2238", name: "name_authority", role: "(Subject)", text: "Greg" },
+        {authority_id: "2238", name: "name_authority", role: "(as a related subject)", text: "John" },
         {authority_id: "2239", name: "place_authority", role: "", text: "Kiwiland" },
         {authority_id: "2240", name: "subject_authority", role: "", text: "Joe - Jim" },
         {authority_id: "2241", name: "iwihapu_authority", role: "", text: "Ngati Poe" }
@@ -92,6 +93,11 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
     it "should store all the name_authorities with the role '(subject)'" do
       enrichment.send(:build_subject)
       enrichment.attributes[:subject].should include("Greg")
+    end
+
+    it "should store all the name_authorities with the role '(as a related subject)'" do
+      enrichment.send(:build_subject)
+      enrichment.attributes[:subject].should include("John")
     end
 
     it "should store all the place_authorities text fields" do
