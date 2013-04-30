@@ -4,13 +4,13 @@ class TestParser; def self._throttle; nil; end; end
 
 describe HarvesterCore::BaseTapuhiEnrichment do
   let(:klass) { HarvesterCore::BaseTapuhiEnrichment }
-  let(:record) { mock(:record, attributes: {}).as_null_object }
-  let(:enrichment) { klass.new(:tapuhi_base, {}, record, TestParser )}
+  let(:record) { mock(:record, id: 1234, attributes: {}).as_null_object }
+  let(:enrichment) { klass.new(:tapuhi_base, {}, record, TestParser)}
 
   describe "#denormalise" do
 
     context "has a record with a source" do
-      let(:record) { mock(:record, title: "Awesome Title")}
+      let(:record) { mock(:record, id: 1234,  title: "Awesome Title")}
       let(:source) { HarvesterCore::SourceWrap.new(mock(:source, attributes: {})) }
 
       context "record has authorities" do

@@ -8,7 +8,7 @@ describe HarvesterCore::Enrichment do
 
   let(:klass) { HarvesterCore::Enrichment }
   let(:block) { Proc.new {} }
-  let(:record) { mock(:record, attributes: {}) }
+  let(:record) { mock(:record, id: 1234, attributes: {}) }
   let(:enrichment) { klass.new(:ndha_rights, {block: block}, record, TestParser) }
   
   describe "#initialize" do
@@ -88,7 +88,7 @@ describe HarvesterCore::Enrichment do
     end
 
     it "should evaluate the get and then the URL" do
-      enrichment = klass.new(:rights, {block: Proc.new { url "http://google.com/#{record.dc_identifier}" }}, mock(:record, dc_identifier: "1.jpg"), TestParser)
+      enrichment = klass.new(:rights, {block: Proc.new { url "http://google.com/#{record.dc_identifier}" }}, mock(:record, id: 1234, dc_identifier: "1.jpg"), TestParser)
       enrichment._url.should eq "http://google.com/1.jpg"
     end
   end

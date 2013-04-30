@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe HarvesterCore::AbstractEnrichment do
   let(:klass) { HarvesterCore::AbstractEnrichment }
-  let(:record) { mock(:record, attributes: {}) }
+  let(:record) { mock(:record, id: 1234, attributes: {}) }
   let(:enrichment) { klass.new(:ndha_rights, {}, record, nil) }
 
   describe "#primary" do
@@ -48,6 +48,14 @@ describe HarvesterCore::AbstractEnrichment do
 
   it "sets the source_id to the specified name" do
     enrichment.attributes.should include(source_id: 'ndha_rights')
+  end
+
+  it "implements a before method that does nothing" do
+    ->{klass.before(:tapuhi)}.should_not raise_error
+  end
+
+  it "implements a after method that does nothing" do
+    ->{klass.after(:tapuhi)}.should_not raise_error
   end
 
 end

@@ -61,11 +61,11 @@ module HarvesterCore
       self._attribute_definitions.each do |name, options|
         builder = AttributeBuilder.new(resource, name, options)
         value = builder.value
-        @attributes[name] ||= nil
+        attributes[name] ||= nil
         if builder.errors.any?
           self.errors[name] = builder.errors
         else
-          @attributes[name] = value if value.present?
+          attributes[name] = value if value.present?
         end
       end
     end

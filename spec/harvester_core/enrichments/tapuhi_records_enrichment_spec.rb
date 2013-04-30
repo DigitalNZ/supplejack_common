@@ -6,7 +6,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
 
   let(:klass) { HarvesterCore::TapuhiRecordsEnrichment }
   let(:record) { mock(:record, attributes: {}).as_null_object }
-  let(:enrichment) { klass.new(:tapuhi_records_enrichment, {}, record, TestParser )}
+  let(:enrichment) { klass.new(:tapuhi_records_enrichment, {}, record, TestParser)}
 
   before(:each) do
     record.stub(:authority_taps) { [] }
@@ -63,7 +63,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       ]
     }
 
-    it "adds all the record type authorities text fields to @attributes[:format]" do
+    it "adds all the record type authorities text fields to attributes[:format]" do
       enrichment.attributes[:authorities] = Set.new(authorities)
       enrichment.send(:build_format)
       enrichment.attributes[:format].should include("Bill")

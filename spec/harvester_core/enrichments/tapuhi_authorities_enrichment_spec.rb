@@ -5,8 +5,8 @@ class TestParser; def self._throttle; nil; end; end
 describe HarvesterCore::TapuhiAuthoritiesEnrichment do
 
   let(:klass) { HarvesterCore::TapuhiAuthoritiesEnrichment }
-  let(:record) { mock(:record, attributes: {}).as_null_object }
-  let(:enrichment) { klass.new(:tapuhi_authorities, {}, record, TestParser )}
+  let(:record) { mock(:record, id: 1234, attributes: {}).as_null_object }
+  let(:enrichment) { klass.new(:tapuhi_authorities, {}, record, TestParser)}
 
   describe "#set_attribute_values" do
     it "should denormalise relationships" do

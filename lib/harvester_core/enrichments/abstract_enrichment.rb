@@ -4,16 +4,20 @@ module HarvesterCore
   class AbstractEnrichment
 
     attr_accessor :errors
-    attr_reader :name, :record, :attributes, :parser_class
+    attr_reader :name, :record, :record_attributes, :parser_class
 
     def initialize(name, options, record, parser_class)
       @name = name
+      @source_id = name
       @record = record
       @parser_class = parser_class
-      @attributes = Hash.new {|hash, key| hash[key] = Set.new}
+      @record_attributes = Hash.new do |hash, key|
+        hash[key] = Hash.new {|hash, key| hash[key] = Set.new()}
+        hash[key][:priority] = options[:priority] || 1
+        hash[key][:source_id] = self.name.to_s
+        hash[key]
+      end
       @errors = {}
-      @attributes[:priority] = options[:priority] || 1
-      @attributes[:source_id] = self.name.to_s
     end
 
     def primary
@@ -26,6 +30,16 @@ module HarvesterCore
 
     def enrichable?
       raise NotImplementedError.new("All subclasses of HarvesterCore::AbstractEnrichment must override #enrichable?.")
+    end
+
+    def attributes
+      @record_attributes[record.id]
+    end
+
+    # these hooks are called before and after Enrichment job
+    class << self
+      def before(source_id); end
+      def after(source_id); end
     end
     
     private

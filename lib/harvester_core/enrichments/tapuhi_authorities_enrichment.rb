@@ -25,7 +25,7 @@ module HarvesterCore
           ancestor = find_record(ancestor_tap)
 
           unless ancestor.nil?
-            @attributes[:authorities] << {authority_id: ancestor.tap_id, name: "broad_related_authority", text: ancestor.title}
+            attributes[:authorities] << {authority_id: ancestor.tap_id, name: "broad_related_authority", text: ancestor.title}
             processed_ancestors << ancestor.tap_id
 
             queued_ancestors += ancestor.authority_taps(:broader_term)

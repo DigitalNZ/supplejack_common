@@ -8,8 +8,8 @@ describe HarvesterCore::Enrichment do
 
   let(:klass) { HarvesterCore::Enrichment }
   let(:block) { Proc.new {} }
-  let(:record) { mock(:record, attributes: {}) }
-  let(:enrichment) { klass.new(:ndha_rights, {block: block}, record, TestParser) }
+  let(:record) { mock(:record, id: 1234, attributes: {}) }
+  let(:enrichment) { klass.new(:ndha_rights, {block: block}, record, TestParser, 'a123') }
   
   describe "#initialize" do
     it "sets the name and block" do
@@ -70,18 +70,18 @@ describe HarvesterCore::Enrichment do
 
   describe "#evaluate_block" do
     it "should evaluate the block" do
-      enrichment = klass.new(:rights, {block: Proc.new { url "http://google.com" }}, record, TestParser)
+      enrichment = klass.new(:rights, {block: Proc.new { url "http://google.com" }}, record, TestParser, 'a123')
       enrichment._url.should eq "http://google.com"
     end
 
     it "should evaluate the get and then the URL" do
-      enrichment = klass.new(:rights, {block: Proc.new { url "http://google.com/#{record.dc_identifier}" }}, mock(:record, dc_identifier: "1.jpg"), TestParser)
+      enrichment = klass.new(:rights, {block: Proc.new { url "http://google.com/#{record.dc_identifier}" }}, mock(:record, id: 1234, dc_identifier: "1.jpg"), TestParser, 'a123')
       enrichment._url.should eq "http://google.com/1.jpg"
     end
   end
 
   describe "#resource" do
-    let!(:enrichment) { klass.new(:ndha_rights, {block: Proc.new { url "http://goo.gle/1"; format "xml" }}, record, TestParser) }
+    let!(:enrichment) { klass.new(:ndha_rights, {block: Proc.new { url "http://goo.gle/1"; format "xml" }}, record, TestParser, 'a123') }
 
     before do
       record.stub(:class) { mock(:class, :_throttle => {}) }
