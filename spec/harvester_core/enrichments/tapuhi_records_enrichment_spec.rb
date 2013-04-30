@@ -33,6 +33,11 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       enrichment.set_attribute_values
     end
 
+    it "should build contributor" do
+      enrichment.should_receive(:build_contributor)
+      enrichment.set_attribute_values
+    end
+
     it "should build relationships" do
       enrichment.should_receive(:relationships)
       enrichment.set_attribute_values
@@ -150,6 +155,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
           {authority_id: "2235", name: "name_authority", role: "(Artist)", text: "Ben" },
           {authority_id: "2235", name: "name_authority", role: "(Subject)", text: "Billy" },
           {authority_id: "2237", name: "name_authority", role: "(as a related subject)", text: "John" },
+          {authority_id: "2237", name: "name_authority", role: "(Contributor)", text: "Frank" },
           {authority_id: "2236", name: "subject_authority", role: "", text: "Andy" }
         ]
       }
@@ -173,6 +179,10 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
         enrichment.attributes[:creator].should_not include("Billy")
         enrichment.attributes[:creator].should_not include("John")
       end
+
+      it "should not include name authorities that are contributors" do
+        enrichment.attributes[:creator].should_not include("Frank")
+      end
     end
 
     context "has no name_authorities" do
@@ -191,6 +201,25 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       end
     end
 
+  end
+
+  describe "#build_contributor" do
+    let(:authorities) {
+      [
+        {authority_id: "2234", name: "name_authority", role: "(Creator)", text: "Bill" },
+        {authority_id: "2237", name: "name_authority", role: "(Contributor)", text: "Frank" },
+        {authority_id: "2236", name: "subject_authority", role: "", text: "Andy" }
+      ]
+    }
+
+    before do
+      enrichment.attributes[:authorities] = authorities
+      enrichment.send(:build_contributor)
+    end
+
+    it "should add contributors for name_authorities with role of contributor" do
+      enrichment.attributes[:contributor].should eq Set.new(["Frank"])
+    end
   end
 
   describe "#relationships" do
