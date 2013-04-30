@@ -38,6 +38,7 @@ module HarvesterCore
         load(path)
         @loaded = true
       rescue StandardError, ScriptError => e
+        puts "Error: #{e.message}"
         @load_error = e.message
         @loaded = false
       end
