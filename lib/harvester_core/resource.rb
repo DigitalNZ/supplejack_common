@@ -7,7 +7,7 @@ module HarvesterCore
     def initialize(url, options={})
       @url = url
       @throttling_options = options[:throttling_options] || {}
-      @attributes = {}
+      @attributes = options[:attributes] || {}
     end
 
     def strategy_value(options)

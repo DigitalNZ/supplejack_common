@@ -51,6 +51,7 @@ module HarvesterCore
     def resource
       resource_class = "HarvesterCore::#{_format.to_s.capitalize}Resource".constantize
       options = {}
+      options[:attributes] = self.attributes if self.attributes.present?
       options[:throttling_options] = parser_class._throttle if parser_class._throttle.present?
       options[:namespaces] = self._namespaces if self._namespaces.present?
       @resource ||= resource_class.new(self._url, options)

@@ -12,9 +12,10 @@ module HarvesterCore
       HarvesterCore::AttributeValue.new(values)
     end
 
-    def node(xpath, options={})
+    def node(xpath, name_spaces_hash={})
       if self.document
-        self.document.xpath(xpath, self.class.get_namespaces(options[:namespaces]))
+        name_spaces = name_spaces_hash.is_a?(Hash) ? name_spaces_hash : nil
+        self.document.xpath(xpath, name_spaces)
       else
         HarvesterCore::AttributeValue.new(nil)
       end
@@ -29,10 +30,6 @@ module HarvesterCore
       def namespaces(namespaces={})
         self._namespaces ||= {}
         self._namespaces.merge!(namespaces)
-      end
-
-      def get_namespaces(namespaces)
-        self._namespaces.present? ? self._namespaces.select{ |k,v| Array(namespaces).map(&:to_sym).include? k } : {}
       end
     end
   end

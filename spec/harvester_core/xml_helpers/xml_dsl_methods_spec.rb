@@ -43,9 +43,8 @@ describe HarvesterCore::XmlDslMethods do
     end
 
     it "should fetch a node with a name space" do
-       klass.namespaces dc: "http://purl.org/dc/elements/1.1/", xsi: "xsiid"
        document.should_receive(:xpath).with("//locations", {:dc => "http://purl.org/dc/elements/1.1/", :xsi => "xsiid"}) { xml_nodes }
-       record.node("//locations", namespaces: ["dc", "xsi"])
+       record.node("//locations", dc: "http://purl.org/dc/elements/1.1/", xsi: "xsiid")
     end
 
     context "xml document not available" do
@@ -56,17 +55,6 @@ describe HarvesterCore::XmlDslMethods do
         nodes.should be_a(HarvesterCore::AttributeValue)
         nodes.to_a.should eq []
       end
-    end
-  end
-
-  describe ".get_namespaces" do
-    it "return a hash of the namespaces specified" do
-      klass.namespaces dc: "http://purl.org/dc/elements/1.1/", xsi: "xsiid"
-      klass.send(:get_namespaces, [:dc]).should eq({:dc => "http://purl.org/dc/elements/1.1/"})
-    end
-
-    it "returns an empty hash when passed nil" do
-      klass.send(:get_namespaces, nil).should eq({})
     end
   end
 end

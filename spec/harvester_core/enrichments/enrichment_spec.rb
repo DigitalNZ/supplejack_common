@@ -100,20 +100,25 @@ describe HarvesterCore::Enrichment do
       record.stub(:class) { mock(:class, :_throttle => {}) }
     end
 
+    it "should store the attributes from the enrichment" do
+      enrichment.attributes[:title] = "Title"
+      enrichment.resource.attributes[:title].should eq "Title"
+    end
+
     it "should initialize a xml resource object" do
-      HarvesterCore::XmlResource.should_receive(:new).with("http://goo.gle/1", {})
+      HarvesterCore::XmlResource.should_receive(:new).with("http://goo.gle/1", {attributes: {priority: 1, source_id: "ndha_rights"}})
       enrichment.resource
     end
 
     it "should initialize a json resource object" do
       enrichment = klass.new(:ndha_rights, {block: Proc.new { url "http://goo.gle/1"; format "json" }}, record, TestParser)
-      HarvesterCore::JsonResource.should_receive(:new).with("http://goo.gle/1", {})
+      HarvesterCore::JsonResource.should_receive(:new).with("http://goo.gle/1", {attributes: {priority: 1, source_id: "ndha_rights"}})
       enrichment.resource
     end
 
     it "should initialize a file resource object" do
       enrichment = klass.new(:ndha_rights, {block: Proc.new { url "http://goo.gle/1"; format "file" }}, record, TestParser)
-      HarvesterCore::FileResource.should_receive(:new).with("http://goo.gle/1", {})
+      HarvesterCore::FileResource.should_receive(:new).with("http://goo.gle/1", {attributes: {priority: 1, source_id: "ndha_rights"}})
       enrichment.resource
     end
 
@@ -123,7 +128,7 @@ describe HarvesterCore::Enrichment do
 
     it "initializes the resource with throttle options" do
       TestParser.stub(:_throttle) { {host: "gdata.youtube.com", delay: 1} }
-      HarvesterCore::Resource.should_receive(:new).with("http://goo.gle/1", {throttling_options: {host: "gdata.youtube.com", delay: 1}})
+      HarvesterCore::Resource.should_receive(:new).with("http://goo.gle/1", {attributes: {priority: 1, source_id: "ndha_rights"}, throttling_options: {host: "gdata.youtube.com", delay: 1}})
       enrichment.resource
     end
   end
