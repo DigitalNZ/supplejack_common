@@ -5,7 +5,7 @@ module HarvesterCore
     end
 
     def enrich_groups
-      unless parent_tap = record.parent_tap_id
+      if parent_tap = record.parent_tap_id
         parent = find_record(parent_tap)
         @record_attributes[parent.id][:category] << "Groups"
         @record_attributes[parent.id][:collection_title] << parent.title
