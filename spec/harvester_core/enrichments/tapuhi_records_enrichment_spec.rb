@@ -124,6 +124,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
   end
 
   describe "#build_collection_title" do
+
     it "adds the library_collections to collection title" do
       enrichment.attributes[:library_collection] = Set.new(["Bill", "Bob"])
       enrichment.send(:build_collection_title)
@@ -144,6 +145,22 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       enrichment.send(:build_collection_title)
 
       enrichment.attributes[:collection_title].should include("parent_title")
+    end
+
+    it "should not include 'New Zealand Cartoon Archive'" do
+      enrichment.send(:build_collection_title)
+      enrichment.attributes[:collection_title].should_not include("New Zealand Cartoon Archive")
+    end
+
+    context "cartoon archive" do
+      before do
+        enrichment.stub(:cartoon_archive?) { true }
+      end
+
+      it "adds 'New Zealand Cartoon Archive' to collection title" do
+        enrichment.send(:build_collection_title)
+        enrichment.attributes[:collection_title].should include("New Zealand Cartoon Archive")
+      end
     end
   end
 
@@ -423,6 +440,22 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       it "should set the tap_id in the enrichment if it does not exist on the primary source." do
         enrichment.send(:build_relation, parent).should_not include("tap:1234")
       end
+    end
+  end
+
+  describe "#cartoon_archive?" do
+    context "is a NZ Cartoon Archive" do
+      before do
+        enrichment.attributes[:authorities] = [{authority_id: "2235", name: "recordtype_authority", role: "", text: "Cartoons (Commentary)" }]
+      end
+
+      it "returns true if New Zealand Cartoon Archive" do
+        enrichment.send(:cartoon_archive?).should be_true
+      end
+    end
+
+    it "returns true if New Zealand Cartoon Archive" do
+      enrichment.send(:cartoon_archive?).should be_false
     end
   end
 end

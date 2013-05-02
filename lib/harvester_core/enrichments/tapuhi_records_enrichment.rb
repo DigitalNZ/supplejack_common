@@ -39,13 +39,15 @@ module HarvesterCore
       # Title is always the first value in the array
       attributes[:collection_title] << attributes[:relation].first
       attributes[:collection_title] << attributes[:is_part_of].first
+
+      attributes[:collection_title] << "New Zealand Cartoon Archive" if cartoon_archive?
     end
 
     def build_creator
       name_authorities = attributes[:authorities].find_all { |v| v[:name] == "name_authority" and not ["(Subject)", "(as a related subject)", "(Contributor)"].include?(v[:role]) }
       
       attributes[:creator] += name_authorities.map { |v| v[:text] }
-      attributes[:creator] <<  "Not specified" if attributes[:creator].empty?
+      attributes[:creator] << "Not specified" if attributes[:creator].empty?
     end
 
     def build_contributor
@@ -159,6 +161,10 @@ module HarvesterCore
     def build_is_part_of(root)
       attributes[:is_part_of] << root.title
       attributes[:is_part_of] << root.shelf_location
+    end
+
+    def cartoon_archive?
+      !!attributes[:authorities].find { |v| v[:name] == "recordtype_authority" and !!v[:text].match(/^(.*[^\w])?cartoons?(.*[^\w])?$/i) }
     end
   end
 end
