@@ -151,6 +151,7 @@ module HarvesterCore
     end
 
     def build_relation(parent)
+      @attributes[:relation] << parent.internal_identifier if record.relation.nil?
       @attributes[:relation] << parent.title
       @attributes[:relation] << parent.shelf_location
     end

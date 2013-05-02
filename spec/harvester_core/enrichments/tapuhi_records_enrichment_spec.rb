@@ -405,4 +405,24 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       end
     end
   end
+
+  describe "#build_relation" do
+
+    let(:parent) { mock(:record, internal_identifier: "tap:1234").as_null_object }
+    
+    context "primary_source has no relation field set" do
+      let(:record) { mock(:record, relation: nil) }
+
+      it "should set the tap_id in the enrichment if it does not exist on the primary source." do
+        enrichment.send(:build_relation, parent).should include("tap:1234")
+      end
+    end
+
+    context "primary_source has relation field set" do
+      let(:record) { mock(:record, relation: "tap:1234") }
+      it "should set the tap_id in the enrichment if it does not exist on the primary source." do
+        enrichment.send(:build_relation, parent).should_not include("tap:1234")
+      end
+    end
+  end
 end
