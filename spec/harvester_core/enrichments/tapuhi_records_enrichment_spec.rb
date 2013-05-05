@@ -5,7 +5,7 @@ class TestParser; def self._throttle; nil; end; end
 describe HarvesterCore::TapuhiRecordsEnrichment do
 
   let(:klass) { HarvesterCore::TapuhiRecordsEnrichment }
-  let(:record) { mock(:record, attributes: {}).as_null_object }
+  let(:record) { mock(:record, id: '123', attributes: {}).as_null_object }
   let(:enrichment) { klass.new(:tapuhi_records_enrichment, {}, record, TestParser)}
 
   before(:each) do
@@ -252,7 +252,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
 
     context "records parent is the root of the tree" do
 
-      let(:parent_record) { mock(:record, parent_tap_id: nil, tap_id: 1234, title: "title", shelf_location: "ms-1234-d", attributes: {})}
+      let(:parent_record) { mock(:record, id: 123, parent_tap_id: nil, tap_id: 1234, title: "title", shelf_location: "ms-1234-d", attributes: {})}
 
       before do
         record.stub(:parent_tap_id) { 1234 }
@@ -428,7 +428,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
     let(:parent) { mock(:record, internal_identifier: "tap:1234").as_null_object }
     
     context "primary_source has no relation field set" do
-      let(:record) { mock(:record, relation: nil) }
+      let(:record) { mock(:record, id: 123, relation: nil) }
 
       it "should set the tap_id in the enrichment if it does not exist on the primary source." do
         enrichment.send(:build_relation, parent).should include("tap:1234")
@@ -436,7 +436,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
     end
 
     context "primary_source has relation field set" do
-      let(:record) { mock(:record, relation: "tap:1234") }
+      let(:record) { mock(:record, id: 123, relation: "tap:1234") }
       it "should set the tap_id in the enrichment if it does not exist on the primary source." do
         enrichment.send(:build_relation, parent).should_not include("tap:1234")
       end
