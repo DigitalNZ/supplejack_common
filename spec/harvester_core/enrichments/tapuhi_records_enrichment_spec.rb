@@ -155,11 +155,23 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
     context "cartoon archive" do
       before do
         enrichment.stub(:cartoon_archive?) { true }
+        enrichment.primary.stub(:[],:collection_title) { ['Collection'] }
       end
 
       it "adds 'New Zealand Cartoon Archive' to collection title" do
         enrichment.send(:build_collection_title)
         enrichment.attributes[:collection_title].should include("New Zealand Cartoon Archive")
+      end
+
+      context "primary source's collection title already contains 'New Zealand Cartoon Archive'" do
+        before do
+          enrichment.primary.stub(:[],:collection_title) { ['New Zealand Cartoon Archive'] }
+        end
+
+        it "does not add 'New Zealand Cartoon Archive' to collection title" do
+          enrichment.send(:build_collection_title)
+          enrichment.attributes[:collection_title].should_not include("New Zealand Cartoon Archive")
+        end
       end
     end
   end
@@ -437,6 +449,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
 
     context "primary_source has relation field set" do
       let(:record) { mock(:record, id: 123, relation: "tap:1234") }
+
       it "should set the tap_id in the enrichment if it does not exist on the primary source." do
         enrichment.send(:build_relation, parent).should_not include("tap:1234")
       end

@@ -40,7 +40,7 @@ module HarvesterCore
       attributes[:collection_title] << attributes[:relation].first
       attributes[:collection_title] << attributes[:is_part_of].first
 
-      attributes[:collection_title] << "New Zealand Cartoon Archive" if cartoon_archive?
+      attributes[:collection_title] << "New Zealand Cartoon Archive" if cartoon_archive? and not primary[:collection_title].include? "New Zealand Cartoon Archive"
     end
 
     def build_creator
