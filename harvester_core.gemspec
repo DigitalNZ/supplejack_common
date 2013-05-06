@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "activesupport",   "~> 3.2"
   gem.add_runtime_dependency "actionpack",      "~> 3.2"
   gem.add_runtime_dependency "redis",           "~> 3"
-  gem.add_runtime_dependency "mongoid",         "~> 3.0"
+  gem.add_runtime_dependency "mongoid",         "~> 3.1.3"
 
   gem.add_runtime_dependency "nokogiri"
   gem.add_runtime_dependency "rest-client",     "~> 1.6.7"
