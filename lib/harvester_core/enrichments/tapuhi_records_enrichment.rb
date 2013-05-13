@@ -10,6 +10,7 @@ module HarvesterCore
       relationships
       build_collection_title
       broad_related_authorities
+      denormalize_locations
     end
 
     protected
@@ -31,6 +32,19 @@ module HarvesterCore
       subjects = subject_authorities.map { |v| v[:text] }
 
       attributes[:subject] += subjects.map { |v| v.split(" - ") }.flatten
+    end
+
+    def denormalize_locations
+      locations = []
+
+      place_authorities = record.authorities.find_all { |v| v[:name] == "place_authority" }
+
+      place_authorities.each do |authority|
+        authority = find_record(authority[:authority_id])
+        authority.locations.each do |location|
+          attributes[:locations] << location.attributes.tap { |l| l.delete("_id") }
+        end
+      end
     end
 
     def build_collection_title

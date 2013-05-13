@@ -36,6 +36,10 @@ module Repository
       authorities.values
     end
 
+    def locations
+      sources.map(&:locations).flatten
+    end
+
     private
 
     def sorted_sources

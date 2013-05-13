@@ -52,6 +52,11 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
       enrichment.should_receive(:broad_related_authorities)
       enrichment.set_attribute_values
     end
+
+    it "should build denormalize the locations" do
+      enrichment.should_receive(:denormalize_locations)
+      enrichment.set_attribute_values
+    end
   end
 
   describe "#build_format" do
@@ -123,8 +128,42 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
     end
   end
 
-  describe "#build_collection_title" do
+  describe "#denormalize_locations" do
+      let(:authorities) {
+        [
+          {authority_id: "2235", name: "place_authority", role: "", text: "Wellington" },
+          {authority_id: "2236", name: "place_authority", role: "", text: "Auckland" },
+          {authority_id: "2237", name: "subject_authority", role: "", text: "Bob" }
+        ]
+      }
 
+      let(:wellington_place_authority) { 
+        mock(:record, id: 2235, locations: [
+          Repository::Location.new(lat: 1, lng: 1, country: "New Zealand", placename: "Wellington", path: "Wellington, New Zealand")
+        ])
+      }
+
+      let(:auckland_place_authority) { 
+        mock(:record, id: 2235, locations: [
+          Repository::Location.new(lat: 2, lng: 2, country: "New Zealand", placename: "Auckland", path: "Auckland, New Zealand")
+        ])
+      }
+
+      before do
+        record.stub(:authorities) { authorities }
+        enrichment.stub(:find_record).with("2235") { wellington_place_authority }
+        enrichment.stub(:find_record).with("2236") { auckland_place_authority }
+      end
+
+      it "should add the wellington & auckland location to the record from the place authority" do
+        enrichment.send(:denormalize_locations)
+        enrichment.attributes[:locations].should include({"lat" => 1, "lng" => 1, "country" => "New Zealand", "placename" => "Wellington", "path" => "Wellington, New Zealand"})
+        enrichment.attributes[:locations].should include({"lat" => 2, "lng" => 2, "country" => "New Zealand", "placename" => "Auckland", "path" => "Auckland, New Zealand"})
+        enrichment.attributes[:locations].count.should eq 2
+      end
+  end
+
+  describe "#build_collection_title" do
     it "adds the library_collections to collection title" do
       enrichment.attributes[:library_collection] = Set.new(["Bill", "Bob"])
       enrichment.send(:build_collection_title)

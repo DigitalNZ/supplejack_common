@@ -70,6 +70,20 @@ describe Repository::Record do
     end
   end
 
+  describe "#locations" do
+    let(:source_2) { record.sources.build }
+
+    before(:each) do
+      @loc1 = primary_source.locations.build(placename: "Wellington")
+      @loc2 = primary_source.locations.build(placename: "China")
+      @loc3 = source_2.locations.build(placename: "Japan")
+    end
+
+    it "returns all the locations from all the sources" do
+      record.locations.should include(@loc1, @loc2, @loc3)
+    end
+  end
+
   describe "#sorted_sources" do
     it "returns a list of sources sorted by priority" do
       record.sources.build(priority: 10)
