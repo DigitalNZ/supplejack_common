@@ -1,5 +1,3 @@
-
-
 module HarvesterCore
   class AbstractEnrichment
 
