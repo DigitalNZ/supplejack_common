@@ -32,15 +32,10 @@ module HarvesterCore
     def load_parser
       return @loaded unless @loaded.nil?
 
-      begin
-        create_tempfile
-        clear_parser_class_definitions
-        load(path)
-        @loaded = true
-      rescue StandardError, ScriptError => e
-        @load_error = e.message
-        @loaded = false
-      end
+      create_tempfile
+      clear_parser_class_definitions
+      load(path)
+      @loaded = true      
     end
 
     def loaded?

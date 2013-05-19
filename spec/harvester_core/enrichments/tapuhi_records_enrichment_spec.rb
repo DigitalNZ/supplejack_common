@@ -139,13 +139,13 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
 
       let(:wellington_place_authority) { 
         mock(:record, id: 2235, locations: [
-          Repository::Location.new(lat: 1, lng: 1, country: "New Zealand", placename: "Wellington", path: "Wellington, New Zealand")
+          mock(:location, attributes: {lat: 1, lng: 1, country: "New Zealand", placename: "Wellington", path: "Wellington, New Zealand"}.stringify_keys)
         ])
       }
 
       let(:auckland_place_authority) { 
         mock(:record, id: 2235, locations: [
-          Repository::Location.new(lat: 2, lng: 2, country: "New Zealand", placename: "Auckland", path: "Auckland, New Zealand")
+          mock(:location, attributes: {lat: 2, lng: 2, country: "New Zealand", placename: "Auckland", path: "Auckland, New Zealand"}.stringify_keys)
         ])
       }
 
