@@ -1,7 +1,10 @@
 class XmlParser < HarvesterCore::Xml::Base
   
   base_url "http://www.nzonscreen.com/api/title/"
-  record_url_selector "//loc"
+
+  sitemap_entry_selector "//loc"
+  record_selector "//title"
+
   record_format :xml
 
   attribute :content_partner,         default: "NZ On Screen"

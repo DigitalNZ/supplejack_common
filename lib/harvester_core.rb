@@ -24,15 +24,17 @@ require "harvester_core/enrichments"
 require "harvester_core/resource"
 require "harvester_core/source_wrap"
 require "harvester_core/loader"
+require "harvester_core/dsl/sitemap"
 
 require "harvester_core/oai"
 require "harvester_core/rss"
 require "harvester_core/xml"
 require "harvester_core/json"
 require "harvester_core/tapuhi"
+require "harvester_core/sitemap"
+
 
 module HarvesterCore
-  # Your code goes here...
 
   class << self
     attr_accessor :caching_enabled

@@ -9,10 +9,15 @@ describe HarvesterCore::Xml::Base do
     klass.clear_definitions
   end
 
-  describe ".record_url_selector" do
-    it "stores the xpath to retrieve every record url" do
-      klass.record_url_selector "loc"
-      klass._record_url_selector.should eq "loc"
+  describe ".records" do
+    it "returns an object of type HarvesterCore::Sitemap::PaginatedCollection when sitemap_entry_selector is set" do
+      klass.should_receive(:_sitemap_entry_selector).twice.and_return("//loc")
+      klass.records.class.should eq HarvesterCore::Sitemap::PaginatedCollection
+    end
+
+    it "returns an object of type HarvesterCore::PaginatedCollection when sitemap_entry_selector is set" do
+      klass.should_receive(:_sitemap_entry_selector).and_return(nil)
+      klass.records.class.should eq HarvesterCore::PaginatedCollection
     end
   end
 
@@ -30,139 +35,14 @@ describe HarvesterCore::Xml::Base do
     end
   end
 
-  describe ".sitemap_format" do
-    it "stores the format of the actual record" do
-      klass.sitemap_format :xml
-      klass._sitemap_format.should eq :xml
-    end
-  end
-
-  describe ".sitemap_format_class" do
-    it "should return the Nokogiri::XML class" do
-      klass.sitemap_format :xml
-      klass.sitemap_format_class.should eq Nokogiri::XML
-    end
-
-    it "should return the Nokogiri::HTML class" do
-      klass.sitemap_format :html
-      klass.sitemap_format_class.should eq Nokogiri::HTML
-    end
-
-    it "should default to Nokogiri::HTML" do
-      klass.sitemap_format_class.should eq Nokogiri::HTML
-    end
-
-    it "should fallback to Nokogiri::HTML when the format is invalid" do
-      klass.sitemap_format :json
-      klass.sitemap_format_class.should eq Nokogiri::HTML
-    end
-  end
-
-  describe ".sitemap?" do
-    it "returns true" do
-      klass._record_selector = nil
-      klass._record_url_selector = "//loc"
-      klass.sitemap?.should be_true
-    end
-
-    it "returns false" do
-      klass._record_url_selector = nil
-      klass._record_selector = "//items"
-      klass.sitemap?.should be_false
-    end
-  end
-
-  describe ".index_document" do
-    let(:document) { Nokogiri::XML::Document.new }
-
-    it "reads the raw xml and created a nokogiri document" do
-      klass.stub(:index_xml) { "Some xml" }
-      Nokogiri::XML.should_receive(:parse).with("Some xml") { document }
-      klass.index_document
-    end
-  end
-
-  describe ".index_xml" do
-    context "URL" do
-      before do
-        klass.base_url "http://google.com"
-      end
-
-      it "retrieves the XML from the URL" do
-        RestClient.stub(:get).with("http://google.com") { "Some xml" }
-        klass.index_xml.should eq "Some xml"
-      end
-    end
-
-    context "File" do
-      before do
-        klass.base_url "file://harvester_core/integrations/source_data/sitemap_parser_urls.xml"
-      end
-
-      it "reads the xml list of url's from the file" do
-        File.should_receive(:read).with("/harvester_core/integrations/source_data/sitemap_parser_urls.xml") { "Some xml" }
-        klass.index_xml.should eq "Some xml"
-      end
-    end
-  end
-
   describe ".fetch_records" do
-    context "with a record_url_selector" do
-      before { klass.stub(:sitemap?) { true } }
-
-      it "initializes a set of sitemap records" do
-        klass.should_receive(:sitemap_records).with(nil) { [] }
-        klass.fetch_records
-      end
-    end
-
-    context "with a record_selector" do
-      before { klass.stub(:sitemap?) { false } }
-
-      it "initializes a set of xml records" do
-        klass.should_receive(:xml_records).with(nil) { [] }
-        klass.fetch_records
-      end
-    end
-  end
-
-  describe ".sitemap_records" do
-    let(:xml) { File.read("spec/harvester_core/integrations/source_data/xml_parser_urls.xml") }
-
-    before do
-      klass.record_url_selector "//loc"
-      klass.stub(:index_document) { Nokogiri.parse(xml) }
-    end
-
-    it "initializes a record for every url" do
-      klass.should_receive(:new).once.with("http://www.nzonscreen.com/api/title/weekly-review-no-395-1949")
-      klass.sitemap_records
-    end
-  end
-
-  describe ".xml_records" do
-    let(:xml) { File.read("spec/harvester_core/integrations/source_data/xml_parser_records.xml") }
-    let(:doc) { Nokogiri.parse(xml) }
-    let!(:xml_snippets) { doc.xpath("//items/item") }
-
-    before do
-      klass.record_selector "//items/item"
-      klass.stub(:index_document) { doc }
-    end
-
-    it "initializes a record with every section of the XML" do
-      klass.should_receive(:new).once.with(xml_snippets.first) 
-      klass.xml_records
+    it "initializes a set of xml records" do
+      klass.should_receive(:xml_records).with(nil) { [] }
+      klass.fetch_records
     end
   end
 
   describe ".clear_definitions" do
-    it "clears the record_url_selector" do
-      klass.record_url_selector "//loc"
-      klass.clear_definitions
-      klass._record_url_selector.should be_nil
-    end
-
     it "clears the record_selector" do
       klass.record_selector "//item"
       klass.clear_definitions
