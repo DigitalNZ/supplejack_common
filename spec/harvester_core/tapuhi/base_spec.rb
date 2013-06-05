@@ -51,7 +51,7 @@ describe HarvesterCore::Tapuhi::Base do
   describe "#raw_data" do
     it "returns a hash of values with the position of the field as key" do
       record.stub(:fields) { [[], ["Title"], ["Date"], [], ["Subject"]] }
-      record.raw_data.should eq({1 => ["Title"], 2 => ["Date"], 4 => ["Subject"]})
+      record.raw_data.should eq({1 => ["Title"], 2 => ["Date"], 4 => ["Subject"]}.to_json)
     end
   end
 

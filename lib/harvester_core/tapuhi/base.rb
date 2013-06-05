@@ -64,7 +64,7 @@ module HarvesterCore
       end
 
       def raw_data
-        document
+        document.to_json
       end
 
       def full_raw_data

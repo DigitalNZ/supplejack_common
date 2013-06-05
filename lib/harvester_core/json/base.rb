@@ -53,11 +53,11 @@ module HarvesterCore
       end
 
       def raw_data
-        document
+        document.to_json
       end
 
       def full_raw_data
-        raw_data.to_json
+        raw_data
       end
 
       def strategy_value(options={})
