@@ -15,7 +15,7 @@ module HarvesterCore
     		@entries = @sitemap_klass.fetch_entries(next_url)
     		@entries.each do |entry|
           begin
-    			  @records = @klass.fetch_records(entry)
+    			  @records = @klass.fetch_records(@klass.basic_auth_url(entry))
           rescue RestClient::Exception => e
             puts "EXCEPTION THROWN: #{e.message}"
             next
