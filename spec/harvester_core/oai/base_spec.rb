@@ -12,6 +12,7 @@ describe HarvesterCore::Oai::Base do
   before do
     klass._base_urls[klass.identifier] = []
     klass._attribute_definitions[klass.identifier] = {}
+    klass.clear_definitions
   end
 
   describe ".client" do
@@ -19,6 +20,20 @@ describe HarvesterCore::Oai::Base do
       klass.base_url "http://google.com"
       OAI::Client.should_receive(:new).with("http://google.com")
       klass.client
+    end
+  end
+
+  describe "#metadata_prefix" do
+    it "gets the metadata prefix" do
+      klass.metadata_prefix 'prefix'
+      klass.get_metadata_prefix.should eq 'prefix'
+    end
+  end
+
+  describe "#set" do
+    it "gets the set name" do
+      klass.set 'name'
+      klass.get_set.should eq 'name'
     end
   end
 
@@ -44,6 +59,20 @@ describe HarvesterCore::Oai::Base do
     it "accepts a :limit option" do
       HarvesterCore::Oai::PaginatedCollection.should_receive(:new).with(client, {limit: 10}, klass) { paginator }
       klass.records(limit: 10)
+    end
+
+    it "add the :metadata_prefix option from the DSL" do
+      HarvesterCore::Oai::PaginatedCollection.should_receive(:new).with(client, {metadata_prefix: 'prefix'}, klass) { paginator }
+      
+      klass.metadata_prefix 'prefix'
+      klass.records
+    end
+
+    it "add the :set option from the DSL" do
+      HarvesterCore::Oai::PaginatedCollection.should_receive(:new).with(client, {set: 'name'}, klass) { paginator }
+
+      klass.set 'name'
+      klass.records
     end
 
     it "does not pass on unknown options" do

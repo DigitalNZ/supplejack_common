@@ -10,6 +10,12 @@ module HarvesterCore
 
       attr_reader :original_xml
 
+      class_attribute :_metadata_prefix
+      self._metadata_prefix = {}
+
+      class_attribute :_set
+      self._set = {}
+
       class << self
         attr_reader :response
 
@@ -19,11 +25,36 @@ module HarvesterCore
 
         def records(options={})
           options = options.keep_if {|key| VALID_RECORDS_OPTIONS.include?(key) }
+          options[:metadata_prefix] = get_metadata_prefix if get_metadata_prefix.present?
+          options[:set] = get_set if get_set.present?
+          
           HarvesterCore::Oai::PaginatedCollection.new(client, options, self)
         end
 
         def resumption_token
           self.response.try(:resumption_token)
+        end
+
+        def clear_definitions
+          super
+          self._metadata_prefix = {}
+          self._set = {}
+        end
+
+        def metadata_prefix(prefix)
+          self._metadata_prefix[self.identifier] = prefix
+        end
+
+        def get_metadata_prefix
+          self._metadata_prefix[self.identifier]
+        end
+
+        def set(name)
+          self._set[self.identifier] = name
+        end
+
+        def get_set
+          self._set[self.identifier]
         end
       end
 
