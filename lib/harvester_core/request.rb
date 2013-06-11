@@ -13,7 +13,7 @@ module HarvesterCore
     attr_accessor :url, :throttling_options
 
     def initialize(url, options=[])
-      @url = url
+      @url = URI.escape(url)
       
       options ||= []
       @throttling_options = Hash[options.map {|option| [option[:host], option[:delay]] }]

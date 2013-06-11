@@ -35,6 +35,11 @@ describe HarvesterCore::Request do
       request = klass.new("google.com", nil)
       request.throttling_options.should eq({})
     end
+
+    it "URI escapes the url" do
+      request = klass.new("google.com/ben ten", nil)
+      request.url.should eq "google.com/ben%20ten"
+    end
   end
 
   describe "#uri" do
