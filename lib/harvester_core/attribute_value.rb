@@ -38,6 +38,10 @@ module HarvesterCore
       end
     end
 
+    def as_json
+      original_value
+    end
+
     alias_method  :include?, :includes?
 
     def join(joiner)
