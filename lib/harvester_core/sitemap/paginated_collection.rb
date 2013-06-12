@@ -8,11 +8,10 @@ module HarvesterCore
     		super
         @sitemap_klass = HarvesterCore::Sitemap::Base
         @sitemap_klass.sitemap_entry_selector(@klass._sitemap_entry_selector)
-        @sitemap_klass._base_urls[@sitemap_klass.identifier] = @klass._base_urls[@klass.identifier]
       end
 
     	def each(&block)
-        @sitemap_klass.base_urls.each do |base_url|
+        @klass.base_urls.each do |base_url|
       		@entries = @sitemap_klass.fetch_entries(next_url(base_url))
       		@entries.each do |entry|
             begin
