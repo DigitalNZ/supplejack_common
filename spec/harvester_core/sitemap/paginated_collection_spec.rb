@@ -24,7 +24,7 @@ describe HarvesterCore::Sitemap::PaginatedCollection do
 	describe "#each" do
 
 		before do
-			collection.stub(:next_url) { "http://goog.le" }
+			collection.sitemap_klass.stub(:base_urls) { ["http://goog.le"] }
 			TestXml.stub(:fetch_records) { "<xml>1<xml>" }
 			collection.stub(:yield_from_records) { true }
 		end
@@ -48,6 +48,21 @@ describe HarvesterCore::Sitemap::PaginatedCollection do
 			collection.should_receive(:yield_from_records).twice
 		  sitemap_klass.stub(:fetch_entries) { ["http://goo.gl/1.xml", "http://goo.gl/2.xml"] }
 		  collection.each {|record|}
+		end
+
+		context "multiple base urls" do
+
+			before do 
+				collection.sitemap_klass.stub(:base_urls) { ["http://goog.le", "http://dnz.com/1"] }
+				collection.stub(:entries) { [] }
+			end
+
+
+			it "handles multiple sitemap base_urls" do
+			  HarvesterCore::Sitemap::Base.should_receive(:fetch_entries).with("http://goog.le") { [] }
+			  HarvesterCore::Sitemap::Base.should_receive(:fetch_entries).with("http://dnz.com/1"){ [] }
+			  collection.each {|record|}
+			end
 		end
 	end
 end

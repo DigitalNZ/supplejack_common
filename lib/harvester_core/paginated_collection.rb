@@ -22,38 +22,37 @@ module HarvesterCore
     end
 
     def each(&block)
-      @records = klass.fetch_records(next_url)
-      self.total = klass._total_results if paginated?
+      klass.base_urls.each do |base_url|
+        @records = klass.fetch_records(next_url(base_url))
+        self.total = klass._total_results if paginated?
 
-      unless yield_from_records(&block)
-        return nil
-      end
+        unless yield_from_records(&block)
+          return nil
+        end
 
-      if paginated?
-        while more_results? do
-          @records.clear
-          @records = klass.fetch_records(next_url)
+        if paginated?
+          while more_results? do
+            @records.clear
+            @records = klass.fetch_records(next_url(base_url))
 
-          unless yield_from_records(&block)
-            return nil
+            unless yield_from_records(&block)
+              return nil
+            end
           end
         end
       end
     end
 
-    def paginated?
-      page && per_page
-    end
+    private
 
-    def next_url
+    def next_url(url)
       if paginated?
-        url = klass.base_urls.first
         joiner = url.match(/\?/) ? "&" : "?"
         url = "#{url}#{joiner}#{url_options.to_query}"
         increment_page_counter!
         url
       else
-        klass.base_urls.first
+        url
       end
     end
 
@@ -89,7 +88,9 @@ module HarvesterCore
       current_page <= total_pages
     end
 
-    private
+    def paginated?
+      page && per_page
+    end
 
     def yield_from_records(&block)
       while record = @records.shift

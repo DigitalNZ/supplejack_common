@@ -12,18 +12,20 @@ module HarvesterCore
       end
 
     	def each(&block)
-    		@entries = @sitemap_klass.fetch_entries(next_url)
-    		@entries.each do |entry|
-          begin
-    			  @records = @klass.fetch_records(@klass.basic_auth_url(entry))
-          rescue RestClient::Exception => e
-            puts "EXCEPTION THROWN: #{e.message}"
-            next
-          end
-		      unless yield_from_records(&block)
-		        return nil
-		      end
-    		end
+        @sitemap_klass.base_urls.each do |base_url|
+      		@entries = @sitemap_klass.fetch_entries(next_url(base_url))
+      		@entries.each do |entry|
+            begin
+      			  @records = @klass.fetch_records(@klass.basic_auth_url(entry))
+            rescue RestClient::Exception => e
+              puts "EXCEPTION THROWN: #{e.message}"
+              next
+            end
+  		      unless yield_from_records(&block)
+  		        return nil
+  		      end
+      		end
+        end
     	end
     
     end
