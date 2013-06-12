@@ -27,7 +27,7 @@ module HarvesterCore
         document = index_document(url)
         self._namespaces = document.namespaces
         xml_nodes = document.xpath(self._record_selector)
-        xml_nodes.map {|node | new(node) }
+        xml_nodes.map {|node | new(node, url) }
       end
 	  end
   end

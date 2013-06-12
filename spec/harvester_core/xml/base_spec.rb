@@ -58,7 +58,7 @@ describe HarvesterCore::Xml::Base do
 
   describe "#initialize" do
     it "initializes a sitemap record" do
-      record = klass.new("http://google.com/1.html")
+      record = klass.new(nil, "http://google.com/1.html")
       record.url.should eq "http://google.com/1.html"
     end
 
@@ -70,7 +70,7 @@ describe HarvesterCore::Xml::Base do
 
     it "initializes from raw xml" do
       xml = "<record></record>"
-      record = klass.new(xml, true)
+      record = klass.new(xml, nil, true)
       record.original_xml.should eq xml
     end
   end
@@ -78,23 +78,23 @@ describe HarvesterCore::Xml::Base do
   describe "#format" do
     context "sitemap records" do
       it "defaults to HTML" do
-        klass.new("http://google.com/1").format.should eq :html
+        klass.new(nil, "http://google.com/1").format.should eq :html
       end
 
       it "returns XML when format is explicit at the klass level" do
         klass.record_format :xml
-        klass.new("http://google.com/1").format.should eq :xml
+        klass.new(nil, "http://google.com/1").format.should eq :xml
       end
     end
 
     context "records from single XML" do
       it "default to XML for a raw record" do
-        klass.new("<record/>", true).format.should eq :xml
+        klass.new(nil, "<record/>", true).format.should eq :xml
       end
 
       it "returns HTML when format is explicit for raw records" do
         klass.record_format :html
-        klass.new("<body/>", true).format.should eq :html
+        klass.new(nil, "<body/>", true).format.should eq :html
       end
     end
   end
@@ -104,7 +104,7 @@ describe HarvesterCore::Xml::Base do
       klass.any_instance.stub(:set_attribute_values) { nil }
     end
 
-    let(:record) { klass.new("http://google.com") }
+    let(:record) { klass.new(nil, "http://google.com") }
 
     it "returns the url" do
       record.url.should eq "http://google.com"
@@ -122,7 +122,7 @@ describe HarvesterCore::Xml::Base do
     end
 
     let(:document) { mock(:document) }
-    let(:record) { klass.new("http://google.com") }
+    let(:record) { klass.new(nil, "http://google.com") }
 
     context "format is XML" do
       let(:xml) { "<record>Some xml data</record>" }
@@ -146,7 +146,7 @@ describe HarvesterCore::Xml::Base do
       end
 
       it "builds a document from original_xml" do
-        record = klass.new("<record>other data</record>", true)
+        record = klass.new("<record>other data</record>", nil, true)
         record.document.to_xml.should eq "<?xml version=\"1.0\"?>\n<record>other data</record>\n"
       end
     end

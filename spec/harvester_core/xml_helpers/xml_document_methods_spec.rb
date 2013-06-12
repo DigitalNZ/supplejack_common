@@ -53,7 +53,7 @@ describe HarvesterCore::XmlDocumentMethods do
     end
 
     it "initializes a record with every section of the XML" do
-      klass.should_receive(:new).once.with(xml_snippets.first) 
+      klass.should_receive(:new).once.with(xml_snippets.first, anything) 
       klass.xml_records
     end
   end

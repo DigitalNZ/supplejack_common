@@ -23,7 +23,7 @@ module HarvesterCore
 	    	end
 	    end
 
-		  def initialize(node)
+		  def initialize(node, url)
 	      @node = node
 	      super
 	    end

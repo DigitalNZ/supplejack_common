@@ -41,15 +41,12 @@ module HarvesterCore
 
       attr_accessor :original_xml
 
-      def initialize(url_or_node, from_raw=false)
+      def initialize(node, url=nil, from_raw=false)
         if from_raw
-          @original_xml = url_or_node
+          @original_xml = node
         else
-          if url_or_node.is_a?(String)
-            @url = url_or_node
-          else
-            @document = url_or_node
-          end
+          @url = url if url.present?
+          @document = node if node.present?
         end
 
         super
