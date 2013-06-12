@@ -4,44 +4,6 @@ describe HarvesterCore::Utils do
   
   let(:mod) { HarvesterCore::Utils }
 
-  describe "#remove_default_namespace" do
-    let(:xml) do
-      <<-XML
-<?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns='http://www.w3.org/2005/Atom' xmlns:media='http://search.yahoo.com/mrss/'>
-</feed>
-      XML
-    end
-
-    it "removes the default namespace with single quotes" do
-      new_xml = mod.remove_default_namespace(xml)
-      new_xml.should eq <<-XML
-<?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns:media='http://search.yahoo.com/mrss/'>
-</feed>
-      XML
-    end
-
-    it "removes the default namespace with double quotes" do
-      xml_double_quotes = <<-XML
-<?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media='http://search.yahoo.com/mrss/'>
-</feed>
-    XML
-
-      new_xml = mod.remove_default_namespace(xml_double_quotes)
-      new_xml.should eq <<-XML
-<?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns:media='http://search.yahoo.com/mrss/'>
-</feed>
-      XML
-    end
-
-    it "returns the same xml" do
-      mod.remove_default_namespace("<author><name>YouTube</name></author>").should eq "<author><name>YouTube</name></author>"
-    end
-  end
-
   describe "add_html_tag" do
     let(:html) { "<div>Hi</div><span>You</span>" }
 

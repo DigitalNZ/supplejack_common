@@ -69,7 +69,6 @@ module HarvesterCore
         @document ||= begin
           if @url
             response = HarvesterCore::Request.get(self.url, self._throttle)
-            response = HarvesterCore::Utils.remove_default_namespace(response) if format == :xml
             response = HarvesterCore::Utils.add_html_tag(response) if format == :html
           elsif @original_xml
             response = @original_xml

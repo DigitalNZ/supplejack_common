@@ -11,14 +11,12 @@ module HarvesterCore
     
     def document
       @document ||= begin
-        xml = HarvesterCore::Utils.remove_default_namespace(fetch_document)
-        Nokogiri::XML.parse(xml)
+        Nokogiri::XML.parse(fetch_document)
       end
     end
 
     def strategy_value(options)
-      return HarvesterCore::ConditionalOption.new(document, options, namespaces).value if options[:xpath] && options[:if]
-      return HarvesterCore::XpathOption.new(document, options, namespaces).value if options[:xpath]
+      HarvesterCore::XpathOption.new(document, options, namespaces).value if options[:xpath]
     end
   end
 end

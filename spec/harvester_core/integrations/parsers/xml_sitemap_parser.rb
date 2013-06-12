@@ -1,42 +1,31 @@
-class SitemapParser < HarvesterCore::Xml::Base
+class XmlSitemapParser < HarvesterCore::Xml::Base
   
-  base_url "file://harvester_core/integrations/source_data/sitemap_parser_urls.xml"
-  record_url_selector "//loc"
+  base_url "http://www.nzonscreen.com/api/title/"
 
-  attribute :collection,          default: "NZMuseums"
+  namespaces dc: 'http://purl.org/dc/elements/1.1/'
 
-  attribute :thumbnail_url, xpath: ["//div[@class='ehObjectSingleImage']/a/img/@src", "//div[@class='ehObjectImageMultiple']/a/img/@src"] do
-    get(:thumbnail_url).mapping(/m\.jpg$/ => "s.jpg")
+  sitemap_entry_selector "//loc"
+  record_selector "//title"
+
+  record_format :xml
+
+  attribute :content_partner,         default: "NZ On Screen"
+  attribute :category,                default: "Videos"
+
+  attribute :title,                   xpath: "//title/name"
+  attribute :description,             xpath: "//synopsis"
+  attribute :date,                    xpath: "//dc:date"
+
+  attribute :tag,                     xpath: "//tags", separator: ","
+  attribute :thumbnail_url,           xpath: "//thumbnail-image/title/path"
+
+  attribute :contributor,             xpath: "//person", object: true do
+    if get(:contributor).present?
+      get(:contributor).to_a.map do |person|
+        first_name = person.xpath("first-name")
+        last_name = person.xpath("last-name")
+        [first_name, last_name].join(" ")
+      end
+    end
   end
-
-  with_options xpath: "//div[@class='ehFieldLabelDescription']", if: {"span[@class='label']" => :label_value}, value: "span[@class='value']" do |w|
-
-    w.attribute :title,                 label_value: "Name/Title"
-    w.attribute :description,           label_value: ["About this object", "Subject and Association Description", "Inscription and Marks"]
-    w.attributes :coverage, :placename, label_value: "Place Made"
-    w.attribute :identifier,            label_value: "Object number"
-
-  end
-
-  attribute :tags,        xpath: "//a[@class='ehTagReadOnly']"
-  attribute :license,     xpath: "//div[@class='ehObjectLicence']/a/@href",
-                          mappings: {
-                            /.*Attribution$/ => 'CC-BY',
-                            /.*Attribution_-_Share_Alike$/ => 'CC-BY-SA',
-                            /.*Attribution_-_No_Derivatives$/ => 'CC-BY-ND',
-                            /.*Attribution_-_Non-commercial$/ => 'CC-BY-NC',
-                            /.*Attribution_-_Non-commercial_-_Share_Alike$/ => 'CC-BY-NC-SA',
-                            /.*Attribution_-_Non-Commercial_-_No_Derivatives$/ => 'CC-BY-NC-ND'
-                          }
-
-
-  attribute :display_date,  xpath: "//div[@class='ehRepeatingLabelDescription']", 
-                            if: {"span[@class='label']" => "Date Made"}, 
-                            value: "span[@class='value']",
-                            date: true
-
-  attribute :category do
-    get(:thumbnail_url).present? ? "Images" : "Other"
-  end
-
 end

@@ -5,7 +5,7 @@ module HarvesterCore
 		module ClassMethods
 
 	    def index_document(url=nil)
-	      xml = HarvesterCore::Utils.remove_default_namespace(self.index_xml(url))
+        xml = self.index_xml(url)
 	      doc = Nokogiri::XML.parse(xml)
 	      if pagination_options
 	        self._total_results ||= doc.xpath(self.pagination_options[:total_selector]).text.to_i
@@ -25,9 +25,8 @@ module HarvesterCore
 
       def xml_records(url=nil)
         document = index_document(url)
-        self._namespaces = document.namespaces
-        xml_nodes = document.xpath(self._record_selector)
-        xml_nodes.map {|node | new(node, url) }
+        xml_nodes = document.xpath(self._record_selector, self._namespaces)
+        xml_nodes.map {|node| new(node, url) }
       end
 	  end
   end

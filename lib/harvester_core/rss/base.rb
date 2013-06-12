@@ -19,14 +19,12 @@ module HarvesterCore
 
         def fetch_records(url)
           document = index_document(url)
-          self._namespaces = document.namespaces
-          xml_nodes = document.xpath(self._record_selector)
+          xml_nodes = document.xpath(self._record_selector, self._namespaces)
           xml_nodes.map {|node | new(node) }
         end
 
         def index_document(url)
           xml = HarvesterCore::Request.get(url, self._throttle)
-          xml = HarvesterCore::Utils.remove_default_namespace(xml)
           Nokogiri::XML.parse(xml)
         end
       end
@@ -39,7 +37,7 @@ module HarvesterCore
 
       def document
         @document ||= begin
-          xml = HarvesterCore::Utils.remove_default_namespace(original_xml)
+          xml = original_xml
           Nokogiri::XML.parse(xml)
         end
       end

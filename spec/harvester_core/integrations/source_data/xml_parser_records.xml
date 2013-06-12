@@ -1,22 +1,20 @@
 <?xml version="1.0" ?>
-<items>
+<items xmlns="http://digitalnz.org/schemas/test" xmlns:dc="http://digitalnz.org/schemas/dc">
   <item>
-    <description/>
-    <img_url>
-    http://dl.dropbox.com/u/63489205/img/2012_june/P45954.jpg
-    </img_url>
+    <description>
+      A thing
+    </description>
     <keywords/>
-    <lg_img_url>
-    http://dl.dropbox.com/u/63489205/img/2012_june/lg_P45954.jpg
-    </lg_img_url>
-    <sm_img_url>
-    http://dl.dropbox.com/u/63489205/img/2012_june/sm_P45954.jpg
-    </sm_img_url>
-    <timestamp>
+    <dc:date>
     2011-02-13 14:09:03 +1300
-    </timestamp>
+    </dc:date>
+    <author xmlns="http://schema.org/Person">
+      <name>Andy</name>
+      <gender>Male</gender>
+    </author>
     <title>
-    Female Giraffe Weevil (Lasiorhynchus barbicornis), Tuwhaipapa,
+      Page 4 Advertisements Column 4 (Otago Daily Times, 02 April 1888)
     </title>
   </item>
+
 </items>

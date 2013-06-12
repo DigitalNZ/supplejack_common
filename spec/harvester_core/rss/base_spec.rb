@@ -18,11 +18,12 @@ describe HarvesterCore::Rss::Base do
 
     before(:each) do
       klass.stub(:index_document) { doc }
-      doc.stub(:xpath).with("//item") { [node] }
+      klass._namespaces = {dc: 'http://dc.com'}
+      doc.stub(:xpath).with("//item", anything) { [node] }
     end
 
     it "splits the xml into nodes for each RSS entry" do
-      doc.should_receive(:xpath).with("//item") { [node] }
+      doc.should_receive(:xpath).with("//item", anything) { [node] }
       klass.fetch_records(url)
     end
 

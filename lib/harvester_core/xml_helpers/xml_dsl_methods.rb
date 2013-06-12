@@ -22,8 +22,7 @@ module HarvesterCore
     end
 
     def strategy_value(options={})
-      return HarvesterCore::ConditionalOption.new(self.document, options, self.class._namespaces).value if options[:xpath] && options[:if]
-      return HarvesterCore::XpathOption.new(self.document, options, self.class._namespaces).value if options[:xpath]
+      HarvesterCore::XpathOption.new(self.document, options, self.class._namespaces).value if options[:xpath]
     end
 
     module ClassMethods

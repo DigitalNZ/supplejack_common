@@ -45,11 +45,12 @@ describe HarvesterCore::XmlDocumentMethods do
   describe ".xml_records" do
     let(:xml) { File.read("spec/harvester_core/integrations/source_data/xml_parser_records.xml") }
     let(:doc) { Nokogiri.parse(xml) }
-    let!(:xml_snippets) { doc.xpath("//items/item") }
+    let!(:xml_snippets) { doc.xpath("/g:items/g:item", {g: "http://digitalnz.org/schemas/test"}) }
 
     before do
-      klass.record_selector "//items/item"
+      klass.record_selector "/g:items/g:item"
       klass.stub(:index_document) { doc }
+      klass.namespaces g: "http://digitalnz.org/schemas/test"
     end
 
     it "initializes a record with every section of the XML" do
