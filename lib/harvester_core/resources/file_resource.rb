@@ -64,6 +64,16 @@ module HarvesterCore
       end
       extension
     end
+
+    def fetch(value)
+      self.public_send(value.to_sym)
+    end
+
+    def strategy_value(options)
+      if options[:field].present?
+        fetch(options[:field])
+      end
+    end
     
   end
 end

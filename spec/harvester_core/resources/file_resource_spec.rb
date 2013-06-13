@@ -79,4 +79,28 @@ describe HarvesterCore::FileResource do
       resource.extension.should eq "jpeg"
     end
   end
+
+  describe "#fetch" do
+    it "returns the height, if requested" do
+      resource.should_receive(:height) {124}
+      resource.fetch(:height).should eq 124
+    end
+
+    it "returns the size, if requested" do
+      resource.should_receive(:size) {1243}
+      resource.fetch(:size).should eq 1243
+    end
+
+    it "returns the mime_type, if requested" do
+      resource.should_receive(:mime_type) {'image/jpeg'}
+      resource.fetch('mime_type').should eq 'image/jpeg'
+    end
+  end
+
+  describe "#strategy_value" do
+    it "calls fetch with the requested field from options" do
+      resource.should_receive(:fetch).with(:width)
+      resource.strategy_value({field: :width})
+    end
+  end
 end
