@@ -22,6 +22,10 @@ module HarvesterCore
       @primary ||= HarvesterCore::SourceWrap.new(record.sources.where(priority: 0).first)
     end
 
+    def record_source(source_id)
+      HarvesterCore::SourceWrap.new(record.sources.where(source_id: source_id).first)
+    end
+
     def set_attribute_values
       raise NotImplementedError.new("All subclasses of HarvesterCore::AbstractEnrichment must override #set_attribute_values.")
     end
