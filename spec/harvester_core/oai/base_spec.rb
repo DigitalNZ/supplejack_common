@@ -125,7 +125,7 @@ describe HarvesterCore::Oai::Base do
 
     it "returns the raw xml" do
       record = klass.new(oai_record)
-      record.raw_data.should eq "<?xml version=\"1.0\" standalone=\"no\"?>\n<record>\n  <id>1</id>\n</record>\n"
+      record.raw_data.should eq "<?xml version=\"1.0\"?>\n<record>\n  <id>1</id>\n</record>\n"
     end
   end
 end

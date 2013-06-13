@@ -67,8 +67,6 @@ module HarvesterCore
       def document
         @document ||= begin
           doc = Nokogiri::XML.parse(original_xml)
-          doc.remove_namespaces!
-          doc
         end
       end
     end
