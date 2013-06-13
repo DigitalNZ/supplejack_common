@@ -135,7 +135,6 @@ describe HarvesterCore::Xml::Base do
 
       it "requets a record and removes the default namespace" do
         HarvesterCore::Request.should_receive(:get) { xml }
-        HarvesterCore::Utils.should_receive(:remove_default_namespace).with(xml) { xml }
         Nokogiri::XML.should_receive(:parse).with(xml) { document }
         record.document.should eq document
       end
@@ -161,11 +160,6 @@ describe HarvesterCore::Xml::Base do
 
       it "parses the requested HTML" do
         HarvesterCore::Request.should_receive(:get) { html }
-        record.document
-      end
-
-      it "should not remove the default namespace" do
-        HarvesterCore::Utils.should_not_receive(:remove_default_namespace)
         record.document
       end
 

@@ -20,10 +20,6 @@ module HarvesterCore
       end
     end
 
-    def remove_default_namespace(xml)
-      xml.gsub(/ xmlns=(?:"|')[A-Za-z0-9:\/\.\-]+(?:"|')/, "")
-    end
-
     def add_html_tag(html)
       unless html.match(/(<(!DOCTYPE )?html.*>)|(<\?xml.*\?>)/i)
         html = "<html>#{html}</html>"

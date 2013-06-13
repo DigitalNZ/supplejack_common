@@ -1,6 +1,1 @@
-require 'harvester_core/xml_helpers/abstract_option'
-require 'harvester_core/xml_helpers/conditional_option'
-require 'harvester_core/xml_helpers/xpath_option'
-require 'harvester_core/xml_helpers/xml_dsl_methods'
-require 'harvester_core/xml_helpers/xml_data_methods'
-require 'harvester_core/xml_helpers/xml_document_methods'
+Dir[File.dirname(__FILE__) + '/xml_helpers/*.rb'].each {|file| require file }
