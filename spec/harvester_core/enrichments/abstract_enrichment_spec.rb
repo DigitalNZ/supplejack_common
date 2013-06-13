@@ -21,6 +21,22 @@ describe HarvesterCore::AbstractEnrichment do
     end
   end
 
+  describe "#record_source" do
+    let(:source) { mock(:source).as_null_object }
+
+    before do
+      record.stub_chain(:sources, :where).with(source_id: :ndha) { [source] }
+    end
+
+    it "returns a wrapped source" do
+      enrichment.record_source(:ndha).source.should eq source
+    end
+
+    it "should initialize a SourceWrap object" do
+      enrichment.record_source(:ndha).should be_a HarvesterCore::SourceWrap
+    end
+  end
+
   describe "#find_record" do
     it "should find record with tap id" do
       record.class.should_receive(:where).with("sources.dc_identifier" => "tap:12345") { ["1", "2"] }
