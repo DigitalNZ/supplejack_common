@@ -1,12 +1,20 @@
 module HarvesterCore
   module XmlDocumentMethods
     extend ::ActiveSupport::Concern
+
+    included do
+      class_attribute :_record_format
+    end
 		
 		module ClassMethods
 
 	    def index_document(url=nil)
         xml = self.index_xml(url)
-	      doc = Nokogiri::XML.parse(xml)
+        if self._record_format == :html
+          doc = Nokogiri::HTML.parse(xml)
+        else
+          doc = Nokogiri::XML.parse(xml)
+        end
 	      if pagination_options
 	        self._total_results ||= doc.xpath(self.pagination_options[:total_selector]).text.to_i
 	      end
