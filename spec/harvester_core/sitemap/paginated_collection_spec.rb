@@ -21,6 +21,12 @@ describe HarvesterCore::Sitemap::PaginatedCollection do
     collection = HarvesterCore::Sitemap::PaginatedCollection.new(TestXml)
   end
 
+  it "adds the namespaces to the site" do
+    TestXml.namespaces page: 'http://www.w3.org/1999/xhtml'
+    collection.sitemap_klass.should_receive(:_namespaces=).with(page: 'http://www.w3.org/1999/xhtml')
+    collection = HarvesterCore::Sitemap::PaginatedCollection.new(TestXml)
+  end
+
 	describe "#each" do
 
 		before do

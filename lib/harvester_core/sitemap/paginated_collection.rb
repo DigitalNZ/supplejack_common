@@ -8,6 +8,7 @@ module HarvesterCore
     		super
         @sitemap_klass = HarvesterCore::Sitemap::Base
         @sitemap_klass.sitemap_entry_selector(@klass._sitemap_entry_selector)
+        @sitemap_klass._namespaces = @klass._namespaces
       end
 
     	def each(&block)
