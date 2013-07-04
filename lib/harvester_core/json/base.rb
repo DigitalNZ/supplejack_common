@@ -15,7 +15,11 @@ module HarvesterCore
         end
 
         def document(url)
-          HarvesterCore::Request.get(url, self._throttle)
+          if url.match(/^https?/)
+            HarvesterCore::Request.get(url, self._throttle)
+          elsif url.match(/^file/)
+            File.read(url.gsub(/file:\//, ""))
+          end
         end
 
         def records_json(url)

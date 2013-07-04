@@ -40,9 +40,18 @@ describe HarvesterCore::Json::Base do
   describe ".document" do
     let(:json) { %q{"description": "Some json!"} }
 
-    it "stores the raw json" do
-      HarvesterCore::Request.should_receive(:get).with("http://google.com", {}) { json }
-      klass.document("http://google.com").should eq json
+    context "json web document" do
+      it "stores the raw json" do
+        HarvesterCore::Request.should_receive(:get).with("http://google.com", {}) { json }
+        klass.document("http://google.com").should eq json
+      end
+    end
+
+    context "json files" do
+      it "stores the raw json" do
+        File.should_receive(:read).with("file:///data/sites/data.json".gsub(/file:\//, "")) { json }
+        klass.document("file:///data/sites/data.json").should eq json
+      end
     end
   end
 
