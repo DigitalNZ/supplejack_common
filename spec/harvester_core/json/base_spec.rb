@@ -15,8 +15,8 @@ describe HarvesterCore::Json::Base do
 
   describe ".record_selector" do
     it "stores the path to retrieve every record metadata" do
-      klass.record_selector "&..items"
-      klass._record_selector.should eq "&..items"
+      klass.record_selector "$.items"
+      klass._record_selector.should eq "$.items"
     end
   end
 
@@ -32,7 +32,7 @@ describe HarvesterCore::Json::Base do
 
     it "returns an array of records with the parsed json" do
       klass.stub(:document) { json }
-      klass.record_selector "$..items"
+      klass.record_selector "$.items"
       klass.records_json("http://goo.gle.com/1").should eq [{"title" => "Record1"}, {"title" => "Record2"}, {"title" => "Record3"}]
     end
   end
@@ -75,18 +75,18 @@ describe HarvesterCore::Json::Base do
   describe "#initialize" do
     it "initializes the record's attributes" do
       record = klass.new({"title" => "Dos"})
-      record.json_attributes.should eq({"title" => "Dos"})
+      record.json.should eq('{"title":"Dos"}')
     end
 
-    it "returns an empty hash when attributes are nil" do
+    it "returns an empty string when attributes are nil" do
       record = klass.new(nil)
-      record.json_attributes.should eq({})
+      record.json.should eq('')
     end
 
     it "initializes from a json string" do
       data = {"title" => "Hi"}.to_json
       record = klass.new(data)
-      record.document.should eq({"title" => "Hi"})
+      record.document.should eq('{"title":"Hi"}')
     end
   end
 
@@ -102,11 +102,11 @@ describe HarvesterCore::Json::Base do
     let(:record) { klass.new({"dc:creator" => "John", "dc:author" => "Fede"}) }
 
     it "returns the value of a attribute" do
-      record.strategy_value(path: "dc:creator").should eq "John"
+      record.strategy_value(path: "$.'dc:creator'").should eq ["John"]
     end
 
     it "returns the values from multiple paths" do
-      record.strategy_value(path: ["dc:creator", "dc:author"]).should eq ["John", "Fede"]
+      record.strategy_value(path: ["$.'dc:creator'", "$.'dc:author'"]).should eq ["John", "Fede"]
     end
 
     it "returns nil without :path" do

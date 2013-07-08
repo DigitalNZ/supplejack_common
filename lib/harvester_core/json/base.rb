@@ -6,7 +6,7 @@ module HarvesterCore
 
       class_attribute :_record_selector
 
-      attr_reader :json_attributes
+      attr_reader :json
 
       class << self
 
@@ -41,23 +41,23 @@ module HarvesterCore
 
       end
 
-      def initialize(attributes, from_raw=false)
-        if attributes.is_a?(Hash)
-          @json_attributes = attributes || {}
-        elsif attributes.is_a?(String)
-          @json_attributes = JSON.parse(attributes)
+      def initialize(json, from_raw=false)
+        if json.is_a?(Hash)
+          @json = json.to_json
+        elsif json.is_a?(String)
+          @json = json
         else
-          @json_attributes = {}
+          @json = ""
         end
         super
       end
 
       def document
-        @json_attributes
+        @json
       end
 
       def raw_data
-        document.to_json
+        document
       end
 
       def full_raw_data
@@ -69,15 +69,13 @@ module HarvesterCore
         path = options[:path]
         return nil unless path.present?
 
-        if path.is_a?(Array)
-          path.map {|p| json_attributes[p] }
-        else
-          json_attributes[path]
-        end
+        Array(path).map do |p|
+          JsonPath.on(document, p)
+        end.flatten
       end
 
       def fetch(path)
-        value = document[path.to_s]
+        value = JsonPath.on(document, path)
         HarvesterCore::AttributeValue.new(value)
       end
 

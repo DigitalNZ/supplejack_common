@@ -49,6 +49,10 @@ describe HarvesterCore::Json::Base do
     record.thumbnail_url.should eq ["http://bhl.ait.co.at/templates/bhle/sampledata/cachedImage.php?maxSize=200&filename=http://www.biodiversitylibrary.org/pagethumb/25449335"]
   end
 
+  it "gets nested keys" do
+    record.tags.should eq ["foo"]
+  end
+
   context "overriden methods" do
 
     it "gets the landing_url" do

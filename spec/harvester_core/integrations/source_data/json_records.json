@@ -1,4 +1,4 @@
-{
+  {
 "description": "\"new zealand\" - Europeana Open Search",
 "link": "http://api.europeana.eu/api/opensearch.json?searchTerms=%22new%20zealand%22&startPage=1",
 "totalResults": 1710,
@@ -45,7 +45,10 @@
 "scienze",
 "wetenschappen",
 "wissenschaft"
-]
+],
+"nested": {
+  "things": "foo"
+}
 },
 {
 "guid": "http://www.europeana.eu/portal/record/08701/7BC1E51D898EE12D4999AD29FD66B88450225845.html"
