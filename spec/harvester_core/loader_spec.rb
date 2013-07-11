@@ -27,14 +27,14 @@ describe HarvesterCore::Loader do
 
   describe "#content_with_encoding" do
     it "should add a utf-8 encoding to the top of the file" do
-      loader.content_with_encoding.should eq "# encoding: utf-8\r\nclass Europeana < HarvesterCore::Json::Base; end"
+      loader.content_with_encoding.should eq "# encoding: utf-8\r\nmodule LoadedParser\nclass Europeana < HarvesterCore::Json::Base; end\nend"
     end
   end
 
   describe "#create_tempfile" do
     it "creates a new tempfile with the path" do
       loader.create_tempfile
-      File.read(loader.path).should eq "# encoding: utf-8\r\nclass Europeana < HarvesterCore::Json::Base; end"
+      File.read(loader.path).should eq "# encoding: utf-8\r\nmodule LoadedParser\nclass Europeana < HarvesterCore::Json::Base; end\nend"
     end
   end
 
@@ -50,13 +50,25 @@ describe HarvesterCore::Loader do
     end
   end
 
+  describe "#parser_class_name_with_module" do
+    it "removes whitespace from the name" do
+      parser.stub(:name) { "NatLib Pages" }
+      loader.parser_class_name_with_module.should eq "LoadedParser::NatLibPages"
+    end
+
+    it "capitalizes each word" do
+      parser.stub(:name) { "nlnzcat catalog" }
+      loader.parser_class_name_with_module.should eq "LoadedParser::NlnzcatCatalog"
+    end
+  end
+
   describe "#parser_class" do
     before(:each) do
       loader.load_parser
     end
 
     it "returns the class singleton" do
-      loader.parser_class.should eq Europeana
+      loader.parser_class.should eq LoadedParser::Europeana
     end
   end
 
@@ -95,7 +107,7 @@ describe HarvesterCore::Loader do
     end
 
     it "clears the parser class definitions" do
-      Europeana.should_receive(:clear_definitions)
+      LoadedParser::Europeana.should_receive(:clear_definitions)
       loader.clear_parser_class_definitions
     end
   end

@@ -33,6 +33,8 @@ require "harvester_core/json"
 require "harvester_core/tapuhi"
 require "harvester_core/sitemap"
 
+require "harvester_core/parser/harvester_core"
+
 
 module HarvesterCore
 
