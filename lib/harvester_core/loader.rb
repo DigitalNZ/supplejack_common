@@ -49,7 +49,7 @@ module HarvesterCore
 
     def clear_parser_class_definitions
       
-      if LoadedParser.const_defined?(parser_class_name)
+      if LoadedParser.const_defined?(parser_class_name, false)
         parser_class.clear_definitions
         LoadedParser.send(:remove_const, parser_class_name.to_sym)
       end
