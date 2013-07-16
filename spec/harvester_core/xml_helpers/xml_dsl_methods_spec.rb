@@ -27,7 +27,7 @@ describe HarvesterCore::XmlDslMethods do
     it "should fetch a value with a namespace" do
       klass.namespaces dc: "http://purl.org/dc/elements/1.1/"
       record.stub(:document) { Nokogiri.parse(%q{<doc><dc:item xmlns:dc="http://purl.org/dc/elements/1.1/">1</dc:item></doc>}) }
-      record.fetch("//dc:item", "dc").to_a.should eq ["1"]
+      record.fetch("//dc:item").to_a.should eq ["1"]
     end
   end
   
@@ -38,13 +38,14 @@ describe HarvesterCore::XmlDslMethods do
     before { record.stub(:document) { document } }
 
     it "extracts the XML nodes from the document" do
-      document.should_receive(:xpath).with("//locations", {}) { xml_nodes }
+      document.should_receive(:xpath).with("//locations", anything) { xml_nodes }
       record.node("//locations").should eq xml_nodes
     end
 
-    it "should fetch a node with a name space" do
-       document.should_receive(:xpath).with("//locations", {:dc => "http://purl.org/dc/elements/1.1/", :xsi => "xsiid"}) { xml_nodes }
-       record.node("//locations", dc: "http://purl.org/dc/elements/1.1/", xsi: "xsiid")
+    it "should use all the defined namespaces on the class" do
+      klass.namespaces dc: "http://purl.org/dc/elements/1.1/"
+      document.should_receive(:xpath).with("//dc:item", hash_including(dc: "http://purl.org/dc/elements/1.1/")) { xml_nodes }
+      record.node("//dc:item").should eq xml_nodes
     end
 
     context "xml document not available" do

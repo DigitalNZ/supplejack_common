@@ -14,7 +14,8 @@ module HarvesterCore
 
     def node(xpath, name_spaces_hash={})
       if self.document
-        name_spaces = name_spaces_hash.is_a?(Hash) ? name_spaces_hash : nil
+        name_spaces = name_spaces_hash.is_a?(Hash) ? name_spaces_hash : {}
+        name_spaces.merge! self.class._namespaces
         self.document.xpath(xpath, name_spaces)
       else
         HarvesterCore::AttributeValue.new(nil)
