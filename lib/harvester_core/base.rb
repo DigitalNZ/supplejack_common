@@ -68,6 +68,10 @@ module HarvesterCore
         self._rejection_rules[self.identifier]
       end
 
+      def deletion_rules
+        self._deletion_rules[self.identifier]
+      end
+
       def clear_definitions
         self._base_urls[self.identifier] = []
         self._attribute_definitions[self.identifier] = {}
@@ -75,6 +79,7 @@ module HarvesterCore
         self._basic_auth[self.identifier] = nil
         self._pagination_options[self.identifier] = nil
         self._rejection_rules[self.identifier] = nil
+        self._deletion_rules[self.identifier] = nil
       end
 
       def include_snippet(name)

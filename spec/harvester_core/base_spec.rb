@@ -116,6 +116,12 @@ describe HarvesterCore::Base do
       klass.rejection_rules.should be_nil
     end
 
+    it "clears the deletion rules" do
+      klass.delete_if { "Hi" }
+      klass.clear_definitions
+      klass.deletion_rules.should be_nil
+    end
+
     it "clears the enrichment definitions" do
       klass.enrichment :ndha_rights do
         "Hi"
@@ -137,6 +143,13 @@ describe HarvesterCore::Base do
     it "returns the rejection_rules for the klass" do
       klass._rejection_rules[klass.identifier] = Proc.new { "Hi" }
       klass.rejection_rules.should be_a Proc
+    end
+  end
+
+  describe ".deletion_rules" do
+    it "returns the deletion_rules for the klass" do
+      klass._deletion_rules[klass.identifier] = Proc.new { "Hi" }
+      klass.deletion_rules.should be_a Proc
     end
   end
 

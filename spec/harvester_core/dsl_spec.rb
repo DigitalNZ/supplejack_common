@@ -120,6 +120,13 @@ describe HarvesterCore::DSL do
     end
   end
 
+  describe ".delete_if" do
+    it "adds the new delete rule" do
+      klass.delete_if { "value" }
+      klass._deletion_rules[klass.identifier].should be_a Proc
+    end
+  end
+
   describe ".throttle" do
     before do
       klass._throttle = nil

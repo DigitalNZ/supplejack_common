@@ -10,6 +10,7 @@ module HarvesterCore
       class_attribute :_basic_auth
       class_attribute :_pagination_options
       class_attribute :_rejection_rules
+      class_attribute :_deletion_rules
       class_attribute :_throttle
       class_attribute :_environment
 
@@ -20,6 +21,7 @@ module HarvesterCore
       self._basic_auth = {}
       self._pagination_options = {}
       self._rejection_rules = {}
+      self._deletion_rules = {}
       self._environment = {}
     end
 
@@ -69,6 +71,10 @@ module HarvesterCore
 
       def reject_if(&block)
         self._rejection_rules[self.identifier] = block
+      end
+
+      def delete_if(&block)
+        self._deletion_rules[self.identifier] = block
       end
 
       def throttle(options={})
