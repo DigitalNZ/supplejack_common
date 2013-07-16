@@ -191,6 +191,25 @@ describe HarvesterCore::Base do
     end
   end
 
+  describe "#deletable?" do
+    let(:record) { klass.new }
+
+    it "is not deleteable if there are no deletion rules" do
+      klass.stub(:deletion_rules) { nil }
+      record.deletable?.should be_false
+    end
+
+    it "is deletable if the block evals to true" do
+      klass.delete_if { true }
+      record.deletable?.should be_true
+    end
+
+    it "is not deletable if the block evals to true" do
+      klass.delete_if { false }
+      record.deletable?.should be_false
+    end
+  end
+
   describe "#attribute_names" do
     it "returns a list all attributes defined" do
       klass.attribute :content_partner, {default: "Google"}

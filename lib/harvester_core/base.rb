@@ -119,6 +119,12 @@ module HarvesterCore
       end
     end
 
+    def deletable?
+      deletion_rules = self.class.deletion_rules
+      return false if deletion_rules.nil?
+      return self.instance_eval(&deletion_rules)
+    end
+
     def strategy_value(options)
       raise NotImplementedError.new("All subclasses of HarvesterCore::Base must override #strategy_value.")
     end
