@@ -18,7 +18,7 @@ module HarvesterCore
           if url.match(/^https?/)
             HarvesterCore::Request.get(url, self._throttle)
           elsif url.match(/^file/)
-            File.read(url.gsub(/file:\//, ""))
+            File.read(url.gsub(/file:\/\//, ""))
           end
         end
 

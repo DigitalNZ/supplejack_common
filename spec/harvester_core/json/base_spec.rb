@@ -49,7 +49,7 @@ describe HarvesterCore::Json::Base do
 
     context "json files" do
       it "stores the raw json" do
-        File.should_receive(:read).with("file:///data/sites/data.json".gsub(/file:\//, "")) { json }
+        File.should_receive(:read).with("file:///data/sites/data.json".gsub(/file:\/\//, "")) { json }
         klass.document("file:///data/sites/data.json").should eq json
       end
     end
