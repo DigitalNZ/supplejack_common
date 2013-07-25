@@ -56,6 +56,7 @@ module HarvesterCore
         def get_set
           self._set[self.identifier]
         end
+
       end
 
       def initialize(xml, from_raw=false)
@@ -68,6 +69,10 @@ module HarvesterCore
         @document ||= begin
           doc = Nokogiri::XML.parse(original_xml)
         end
+      end
+
+      def deletable?
+        document.xpath("record/header[@status='deleted']").any?
       end
     end
   end

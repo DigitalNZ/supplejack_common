@@ -128,4 +128,15 @@ describe HarvesterCore::Oai::Base do
       record.raw_data.should eq "<?xml version=\"1.0\"?>\n<record>\n  <id>1</id>\n</record>\n"
     end
   end
+
+  describe "#deletable?" do
+    it "returns true when header has deleted attribute" do
+      record.stub(:document) { Nokogiri.parse('<?xml version="1.0"?><record><header status="deleted"></header></record>') }
+      record.deletable?.should be_true
+    end    
+    it "returns false when header does not have deleted attribute" do
+      record.stub(:document) { Nokogiri.parse('<?xml version="1.0"?><record><header></header></record>') }
+      record.deletable?.should be_false
+    end
+  end
 end
