@@ -61,10 +61,9 @@ module HarvesterCore
         end
       end
 
-      if defined?(Rails)
+      if defined?(Sidekiq)
         real_time = measure.real.round(4)
-        Rails.logger.info "\nGET (#{real_time}): #{url}\n"
-        puts "GET (#{real_time}): #{url}"
+        Sidekiq.logger.info "\nGET (#{real_time}): #{url}\n"
       end
 
       response
