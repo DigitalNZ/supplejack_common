@@ -70,7 +70,8 @@ module HarvesterCore
       end
 
       def reject_if(&block)
-        self._rejection_rules[self.identifier] = block
+        self._rejection_rules[self.identifier] ||= []
+        self._rejection_rules[self.identifier] += [block]
       end
 
       def delete_if(&block)

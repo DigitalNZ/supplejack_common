@@ -116,7 +116,7 @@ describe HarvesterCore::DSL do
   describe ".reject_if" do
     it "adds a new rejection rule" do
       klass.reject_if { "value" }
-      klass._rejection_rules[klass.identifier].should be_a Proc
+      klass._rejection_rules[klass.identifier].first.should be_a Proc
     end
   end
 

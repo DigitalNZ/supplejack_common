@@ -96,7 +96,7 @@ module HarvesterCore
       while record = @records.shift
         record.set_attribute_values
 
-        if klass.rejection_rules && record.instance_eval(&klass.rejection_rules)
+        if record.rejected?
           next
         else
           @counter += 1

@@ -26,7 +26,7 @@ module HarvesterCore
               record = klass.new(record_contents)
               record.set_attribute_values
 
-              if klass.rejection_rules && record.instance_eval(&klass.rejection_rules)
+              if record.rejected?
                 next
               else
                 count += 1

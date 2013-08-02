@@ -19,7 +19,7 @@ module HarvesterCore
           record = klass.new(oai_record)
           record.set_attribute_values
 
-          if klass.rejection_rules && record.instance_eval(&klass.rejection_rules)
+          if record.rejected?
             next
           else
             yield(record)

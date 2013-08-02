@@ -141,8 +141,9 @@ describe HarvesterCore::Base do
 
   describe ".rejection_rules" do
     it "returns the rejection_rules for the klass" do
-      klass._rejection_rules[klass.identifier] = Proc.new { "Hi" }
-      klass.rejection_rules.should be_a Proc
+      rules = [Proc.new { "Hi" }]
+      klass._rejection_rules[klass.identifier] = rules
+      klass.rejection_rules.should eq rules
     end
   end
 
@@ -207,6 +208,25 @@ describe HarvesterCore::Base do
     it "is not deletable if the block evals to true" do
       klass.delete_if { false }
       record.deletable?.should be_false
+    end
+  end
+
+  describe "#rejected?" do
+    let(:record) { klass.new }
+
+    it "returns true if any rejection_rule is true" do
+      klass.stub(:rejection_rules) { [Proc.new { false }, Proc.new { true } ] }
+      record.rejected?.should be_true
+    end
+
+    it "returns false if all rejection_rules are false" do
+      klass.stub(:rejection_rules) { [Proc.new { false }, Proc.new { false } ] }
+      record.rejected?.should be_false
+    end
+
+    it "returns false if rejection_rules is undefined" do
+      klass.stub(:rejection_rules) { nil }
+      record.rejected?.should be_false
     end
   end
 

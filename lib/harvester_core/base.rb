@@ -125,6 +125,13 @@ module HarvesterCore
       return self.instance_eval(&deletion_rules)
     end
 
+    def rejected?
+      return false if self.class.rejection_rules.nil?
+      self.class.rejection_rules.any? do |r|
+        self.instance_eval(&r)
+      end
+    end
+
     def strategy_value(options)
       raise NotImplementedError.new("All subclasses of HarvesterCore::Base must override #strategy_value.")
     end
