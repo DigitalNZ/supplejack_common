@@ -13,6 +13,7 @@ module HarvesterCore
       class_attribute :_deletion_rules
       class_attribute :_throttle
       class_attribute :_environment
+      class_attribute :_priority
 
       self._source_id = {}
       self._base_urls = {}
@@ -23,6 +24,7 @@ module HarvesterCore
       self._rejection_rules = {}
       self._deletion_rules = {}
       self._environment = {}
+      self._priority = {}
     end
 
     module ClassMethods
@@ -81,6 +83,10 @@ module HarvesterCore
       def throttle(options={})
         self._throttle ||= []
         self._throttle << options
+      end
+
+      def priority(priority)
+        self._priority[self.identifier] = priority
       end
     end
   end

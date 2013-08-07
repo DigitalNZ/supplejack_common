@@ -143,4 +143,11 @@ describe HarvesterCore::DSL do
       klass._throttle.should eq [{:host => "www.google.com", :max_per_minute => 100}, {:host => "www.yahoo.com", :max_per_minute => 100}]
     end
   end
+
+  describe ".priority" do
+    it "stores the prioriy" do
+      klass.priority 2
+      klass._priority[klass.identifier].should eq 2
+    end
+  end
 end

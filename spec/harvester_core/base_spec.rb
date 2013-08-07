@@ -154,6 +154,18 @@ describe HarvesterCore::Base do
     end
   end
 
+  describe ".get_priority" do
+    it "returns the priority for the klass" do
+      klass._priority[klass.identifier] = 2
+      klass.get_priority.should eq 2
+    end
+
+    it "returns 0 if no priority is set" do
+      klass._priority.delete(klass.identifier)
+      klass.get_priority.should eq 0
+    end
+  end
+
   describe "#set_attribute_values" do
     let(:record) { klass.new }
 
@@ -161,6 +173,12 @@ describe HarvesterCore::Base do
       klass.source_id "nlnzcatz"
       record.set_attribute_values
       record.attributes.should include(source_id: "nlnzcatz")
+    end
+
+    it "should set the priority" do
+      klass.priority 2
+      record.set_attribute_values
+      record.attributes.should include(priority: 2)
     end
 
     it "assigns the attribute values in a hash" do

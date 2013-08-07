@@ -72,6 +72,10 @@ module HarvesterCore
         self._deletion_rules[self.identifier]
       end
 
+      def get_priority
+        self._priority[self.identifier] || 0
+      end
+
       def clear_definitions
         self._base_urls[self.identifier] = []
         self._attribute_definitions[self.identifier] = {}
@@ -102,6 +106,7 @@ module HarvesterCore
 
     def set_attribute_values
       @attributes[:source_id] = self.class.get_source_id
+      @attributes[:priority] = self.class.get_priority
 
       begin
         self.class.attribute_definitions.each do |name, options|
