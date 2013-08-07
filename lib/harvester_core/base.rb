@@ -84,6 +84,7 @@ module HarvesterCore
         self._pagination_options[self.identifier] = nil
         self._rejection_rules[self.identifier] = nil
         self._deletion_rules[self.identifier] = nil
+        self._priority[self.identifier] = nil
       end
 
       def include_snippet(name)
