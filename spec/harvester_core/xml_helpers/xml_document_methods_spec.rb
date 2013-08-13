@@ -24,6 +24,18 @@ describe HarvesterCore::XmlDocumentMethods do
       klass.should_receive(:new).once.with(xml_snippets.first, anything)
       klass.xml_records("url")
     end
+
+    it 'should set the total results if the xpath expression returns xpath node' do
+      klass.stub(:pagination_options) { { total_selector: "/items/item/total" } }
+      klass.xml_records("url")
+      klass._total_results.should_not be_nil
+    end
+
+    it 'should set the total results if the xpath expression returns string' do
+      klass.stub(:pagination_options) { { total_selector: "normalize-space(/items/item/total)" } }
+      klass.xml_records("url")
+      klass._total_results.should_not be_nil
+    end
   end
 
   describe ".with_each_file" do

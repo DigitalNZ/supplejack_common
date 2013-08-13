@@ -16,7 +16,11 @@ module HarvesterCore
           document = parse_document(file)
           xml_nodes += document.xpath(self._record_selector, self._namespaces).map {|node| new(node, url) }
           if pagination_options
-            self._total_results ||= document.xpath(self.pagination_options[:total_selector]).text.to_i
+            if self.pagination_options[:total_selector].start_with?("/")
+              self._total_results ||= document.xpath(self.pagination_options[:total_selector]).text.to_i
+            else
+              self._total_results ||= document.xpath(self.pagination_options[:total_selector]).to_i
+            end
           end
         end
         xml_nodes
