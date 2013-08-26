@@ -52,7 +52,7 @@ describe HarvesterCore::XmlDslMethods do
       before { record.stub(:document) {nil} }
 
       it "returns an empty attribute_value" do
-        nodes = record.node("//locations", {})
+        nodes = record.node("//locations")
         nodes.should be_a(HarvesterCore::AttributeValue)
         nodes.to_a.should eq []
       end
