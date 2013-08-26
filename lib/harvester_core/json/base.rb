@@ -5,6 +5,7 @@ module HarvesterCore
       self.clear_definitions
 
       class_attribute :_record_selector
+      class_attribute :_total_results
 
       attr_reader :json
 
@@ -27,16 +28,18 @@ module HarvesterCore
         end
 
         def fetch_records(url)
+          self._total_results ||= JsonPath.on(document(url), self.pagination_options[:total_selector]).first if pagination_options
           records_json(url).map {|attributes| self.new(attributes) }
         end
 
         def records(options={})
-          HarvesterCore::PaginatedCollection.new(self, {}, options)
+          HarvesterCore::PaginatedCollection.new(self, self.pagination_options, options)
         end
 
         def clear_definitions
           super
           self._record_selector = nil
+          self._total_results = nil
         end
 
       end

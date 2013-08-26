@@ -56,11 +56,34 @@ describe HarvesterCore::Json::Base do
   end
 
   describe ".fetch_records" do
-    before { klass.stub(:records_json) { [{"title" => "Record1"}] } }
+    let(:document) { {"location" => 1234} }
+
+    before do
+      klass.stub(:records_json) { [{"title" => "Record1"}] }
+      klass.stub(:document) { document }
+    end
 
     it "initializes record for every json record" do
       klass.should_receive(:new).once.with({"title" => "Record1"}) { record }
       klass.fetch_records("http://google.com").should eq [record]
+    end
+
+    it "should not set total results" do
+      klass.fetch_records("http://google.com")
+      klass._total_results.should be_nil
+    end
+
+    context "pagination options defined" do
+
+      before do 
+        klass.stub(:pagination_options) { { total_selector: "totalResults" } }
+      end
+
+      it 'should set the total results if the json expression returns string' do
+        JsonPath.should_receive(:on).with(document, "totalResults") { [22] }
+        klass.fetch_records("http://google.com")
+        klass._total_results.should eq 22
+      end
     end
   end
 
@@ -69,6 +92,12 @@ describe HarvesterCore::Json::Base do
       klass.record_selector "path"
       klass.clear_definitions
       klass._record_selector.should be_nil
+    end
+
+    it "clears the total results" do
+      klass._total_results = 100
+      klass.clear_definitions
+      klass._total_results.should be_nil
     end
   end
 
