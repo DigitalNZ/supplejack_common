@@ -33,7 +33,7 @@ module HarvesterCore
         end
 
         def records(options={})
-          HarvesterCore::PaginatedCollection.new(self, self.pagination_options, options)
+          HarvesterCore::PaginatedCollection.new(self, self.pagination_options || {}, options)
         end
 
         def clear_definitions
