@@ -17,7 +17,7 @@ module HarvesterCore
 
     class << self
       def before(source_id)
-        RestClient.delete "#{ENV["API_HOST"]}/harvester/sources/#{source_id.to_s}.json"
+        RestClient.delete "#{ENV["API_HOST"]}/harvester/fragments/#{source_id.to_s}.json"
       end
     end
 

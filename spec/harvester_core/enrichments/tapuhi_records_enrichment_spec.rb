@@ -202,7 +202,7 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
         enrichment.attributes[:collection_title].should include("New Zealand Cartoon Archive")
       end
 
-      context "primary source's collection title already contains 'New Zealand Cartoon Archive'" do
+      context "primary fragment's collection title already contains 'New Zealand Cartoon Archive'" do
         before do
           enrichment.primary.stub(:[],:collection_title) { ['New Zealand Cartoon Archive'] }
         end
@@ -478,18 +478,18 @@ describe HarvesterCore::TapuhiRecordsEnrichment do
 
     let(:parent) { mock(:record, internal_identifier: "tap:1234").as_null_object }
     
-    context "primary_source has no relation field set" do
+    context "primary_fragment has no relation field set" do
       let(:record) { mock(:record, id: 123, relation: nil) }
 
-      it "should set the tap_id in the enrichment if it does not exist on the primary source." do
+      it "should set the tap_id in the enrichment if it does not exist on the primary fragment." do
         enrichment.send(:build_relation, parent).should include("tap:1234")
       end
     end
 
-    context "primary_source has relation field set" do
+    context "primary_fragment has relation field set" do
       let(:record) { mock(:record, id: 123, relation: "tap:1234") }
 
-      it "should set the tap_id in the enrichment if it does not exist on the primary source." do
+      it "should set the tap_id in the enrichment if it does not exist on the primary fragment." do
         enrichment.send(:build_relation, parent).should_not include("tap:1234")
       end
     end

@@ -19,7 +19,7 @@ describe HarvesterCore::TapuhiGroupsEnrichment do
   end
 
   describe "#enrich_groups" do
-    it "should not write a source for the current record" do
+    it "should not write a fragment for the current record" do
       enrichment.enrich_groups
       enrichment.record_attributes.keys.should_not include(record.id)
     end
@@ -47,8 +47,8 @@ describe HarvesterCore::TapuhiGroupsEnrichment do
   end
 
   describe ".before" do
-    it "should delete sources with my source_id" do
-      RestClient.should_receive(:delete).with("#{ENV["API_HOST"]}/harvester/sources/tapuhi_groups_enrichment.json")
+    it "should delete fragments with my source_id" do
+      RestClient.should_receive(:delete).with("#{ENV["API_HOST"]}/harvester/fragments/tapuhi_groups_enrichment.json")
       klass.before(:tapuhi_groups_enrichment)
     end
   end

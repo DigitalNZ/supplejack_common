@@ -134,18 +134,18 @@ describe HarvesterCore::Enrichment do
   end
 
   describe "#primary" do
-    let(:source) { mock(:source).as_null_object }
+    let(:fragment) { mock(:fragment).as_null_object }
 
     before do
-      record.stub_chain(:sources, :where).with(priority: 0) { [source] }
+      record.stub_chain(:fragments, :where).with(priority: 0) { [fragment] }
     end
 
-    it "returns a wrapped source" do
-      enrichment.primary.source.should eq source
+    it "returns a wrapped fragment" do
+      enrichment.primary.fragment.should eq fragment
     end
 
-    it "should initialize a SourceWrap object" do
-      enrichment.primary.should be_a HarvesterCore::SourceWrap
+    it "should initialize a FragmentWrap object" do
+      enrichment.primary.should be_a HarvesterCore::FragmentWrap
     end
   end
 

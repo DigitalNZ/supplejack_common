@@ -11,14 +11,14 @@ describe HarvesterCore::BaseTapuhiEnrichment do
 
     context "has a record with a source" do
       let(:record) { mock(:record, id: 1234,  title: "Awesome Title")}
-      let(:source) { HarvesterCore::SourceWrap.new(mock(:source, attributes: {})) }
+      let(:fragment) { HarvesterCore::FragmentWrap.new(mock(:fragment, attributes: {})) }
 
       context "record has authorities" do
         let(:authority) { {"authority_id" => "2234", "name" => "name_authority", "role" => "(Subject)" } }
     
         before do
-          source.stub_chain(:[],:to_a) { [authority] }
-          enrichment.stub(:primary) { source }
+          fragment.stub_chain(:[],:to_a) { [authority] }
+          enrichment.stub(:primary) { fragment }
           enrichment.stub(:find_record).with("2234") { record }
         end
 
@@ -30,8 +30,8 @@ describe HarvesterCore::BaseTapuhiEnrichment do
 
       context "record has no authorities" do
         before do
-          source.stub_chain(:[],:to_a) { [] }
-          enrichment.stub(:primary) { source }
+          fragment.stub_chain(:[],:to_a) { [] }
+          enrichment.stub(:primary) { fragment }
         end
 
         it "should have no relationship authorities" do

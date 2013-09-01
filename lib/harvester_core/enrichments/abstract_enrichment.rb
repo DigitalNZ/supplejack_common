@@ -19,11 +19,11 @@ module HarvesterCore
     end
 
     def primary
-      @primary ||= HarvesterCore::SourceWrap.new(record.sources.where(priority: 0).first)
+      @primary ||= HarvesterCore::FragmentWrap.new(record.fragments.where(priority: 0).first)
     end
 
-    def record_source(source_id)
-      HarvesterCore::SourceWrap.new(record.sources.where(source_id: source_id).first)
+    def record_fragment(source_id)
+      HarvesterCore::FragmentWrap.new(record.fragments.where(source_id: source_id).first)
     end
 
     def set_attribute_values
@@ -31,7 +31,7 @@ module HarvesterCore
     end
 
     def enrichable?
-      raise NotImplementedError.new("All subclasses of HarvesterCore::AbstractEnrichment must override #enrichable?.")
+      raise NotImple mentedError.new("All subclasses of HarvesterCore::AbstractEnrichment must override #enrichable?.")
     end
 
     def attributes
@@ -49,7 +49,7 @@ module HarvesterCore
     #change to internal identifier?
     def find_record(tap_id)
       return nil unless tap_id.present?
-      record.class.where("sources.dc_identifier" => "tap:#{tap_id}").first
+      record.class.where("fragments.dc_identifier" => "tap:#{tap_id}").first
     end
   end
 end

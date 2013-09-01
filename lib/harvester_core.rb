@@ -22,7 +22,7 @@ require "harvester_core/request"
 require "harvester_core/attribute_builder"
 require "harvester_core/enrichments"
 require "harvester_core/resource"
-require "harvester_core/source_wrap"
+require "harvester_core/fragment_wrap"
 require "harvester_core/loader"
 require "harvester_core/dsl/sitemap"
 

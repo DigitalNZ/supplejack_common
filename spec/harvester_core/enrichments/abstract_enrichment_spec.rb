@@ -6,40 +6,40 @@ describe HarvesterCore::AbstractEnrichment do
   let(:enrichment) { klass.new(:ndha_rights, {}, record, nil) }
 
   describe "#primary" do
-    let(:source) { mock(:source).as_null_object }
+    let(:fragment) { mock(:fragment).as_null_object }
 
     before do
-      record.stub_chain(:sources, :where).with(priority: 0) { [source] }
+      record.stub_chain(:fragments, :where).with(priority: 0) { [fragment] }
     end
 
-    it "returns a wrapped source" do
-      enrichment.primary.source.should eq source
+    it "returns a wrapped fragment" do
+      enrichment.primary.fragment.should eq fragment
     end
 
-    it "should initialize a SourceWrap object" do
-      enrichment.primary.should be_a HarvesterCore::SourceWrap
+    it "should initialize a FragmentWrap object" do
+      enrichment.primary.should be_a HarvesterCore::FragmentWrap
     end
   end
 
-  describe "#record_source" do
-    let(:source) { mock(:source).as_null_object }
+  describe "#record_fragment" do
+    let(:fragment) { mock(:fragment).as_null_object }
 
     before do
-      record.stub_chain(:sources, :where).with(source_id: :ndha) { [source] }
+      record.stub_chain(:fragments, :where).with(source_id: :ndha) { [fragment] }
     end
 
-    it "returns a wrapped source" do
-      enrichment.record_source(:ndha).source.should eq source
+    it "returns a wrapped fragment" do
+      enrichment.record_fragment(:ndha).fragment.should eq fragment
     end
 
-    it "should initialize a SourceWrap object" do
-      enrichment.record_source(:ndha).should be_a HarvesterCore::SourceWrap
+    it "should initialize a FragmentWrap object" do
+      enrichment.record_fragment(:ndha).should be_a HarvesterCore::FragmentWrap
     end
   end
 
   describe "#find_record" do
     it "should find record with tap id" do
-      record.class.should_receive(:where).with("sources.dc_identifier" => "tap:12345") { ["1", "2"] }
+      record.class.should_receive(:where).with("fragments.dc_identifier" => "tap:12345") { ["1", "2"] }
       enrichment.send(:find_record, "12345").should eq "1"
     end
 

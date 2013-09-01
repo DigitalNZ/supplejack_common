@@ -1,9 +1,9 @@
 require "spec_helper"
 
-describe HarvesterCore::SourceWrap do
+describe HarvesterCore::FragmentWrap do
 
-  let(:source) { mock(:source, attributes: {"title" => "Hi"}) }
-  let(:wrap) { HarvesterCore::SourceWrap.new(source) }
+  let(:fragment) { mock(:fragment, attributes: {"title" => "Hi"}) }
+  let(:wrap) { HarvesterCore::FragmentWrap.new(fragment) }
   
   describe "#[]" do
     it "should return the specified attribute" do
