@@ -12,10 +12,6 @@ module HarvesterCore
         end
       end
 
-      def get_source_id
-        self._source_id[self.identifier]
-      end
-
       def base_urls
         self._base_urls[self.identifier].map do |url|
           self.basic_auth_url(environment_url(url))
@@ -106,7 +102,6 @@ module HarvesterCore
     end
 
     def set_attribute_values
-      @attributes[:source_id] = self.class.get_source_id
       @attributes[:priority] = self.class.get_priority
 
       begin

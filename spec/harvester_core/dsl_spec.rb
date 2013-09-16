@@ -7,13 +7,6 @@ describe HarvesterCore::DSL do
   before(:each) do
     klass.clear_definitions
   end
-
-  describe ".source_id" do
-    it "sets the source_id for the current class" do
-      klass.source_id "nlnzcat"
-      klass._source_id[klass.identifier].should eq "nlnzcat"
-    end
-  end
   
   describe ".base_url" do
     it "adds the base_url" do

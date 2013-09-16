@@ -3,7 +3,6 @@ module HarvesterCore
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :_source_id
       class_attribute :_base_urls
       class_attribute :_attribute_definitions
       class_attribute :_enrichment_definitions
@@ -15,7 +14,6 @@ module HarvesterCore
       class_attribute :_environment
       class_attribute :_priority
 
-      self._source_id = {}
       self._base_urls = {}
       self._attribute_definitions = {}
       self._enrichment_definitions = {}
@@ -28,8 +26,11 @@ module HarvesterCore
     end
 
     module ClassMethods
+
+      # DEPRECATED: source_id is no longer defined in the parser. 
+      # This method stub exists to smooth the transition for existing parser
+      # Needs to be removed soon - 2013-09-17
       def source_id(id)
-        self._source_id[self.identifier] = id
       end
 
       def base_url(url)

@@ -28,13 +28,6 @@ describe HarvesterCore::Base do
     end
   end
 
-  describe "#get_source_id" do
-    it "should return the source_id for the class" do
-      klass.source_id "somerssfeed"
-      klass.get_source_id.should eq "somerssfeed"
-    end
-  end
-
   describe ".base_urls" do
     it "returns the list of base_urls" do
       klass.base_url "http://google.com"
@@ -168,12 +161,6 @@ describe HarvesterCore::Base do
 
   describe "#set_attribute_values" do
     let(:record) { klass.new }
-
-    it "should set the source_id as an attribute" do
-      klass.source_id "nlnzcatz"
-      record.set_attribute_values
-      record.attributes.should include(source_id: "nlnzcatz")
-    end
 
     it "should set the priority" do
       klass.priority 2
