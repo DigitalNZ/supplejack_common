@@ -17,6 +17,11 @@ describe HarvesterCore::AttributeValue do
       value.original_value.should eq []
     end
 
+    it "removes nils" do
+      value = klass.new([nil, "ahoy"])
+      value.original_value.should eq ["ahoy"]
+    end
+
     it "should deep clone th original_value" do
       klass.should_receive(:deep_clone).with(["books"])
       value = klass.new("books")

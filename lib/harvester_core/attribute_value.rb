@@ -5,7 +5,7 @@ module HarvesterCore
     
     def initialize(original_value)
       @original_value = Array(original_value)
-      @original_value = @original_value.delete_if { |v| v == "" }
+      @original_value = @original_value.delete_if { |v| v == "" or v.nil? }
       @original_value = self.class.deep_clone(@original_value)
     end
 

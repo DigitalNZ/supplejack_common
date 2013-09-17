@@ -162,6 +162,12 @@ describe HarvesterCore::Base do
   describe "#set_attribute_values" do
     let(:record) { klass.new }
 
+    it "should run values through the attribute value object so we do not get empty strings and nils" do
+      klass.attribute :category, {default: ["value", nil]}
+      record.set_attribute_values
+      record.attributes[:category].should eq ["value"]
+    end
+
     it "should set the priority" do
       klass.priority 2
       record.set_attribute_values
@@ -183,7 +189,7 @@ describe HarvesterCore::Base do
 
     it "adds errors to field_errors" do
       klass.attribute :date, default: "1999/1/1", date: true
-      HarvesterCore::AttributeBuilder.stub(:new).with(record, :date, {default: "1999/1/1", date: true}) { mock(:builder, errors: ["Error"]).as_null_object }
+      HarvesterCore::AttributeBuilder.stub(:new).with(record, :date, {default: "1999/1/1", date: true}) { double(:builder, errors: ["Error"]).as_null_object }
       record.set_attribute_values
       record.attributes.should include(date: nil)
       record.field_errors.should include(date: ["Error"])
