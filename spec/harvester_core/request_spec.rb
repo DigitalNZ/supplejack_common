@@ -55,84 +55,59 @@ describe HarvesterCore::Request do
   end
 
   describe "get" do
-    let!(:time) { Time.now }
-
-    before(:each) do
-      Time.stub(:now) { time }
+    it "should aquire the lock" do
+      request.should_receive(:acquire_lock)
+      request.get
     end
 
     it "should request the resource" do
       request.should_receive(:request_resource) { "body" }
       request.get.should eq "body"
     end
-
-    it "sleeps until the delay has passed" do
-      request.stub(:seconds_to_wait) { 1 }
-      request.should_receive(:sleep).with(1)
-      request.get
-    end
-
-    it "should set the last_request_at" do
-      request.should_receive("last_request_at=").with(time)
-      request.get
-    end
   end
 
-  describe "#seconds_to_wait" do
-    let!(:time) { Time.now }
+  describe "#acquire_lock" do
+    let(:mock_redis) { double(:redis).as_null_object }
 
-    before(:each) do
-      Time.stub(:now) { time }
+    before do
+      request.stub(:request_resource)
+      HarvesterCore.stub(:redis) { mock_redis }
+      request.stub(:delay) { 2000 }
     end
 
-    it "returns the number of seconds needed to wait before the next request" do
-      request.stub(:delay) { 3 }
-      request.stub(:last_request_at) { time.to_f - 2 }
-      request.seconds_to_wait.should eq 1
+    it "should set a key of host in redis" do
+      mock_redis.should_receive(:setnx).with('harvester.throttle.google.com', 0)
+      request.acquire_lock { }
     end
 
-    it "returns 0 when there should be no delay" do
-      request.stub(:delay) { 3 }
-      request.stub(:last_request_at) { time.to_i - 4 }
-      request.seconds_to_wait.should eq 0
+    it "should set the expiry of the key" do
+      mock_redis.should_receive(:pexpire).with('harvester.throttle.google.com', 2000)
+      request.acquire_lock { }
     end
 
-    it "returns fractions of a second" do
-      last_request_at = time.to_f - 2.5
-      request.stub(:delay) { 3 }
-      request.stub(:last_request_at) { last_request_at }
-      request.seconds_to_wait.should eq 0.5
-    end
-
-    it "returns 0 when there is no last_request_at" do
-      request.stub(:delay) { 3 }
-      request.stub(:last_request_at) { 0.0 }
-      request.seconds_to_wait.should eq 0
-    end
-  end
-
-  context "get/set last_request_at" do
-    let!(:time) { Time.now }
-
-    describe "#last_request_at=" do
-      it "stores the request time in redis" do
-        HarvesterCore.redis.should_receive(:set).with("google.com", time.to_f)
-        request.last_request_at = time
+    context "could not acquire lock" do
+      before do
+        mock_redis.stub(:setnx).and_return(false, true) # fails the first time, then succeeds
       end
-    end
 
-    describe "#last_request_at" do
-      it "retrieves the last_request_at in seconds" do
-        HarvesterCore.redis.stub(:get).with("google.com") { "12345678" }
-        request.last_request_at.should eq 12345678
+      it "should sleep for the time left" do
+        mock_redis.stub(:pttl).with('harvester.throttle.google.com') { 1234 }
+        request.should_receive(:sleep).with(1.244)
+        request.acquire_lock { }
+      end
+
+      it "should sleep for the whole delay is there is a problem with the key" do
+        mock_redis.stub(:pttl).with('harvester.throttle.google.com') { -1 }
+        mock_redis.should_receive(:pexpire).with('harvester.throttle.google.com', 2000)
+        request.acquire_lock { }
       end
     end
   end
 
   describe "#delay" do
-    it "returns the delay when it matches the host" do
+    it "returns the delay in ms when it matches the host" do
       request = klass.new("http://google.com", [{host: "google.com", delay: 5}])
-      request.delay.should eq 5
+      request.delay.should eq 5000
     end
 
     it "returns 0 when the URL doesn't match the host" do
