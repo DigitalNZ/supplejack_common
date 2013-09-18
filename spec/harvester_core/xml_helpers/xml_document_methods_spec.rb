@@ -18,6 +18,7 @@ describe HarvesterCore::XmlDocumentMethods do
       klass.stub(:with_each_file).and_yield(xml)
       klass.stub(:parse_document) {doc}
       klass.namespaces g: "http://digitalnz.org/schemas/test"
+      klass._request_timeout = 60000
     end
 
     it "initializes a record with every section of the XML" do
@@ -43,7 +44,7 @@ describe HarvesterCore::XmlDocumentMethods do
     
     context "url is a url" do
       it "gets the url and yields it" do
-        HarvesterCore::Request.should_receive(:get).with('http://google.co.nz', anything) {file}
+        HarvesterCore::Request.should_receive(:get).with('http://google.co.nz', 60000, anything) {file}
         expect{ |b| klass.send(:with_each_file, 'http://google.co.nz', &b) }.to yield_with_args(file) 
       end
     end

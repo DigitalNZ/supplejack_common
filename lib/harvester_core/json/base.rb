@@ -17,7 +17,7 @@ module HarvesterCore
 
         def document(url)
           if url.match(/^https?/)
-            HarvesterCore::Request.get(url, self._throttle)
+            HarvesterCore::Request.get(url, self._request_timeout, self._throttle)
           elsif url.match(/^file/)
             File.read(url.gsub(/file:\/\//, ""))
           end

@@ -12,8 +12,8 @@ describe HarvesterCore::Rss::Base do
   end
 
   describe "fetch_records" do
-    let(:doc) { mock(:nokogiri).as_null_object }
-    let(:node) { mock(:node).as_null_object }
+    let(:doc) { double(:nokogiri).as_null_object }
+    let(:node) { double(:node).as_null_object }
     let(:url) { "http://goo.gle" }
 
     before(:each) do
@@ -35,7 +35,7 @@ describe HarvesterCore::Rss::Base do
 
   describe "#initialize" do
     let(:xml) { "<record><title>Hi</title></record>" }
-    let(:node) { mock(:node, to_xml: xml ).as_null_object }
+    let(:node) { double(:node, to_xml: xml ).as_null_object }
 
     it "initializes the record from xml" do
       record = klass.new(xml)
@@ -52,7 +52,7 @@ describe HarvesterCore::Rss::Base do
   describe "#document" do
     let(:xml) { "<record><title>Hi</title></record>" }
     let(:record) { klass.new(xml) }
-    let(:document) { mock(:document).as_null_object }
+    let(:document) { double(:document).as_null_object }
 
     it "should parse the xml with Nokogiri" do
       Nokogiri::XML.should_receive(:parse).with(xml) { document }

@@ -3,14 +3,15 @@ require "spec_helper"
 describe HarvesterCore::Json::Base do
   
   let(:klass) { HarvesterCore::Json::Base }
-  let(:document) { mock(:document) }
-  let(:record) { mock(:record).as_null_object }
+  let(:document) { double(:document) }
+  let(:record) { double(:record).as_null_object }
 
   after do
     klass._base_urls[klass.identifier] = []
     klass._attribute_definitions[klass.identifier] = {}
     klass._rejection_rules[klass.identifier] = nil
     klass._throttle = {}
+    klass._request_timeout = 60000
   end
 
   describe ".record_selector" do
@@ -42,7 +43,8 @@ describe HarvesterCore::Json::Base do
 
     context "json web document" do
       it "stores the raw json" do
-        HarvesterCore::Request.should_receive(:get).with("http://google.com", {}) { json }
+        klass._throttle = {}
+        HarvesterCore::Request.should_receive(:get).with("http://google.com",60000, {}) { json }
         klass.document("http://google.com").should eq json
       end
     end

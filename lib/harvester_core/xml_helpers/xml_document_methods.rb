@@ -35,7 +35,7 @@ module HarvesterCore
       #
       def with_each_file(url, &block)
         if url.match(/^https?/)
-          yield HarvesterCore::Request.get(url, self._throttle)
+          yield HarvesterCore::Request.get(url,self._request_timeout, self._throttle)
         elsif url.match(/^file/)
           url = url.gsub(/file:\/\//, "")
 

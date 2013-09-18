@@ -137,6 +137,17 @@ describe HarvesterCore::DSL do
     end
   end
 
+  describe ".request_timeout" do
+    before do
+      klass._request_timeout = nil
+    end
+
+    it "should store the timeout information" do
+      klass.request_timeout(10000)
+      klass._request_timeout.should eq 10000
+    end
+  end
+
   describe ".priority" do
     it "stores the prioriy" do
       klass.priority 2

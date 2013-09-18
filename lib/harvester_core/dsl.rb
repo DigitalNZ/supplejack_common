@@ -11,6 +11,7 @@ module HarvesterCore
       class_attribute :_rejection_rules
       class_attribute :_deletion_rules
       class_attribute :_throttle
+      class_attribute :_request_timeout
       class_attribute :_environment
       class_attribute :_priority
 
@@ -23,6 +24,7 @@ module HarvesterCore
       self._deletion_rules = {}
       self._environment = {}
       self._priority = {}
+      self._request_timeout = nil
     end
 
     module ClassMethods
@@ -84,6 +86,10 @@ module HarvesterCore
       def throttle(options={})
         self._throttle ||= []
         self._throttle << options
+      end
+
+      def request_timeout(timeout)
+        self._request_timeout = timeout
       end
 
       def priority(priority)

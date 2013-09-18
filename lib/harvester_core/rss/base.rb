@@ -24,7 +24,7 @@ module HarvesterCore
         end
 
         def index_document(url)
-          xml = HarvesterCore::Request.get(url, self._throttle)
+          xml = HarvesterCore::Request.get(url, self._request_timeout, self._throttle)
           Nokogiri::XML.parse(xml)
         end
       end
