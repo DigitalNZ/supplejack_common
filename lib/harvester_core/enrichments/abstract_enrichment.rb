@@ -31,7 +31,7 @@ module HarvesterCore
     end
 
     def enrichable?
-      raise NotImple mentedError.new("All subclasses of HarvesterCore::AbstractEnrichment must override #enrichable?.")
+      raise NotImplementedError.new("All subclasses of HarvesterCore::AbstractEnrichment must override #enrichable?.")
     end
 
     def attributes
