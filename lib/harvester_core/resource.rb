@@ -2,11 +2,12 @@ module HarvesterCore
   class Resource
     include HarvesterCore::Modifiers
     
-    attr_reader :url, :throttling_options, :attributes
+    attr_reader :url, :throttling_options, :attributes, :request_timeout
 
     def initialize(url, options={})
       @url = url
       @throttling_options = options[:throttling_options] || {}
+      @request_timeout = options[:request_timeout] || 60000
       @attributes = options[:attributes] || {}
     end
 
@@ -21,7 +22,7 @@ module HarvesterCore
     protected
     
     def fetch_document
-      HarvesterCore::Request.get(url, throttling_options)
+      HarvesterCore::Request.get(url, request_timeout, throttling_options)
     end
   end
 end

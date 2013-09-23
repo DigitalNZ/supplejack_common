@@ -98,6 +98,7 @@ describe HarvesterCore::Enrichment do
 
     before do
       record.stub(:class) { mock(:class, :_throttle => {}) }
+      TestParser.stub(:_request_timeout) { nil }
     end
 
     it "should store the attributes from the enrichment" do
@@ -129,6 +130,12 @@ describe HarvesterCore::Enrichment do
     it "initializes the resource with throttle options" do
       TestParser.stub(:_throttle) { {host: "gdata.youtube.com", delay: 1} }
       HarvesterCore::Resource.should_receive(:new).with("http://goo.gle/1", {attributes: {priority: 1, source_id: "ndha_rights"}, throttling_options: {host: "gdata.youtube.com", delay: 1}})
+      enrichment.resource
+    end
+
+    it "initalizes the resource with request timeout options" do
+      TestParser.stub(:_request_timeout) { 100 }
+      HarvesterCore::Resource.should_receive(:new).with(anything, hash_including(:request_timeout => 100))
       enrichment.resource
     end
   end

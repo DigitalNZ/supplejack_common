@@ -8,8 +8,8 @@ describe HarvesterCore::Resource do
   describe "#fetch_document" do
     let(:resource) { klass.new("http://google.com/1", {throttling_options: {host: "google.com", delay: 1}}) }
 
-    it "request the resource with the throttling options" do
-      HarvesterCore::Request.should_receive(:get).with("http://google.com/1", {host: "google.com", delay: 1})
+    it "request the resource with the throttling options and request timeout" do
+      HarvesterCore::Request.should_receive(:get).with("http://google.com/1", 60000, {host: "google.com", delay: 1})
       resource.send(:fetch_document)
     end
   end

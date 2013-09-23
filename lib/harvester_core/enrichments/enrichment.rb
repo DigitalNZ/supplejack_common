@@ -54,6 +54,7 @@ module HarvesterCore
       options[:attributes] = self.attributes if self.attributes.present?
       options[:throttling_options] = parser_class._throttle if parser_class._throttle.present?
       options[:namespaces] = self._namespaces if self._namespaces.present?
+      options[:request_timeout] = parser_class._request_timeout if parser_class._request_timeout.present?
       @resource ||= resource_class.new(self._url, options)
     end
 
