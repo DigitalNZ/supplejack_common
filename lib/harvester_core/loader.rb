@@ -1,11 +1,12 @@
 module HarvesterCore
   class Loader
 
-    attr_accessor :parser, :load_error
+    attr_accessor :parser, :load_error, :environment
 
-    def initialize(parser)
+    def initialize(parser, environment)
       @parser = parser
       @loaded = nil
+      @environment = environment.to_s.camelize
     end
 
     def path
@@ -13,7 +14,7 @@ module HarvesterCore
     end
 
     def content_with_encoding
-      "# encoding: utf-8\r\nmodule LoadedParser\n" + parser.content.to_s + "\nend"
+      "# encoding: utf-8\r\nmodule LoadedParser::#{environment}\n" + parser.content.to_s + "\nend"
     end
 
     def create_tempfile
@@ -26,11 +27,11 @@ module HarvesterCore
     end
 
     def parser_class_name_with_module
-      "LoadedParser::" + parser_class_name
+      "LoadedParser::#{environment}::" + parser_class_name
     end
 
     def parser_class
-      "LoadedParser::#{parser_class_name}".constantize
+      "LoadedParser::#{environment}::#{parser_class_name}".constantize
     end
 
     def load_parser
@@ -39,7 +40,7 @@ module HarvesterCore
       create_tempfile
       clear_parser_class_definitions
       load(path)
-      @loaded = true      
+      @loaded = true
     end
 
     def loaded?
@@ -48,10 +49,10 @@ module HarvesterCore
     end
 
     def clear_parser_class_definitions
-      
-      if LoadedParser.const_defined?(parser_class_name, false)
+      mod = "LoadedParser::#{environment}".constantize
+      if mod.const_defined?(parser_class_name, false)
         parser_class.clear_definitions
-        LoadedParser.send(:remove_const, parser_class_name.to_sym)
+        mod.send(:remove_const, parser_class_name.to_sym)
       end
     end
   end

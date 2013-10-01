@@ -85,7 +85,8 @@ module HarvesterCore
 
       def include_snippet(name)
         if defined?(Snippet)
-          if snippet = Snippet.find_by_name(name)
+          environment = self.parent.name.split('::').last.downcase.to_sym
+          if snippet = Snippet.find_by_name(name, environment)
             self.class_eval <<-METHOD, __FILE__, __LINE__ + 1
               #{snippet.content}
             METHOD

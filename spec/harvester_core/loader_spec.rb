@@ -3,7 +3,7 @@ require "spec_helper"
 describe HarvesterCore::Loader do
 
   let(:parser) { mock(:parser, strategy: "json", name: "Europeana", content: "class Europeana < HarvesterCore::Json::Base; end", file_name: "europeana.rb") }
-  let(:loader) { HarvesterCore::Loader.new(parser) }
+  let(:loader) { HarvesterCore::Loader.new(parser, "staging") }
 
   before(:each) do
     HarvesterCore.parser_base_path = File.dirname(__FILE__) + "/tmp"
@@ -12,7 +12,7 @@ describe HarvesterCore::Loader do
   after do
     FileUtils.rmdir(HarvesterCore.parser_base_path)
   end
-  
+
   describe "#path" do
     it "builds a absolute path to the temp file" do
       loader.path.should eq "#{File.dirname(__FILE__)}/tmp/json/europeana.rb"
@@ -27,14 +27,14 @@ describe HarvesterCore::Loader do
 
   describe "#content_with_encoding" do
     it "should add a utf-8 encoding to the top of the file" do
-      loader.content_with_encoding.should eq "# encoding: utf-8\r\nmodule LoadedParser\nclass Europeana < HarvesterCore::Json::Base; end\nend"
+      loader.content_with_encoding.should eq "# encoding: utf-8\r\nmodule LoadedParser::Staging\nclass Europeana < HarvesterCore::Json::Base; end\nend"
     end
   end
 
   describe "#create_tempfile" do
     it "creates a new tempfile with the path" do
       loader.create_tempfile
-      File.read(loader.path).should eq "# encoding: utf-8\r\nmodule LoadedParser\nclass Europeana < HarvesterCore::Json::Base; end\nend"
+      File.read(loader.path).should eq "# encoding: utf-8\r\nmodule LoadedParser::Staging\nclass Europeana < HarvesterCore::Json::Base; end\nend"
     end
   end
 
@@ -53,12 +53,12 @@ describe HarvesterCore::Loader do
   describe "#parser_class_name_with_module" do
     it "removes whitespace from the name" do
       parser.stub(:name) { "NatLib Pages" }
-      loader.parser_class_name_with_module.should eq "LoadedParser::NatLibPages"
+      loader.parser_class_name_with_module.should eq "LoadedParser::Staging::NatLibPages"
     end
 
     it "capitalizes each word" do
       parser.stub(:name) { "nlnzcat catalog" }
-      loader.parser_class_name_with_module.should eq "LoadedParser::NlnzcatCatalog"
+      loader.parser_class_name_with_module.should eq "LoadedParser::Staging::NlnzcatCatalog"
     end
   end
 
@@ -68,7 +68,7 @@ describe HarvesterCore::Loader do
     end
 
     it "returns the class singleton" do
-      loader.parser_class.should eq LoadedParser::Europeana
+      loader.parser_class.should eq LoadedParser::Staging::Europeana
     end
   end
 
@@ -107,7 +107,7 @@ describe HarvesterCore::Loader do
     end
 
     it "clears the parser class definitions" do
-      LoadedParser::Europeana.should_receive(:clear_definitions)
+      LoadedParser::Staging::Europeana.should_receive(:clear_definitions)
       loader.clear_parser_class_definitions
     end
   end

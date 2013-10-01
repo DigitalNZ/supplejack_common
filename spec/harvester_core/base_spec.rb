@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+class Snippet
+
+end
+
 describe HarvesterCore::Base do
   let(:klass) { HarvesterCore::Base }
 
@@ -122,7 +126,19 @@ describe HarvesterCore::Base do
       klass.clear_definitions
       klass.enrichment_definitions.should be_empty
     end
-    
+
+    describe ".include_snippet" do
+      before do
+        Snippet.stub(:find_by_name)
+      end
+
+      it "finds the snippet by name and environment" do
+        klass.stub_chain(:parent, :name) { "TAPUHI::Staging" }
+        Snippet.should_receive(:find_by_name).with("snip", :staging)
+        klass.include_snippet("snip")
+      end
+    end
+
   end
 
   describe "#attribute_definitions" do
