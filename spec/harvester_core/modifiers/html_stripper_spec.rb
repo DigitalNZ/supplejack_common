@@ -19,10 +19,16 @@ describe HarvesterCore::Modifiers::HtmlStripper do
       stripper.modify.should eq ["Stripped"]
     end
 
-    it "doens't try to strip_html from non strings" do
+    it "doesn't try to strip_html from non strings" do
       node = mock(:node)
       stripper.stub(:original_value) { [node] }
       stripper.modify.should eq [node]
+    end
+
+    it 'removes invalid encoded characters' do
+      invalid_html = 'Something with invalid characters \x80 and tags.'
+      stripper.stub(:original_value) { [invalid_html] }
+      stripper.modify.should eq ["Something with invalid characters \\x80 and tags."]
     end
   end
 end

@@ -20,9 +20,14 @@ module HarvesterCore
       end
 
       def strip_tags(html)
+        html = validate_encoding(html)
         self.class.full_sanitizer.sanitize(html)
       end
-      
+
+      def validate_encoding(html)
+        return html.dup.force_encoding('UTF-8').encode('UTF-16', invalid: :replace, replace: '').encode('UTF-8')
+      end
+
     end
   end
 end
