@@ -13,7 +13,9 @@ module HarvesterCore
     attr_accessor :url, :throttling_options, :request_timeout
 
     def initialize(url, request_timeout, options=[])
-      @url = URI.escape(url)
+      # Prevents from escaping escaped URL
+      # Sifter #6439
+      @url = URI.escape(URI.unescape(url))
       
       options ||= []
       @throttling_options = Hash[options.map {|option| [option[:host], option[:delay]] }]
