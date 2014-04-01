@@ -16,5 +16,10 @@ module HarvesterCore
         document[path]
       end
     end
+
+    def fetch(path)
+      value = JsonPath.on(document, path)
+      HarvesterCore::AttributeValue.new(value)
+    end
   end
 end

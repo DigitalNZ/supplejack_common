@@ -11,4 +11,13 @@ describe HarvesterCore::JsonResource do
       resource.document.should eq({"title" => "Value"})
     end
   end
+
+  describe '#fetch' do
+    it 'returns the value object' do
+    	resource.stub(:fetch_document) { {title: 'Lorem'}.to_json }
+    	value = resource.fetch('title')
+      value.should be_a HarvesterCore::AttributeValue
+      value.to_a.should eq ['Lorem']
+    end
+  end
 end
