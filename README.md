@@ -1,7 +1,6 @@
-Harvester
-=========
+# Supplejack Harvester Core
 
-Prototype that showcases and demonstrates how the DigitalNZ harvester could be rewritten with a more flexible, easy to maintain and testable approach.
+The Supplejack Harvester Core provides the Parser DSL that is used in the [Supplejack Manager](https://github.com/DigitalNZ/supplejack_manager) and [Supplejack Worker](https://github.com/DigitalNZ/supplejack_worker)
 
 ## Architecture
 
@@ -49,9 +48,6 @@ Overtime we can very easily expand this set of tools solve common problems acros
 ## Testing
 Since each adapater and each parser file are just ruby classes with very little dependencies it is very easy to test them with a predefined set of data.
 
-## Vision
-The vision of this proyect is to have something that change very easily since harvesting in itself is a very unpredictable task with very different types of sources and also the data requierements for the API evolve.
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -66,14 +62,14 @@ Or install it yourself as:
 
     $ gem install harvester_core
 
-## Usage
+## COPYRIGHT AND LICENSING  
 
-TODO: Write usage instructions here
+### SUPPLEJACK CODE - GNU GENERAL PUBLIC LICENCE, VERSION 3  
 
-## Contributing
+Supplejack, a tool for aggregating, searching and sharing metadata records, is Crown copyright (C) 2014, New Zealand Government. 
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. http://digitalnz.org/supplejack  
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+
+See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses / http://www.gnu.org/licenses/gpl-3.0.txt
