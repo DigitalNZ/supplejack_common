@@ -2,21 +2,7 @@
 
 The Supplejack Harvester Core provides the Parser DSL that is used in the [Supplejack Manager](https://github.com/DigitalNZ/supplejack_manager) and [Supplejack Worker](https://github.com/DigitalNZ/supplejack_worker).
 
-Full documentation on the Supplejack Stack can be found at http://digitalnz.github.io/supplejack/.
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'harvester_core'
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install harvester_core
+For more information on the Supplejack Stack refer to the [documentation](http://digitalnz.github.io/supplejack)
 
 ## COPYRIGHT AND LICENSING  
 
