@@ -1,4 +1,12 @@
 # -*- encoding: utf-8 -*-
+
+# The Supplejack code is Crown copyright (C) 2014, New Zealand Government,
+# and is licensed under the GNU General Public License, version 3. 
+# See https://github.com/DigitalNZ/supplejack for details. 
+# 
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
+# http://digitalnz.org/supplejack_core 
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'harvester_core/version'
@@ -6,8 +14,8 @@ require 'harvester_core/version'
 Gem::Specification.new do |gem|
   gem.name          = "harvester_core"
   gem.version       = HarvesterCore::VERSION
-  gem.authors       = ["Federico Gonzalez"]
-  gem.email         = ["fedegl@gmail.com"]
+  gem.authors       = ["DigitalNZ"]
+  gem.email         = ["info@digitalnz.org"]
   gem.description   = %q{DNZ Harvester project which provides a DSL to harvest records of different sources}
   gem.summary       = %q{DNZ Harvester project which provides a DSL to harvest records of different sources}
   gem.homepage      = ""
