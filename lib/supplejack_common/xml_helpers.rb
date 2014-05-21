@@ -3,6 +3,6 @@
 # See https://github.com/DigitalNZ/supplejack for details. 
 # 
 # Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack_core 
+# http://digitalnz.org/supplejack 
 
 Dir[File.dirname(__FILE__) + '/xml_helpers/*.rb'].each {|file| require file }

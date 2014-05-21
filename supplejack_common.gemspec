@@ -5,7 +5,7 @@
 # See https://github.com/DigitalNZ/supplejack for details. 
 # 
 # Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack_core 
+# http://digitalnz.org/supplejack 
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)

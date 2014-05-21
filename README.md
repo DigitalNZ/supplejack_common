@@ -1,6 +1,6 @@
-# Supplejack Harvester Core
+# Supplejack Common
 
-The Supplejack Harvester Core provides the Parser DSL that is used in the [Supplejack Manager](https://github.com/DigitalNZ/supplejack_manager) and [Supplejack Worker](https://github.com/DigitalNZ/supplejack_worker).
+The Supplejack Common provides the [Parser DSL](http://digitalnz.github.io/supplejack/manager/parser-dsl-domain-specific-language.html) that is used in the [Supplejack Manager](https://github.com/DigitalNZ/supplejack_manager) and [Supplejack Worker](https://github.com/DigitalNZ/supplejack_worker).
 
 For more information on the Supplejack Stack refer to the [documentation](http://digitalnz.github.io/supplejack)
 
