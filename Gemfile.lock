@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    harvester_core (0.0.1)
+    supplejack_common (0.0.1)
       actionpack (~> 3.2)
       activesupport (~> 3.2)
       chronic (~> 0.8.0)
@@ -111,9 +111,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  harvester_core!
   oai!
   pry
   rake
   rspec (~> 2.11.0)
+  supplejack_common!
   webmock (~> 1.8)

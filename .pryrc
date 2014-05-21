@@ -3,11 +3,11 @@ Pry.editor = "subl"
 require "rubygems"
 require "bundler/setup"
 
-require 'harvester_core'
+require 'supplejack_common'
 
 def reload!
   files_names = Dir.glob("lib/**/*.rb")
-  files_names.delete("lib/harvester_core/version.rb")
+  files_names.delete("lib/supplejack_common/version.rb")
   files_names.each do |name|
     eval(File.read(name))
   end

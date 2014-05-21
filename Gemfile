@@ -1,4 +1,4 @@
-# The Supplejack code is Crown copyright (C) 2014, New Zealand Government,
+# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
 # and is licensed under the GNU General Public License, version 3. 
 # See https://github.com/DigitalNZ/supplejack for details. 
 # 
@@ -7,7 +7,7 @@
 
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in harvester_core.gemspec
+# Specify your gem's dependencies in supplejack_common.gemspec
 gemspec
 
 gem "oai", git: "https://github.com/code4lib/ruby-oai.git"
