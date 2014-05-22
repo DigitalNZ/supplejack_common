@@ -27,4 +27,12 @@ describe SupplejackCommon::JsonResource do
       value.to_a.should eq ['Lorem']
     end
   end
+
+  describe '#requirements' do
+    let(:json_resource) { klass.new("http://google.com/1", { attributes: { requirements: { required_attr: 'Lorem' } } }) }  
+
+    it "returns 'requires' value" do
+      expect(json_resource.requirements).to include(required_attr: 'Lorem')
+    end
+  end
 end

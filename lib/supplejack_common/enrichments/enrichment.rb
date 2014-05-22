@@ -59,6 +59,7 @@ module SupplejackCommon
       resource_class = "SupplejackCommon::#{_format.to_s.capitalize}Resource".constantize
       options = {}
       options[:attributes] = self.attributes if self.attributes.present?
+      options[:attributes][:requirements] = requirements if requirements.any?
       options[:throttling_options] = parser_class._throttle if parser_class._throttle.present?
       options[:namespaces] = self._namespaces if self._namespaces.present?
       options[:request_timeout] = parser_class._request_timeout if parser_class._request_timeout.present?

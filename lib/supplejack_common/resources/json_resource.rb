@@ -28,5 +28,9 @@ module SupplejackCommon
       value = JsonPath.on(document, path)
       SupplejackCommon::AttributeValue.new(value)
     end
+
+    def requirements
+      self.attributes[:requirements]
+    end
   end
 end
