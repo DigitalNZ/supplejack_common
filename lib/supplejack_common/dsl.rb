@@ -21,6 +21,7 @@ module SupplejackCommon
       class_attribute :_request_timeout
       class_attribute :_environment
       class_attribute :_priority
+      class_attribute :_match_concepts
 
       self._base_urls = {}
       self._attribute_definitions = {}
@@ -32,6 +33,7 @@ module SupplejackCommon
       self._environment = {}
       self._priority = {}
       self._request_timeout = nil
+      self._match_concepts = {}
     end
 
     module ClassMethods
@@ -101,6 +103,10 @@ module SupplejackCommon
 
       def priority(priority)
         self._priority[self.identifier] = priority
+      end
+
+      def match_concepts(match_concepts)
+        self._match_concepts[self.identifier] = match_concepts
       end
     end
   end

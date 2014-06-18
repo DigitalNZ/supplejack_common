@@ -79,6 +79,10 @@ module SupplejackCommon
         self._priority[self.identifier] || 0
       end
 
+      def match_concepts_rule
+        self._match_concepts[self.identifier]
+      end
+
       def clear_definitions
         self._base_urls[self.identifier] = []
         self._attribute_definitions[self.identifier] = {}
@@ -88,6 +92,7 @@ module SupplejackCommon
         self._rejection_rules[self.identifier] = nil
         self._deletion_rules[self.identifier] = nil
         self._priority[self.identifier] = nil
+        self._match_concepts[self.identifier] = nil
       end
 
       def include_snippet(name)
@@ -111,6 +116,7 @@ module SupplejackCommon
 
     def set_attribute_values
       @attributes[:priority] = self.class.get_priority
+      @attributes[:match_concepts] = self.class.match_concepts_rule
 
       begin
         self.class.attribute_definitions.each do |name, options|

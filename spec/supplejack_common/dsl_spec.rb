@@ -161,4 +161,11 @@ describe SupplejackCommon::DSL do
       klass._priority[klass.identifier].should eq 2
     end
   end
+
+  describe ".match_concepts" do
+    it "stores the match concept rule" do
+      klass.match_concepts :create_or_match
+      klass._match_concepts[klass.identifier].should eq :create_or_match
+    end
+  end
 end

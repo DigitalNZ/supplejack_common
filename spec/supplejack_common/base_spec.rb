@@ -182,19 +182,32 @@ describe SupplejackCommon::Base do
     end
   end
 
+  describe ".match_concepts_rule" do
+    it "returns the match_concepts_rule for the klass" do
+      klass._match_concepts[klass.identifier] = :create
+      klass.match_concepts_rule.should eq :create
+    end
+  end
+
   describe "#set_attribute_values" do
     let(:record) { klass.new }
+    
+    it "should set the priority" do
+      klass.priority 2
+      record.set_attribute_values
+      record.attributes.should include(priority: 2)
+    end
+
+    it "should set the match_concepts" do
+      klass.match_concepts :create_or_match
+      record.set_attribute_values
+      record.attributes.should include(match_concepts: :create_or_match)
+    end
 
     it "should run values through the attribute value object so we do not get empty strings and nils" do
       klass.attribute :category, {default: ["value", nil]}
       record.set_attribute_values
       record.attributes[:category].should eq ["value"]
-    end
-
-    it "should set the priority" do
-      klass.priority 2
-      record.set_attribute_values
-      record.attributes.should include(priority: 2)
     end
 
     it "assigns the attribute values in a hash" do
