@@ -12,6 +12,11 @@ describe SupplejackCommon::Modifiers do
   class ModifiersTestParser < SupplejackCommon::Base
   end
 
+  module SupplejackApi
+    class Concept
+    end
+  end
+
   let(:record) { ModifiersTestParser.new }
 
   before(:each) do
@@ -37,6 +42,16 @@ describe SupplejackCommon::Modifiers do
     it "joins the values with a comma" do
       value = record.compose("dogs", "cats", extension, {separator: ", "})
       value.to_a.should eq ["dogs, cats, thumb.jpg"]
+    end
+  end
+
+  describe "#concept_lookup" do
+    before do
+      SupplejackApi::Concept.stub_chain(:where, :map).and_return([1,2,3])
+    end
+    it "return concepts that has fragments with sameAs field contains lookup url" do
+      values = record.concept_lookup("http://localhost.com")
+      values.to_a.should eq [1,2,3]
     end
   end
 end

@@ -44,5 +44,10 @@ module SupplejackCommon
 
       SupplejackCommon::AttributeValue.new(values.flatten.join(options[:separator]))
     end
+
+    def concept_lookup(url)
+      values = SupplejackApi::Concept.where("fragments.sameAs" => url).map(&:concept_id)
+      SupplejackCommon::AttributeValue.new(values)
+    end
   end
 end
