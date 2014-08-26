@@ -10,6 +10,5 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in supplejack_common.gemspec
 gemspec
 
-gem "oai", git: "https://github.com/code4lib/ruby-oai.git"
-
-gem "pry"
+gem 'oai', '~> 0.3.1'
+gem 'pry'

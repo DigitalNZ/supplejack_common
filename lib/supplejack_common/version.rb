@@ -6,5 +6,5 @@
 # http://digitalnz.org/supplejack 
 
 module SupplejackCommon
-  VERSION = "0.0.1"
+  VERSION = "0.0.2"
 end

@@ -5,7 +5,11 @@
 # Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
 # http://digitalnz.org/supplejack 
 
-require 'action_controller/vendor/html-scanner'
+begin
+  require 'action_view/vendor/html-scanner'
+rescue Exception => e
+  require 'action_controller/vendor/html-scanner' 
+end
 
 module SupplejackCommon
   module Modifiers
