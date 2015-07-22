@@ -14,6 +14,13 @@ module SupplejackCommon
     def enrich_groups
       if parent_tap = record.parent_tap_id
         parent = find_record(parent_tap)
+
+        if parent.nil?
+          Sidekiq.logger.info '------------------------------'
+          Sidekiq.logger.info "Parent record not found for #{record.record_id} - #{parent_tap}"
+          Sidekiq.logger.info '------------------------------'
+        end
+        
         @record_attributes[parent.id][:category] << "Groups"
         @record_attributes[parent.id][:collection_title] << parent.title
 
