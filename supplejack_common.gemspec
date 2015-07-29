@@ -38,6 +38,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "dimensions"
   gem.add_runtime_dependency "mimemagic"
   gem.add_runtime_dependency "json",            "~> 1.7.7"
+  gem.add_runtime_dependency "sanitize"
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec",      "~> 2.11.0"

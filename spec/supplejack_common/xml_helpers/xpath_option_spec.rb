@@ -14,21 +14,26 @@ describe SupplejackCommon::XpathOption do
   let(:xo) { SupplejackCommon::XpathOption.new(document, options) }
 
   describe "#value" do
-    let(:nodes) { mock(:nodes, text: "Value") }
+    let(:nodes) { mock(:nodes, to_html: "<br>Value<br>") }
     before { xo.stub(:nodes) { nodes } }
 
-    it "returns the text from the nodes" do
+    it "returns the sanitized html from the nodes" do
       xo.value.should eq "Value"
     end
 
-    it "returns the text from a array of NodeSets" do
-      xo.stub(:nodes) { [mock(:node_set, text: "Value")] }
+    it "returns the sanitized html from an array of NodeSets" do
+      xo.stub(:nodes) { [mock(:node_set, to_html: "Value")] }
       xo.value.should eq ["Value"]
     end
 
     it "returns the node object" do
       xo.stub(:options) { {xpath: "table/tr", object: true} }
       xo.value.should eq nodes
+    end
+
+    it "lets you specify what elements not to sanitize" do
+      xo.stub(:options){{sanitize_config: {elements: ['br']}}}
+      expect(xo.value).to eq("<br>Value<br>")
     end
   end
 
