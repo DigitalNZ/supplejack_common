@@ -15,6 +15,7 @@ module SupplejackCommon
       @document = document
       @options = options
       @namespace_definitions = namespace_definitions || {}
+      @default_sanitization_config = Sanitize::Config.merge(Sanitize::Config::DEFAULT, whitespace_elements: [])
     end
 
     def value
@@ -42,7 +43,7 @@ module SupplejackCommon
     end
 
     def extract_node_value(node)
-      Sanitize.fragment(node.to_html, options[:sanitize_config] || Sanitize::Config::RESTRICTED).strip
+      Sanitize.fragment(node.to_html, options[:sanitize_config] || @default_sanitization_config).strip
     end
 
     def xpath_value(xpath)
