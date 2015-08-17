@@ -35,6 +35,13 @@ describe SupplejackCommon::XpathOption do
       xo.stub(:options){{sanitize_config: {elements: ['br']}}}
       expect(xo.value).to eq("<br>Value<br>")
     end
+
+    it "does not encode special entities" do
+      node = mock(:nodes, to_html: "Test & Test")
+      xo.stub(:nodes) {node}
+
+      expect(xo.value).to eq("Test & Test")
+    end
   end
 
   describe "#xpath_value" do

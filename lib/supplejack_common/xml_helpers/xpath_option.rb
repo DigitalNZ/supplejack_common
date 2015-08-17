@@ -5,6 +5,7 @@
 # Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
 # http://digitalnz.org/supplejack 
 require 'sanitize'
+require 'htmlentities'
 
 module SupplejackCommon
   class XpathOption
@@ -42,7 +43,14 @@ module SupplejackCommon
     end
 
     def extract_node_value(node)
-      Sanitize.fragment(node.to_html, options[:sanitize_config] || @default_sanitization_config).strip
+      sanitized_value = Sanitize.fragment(node.to_html, options[:sanitize_config] || @default_sanitization_config).strip
+      decoded_value = HTMLEntities.new.decode sanitized_value
+
+      if match = decoded_value.match(/.*=(?:"|')(.*)(?:"|')/)
+        return match.captures.first
+      end
+
+      decoded_value
     end
 
     def xpath_value(xpath)

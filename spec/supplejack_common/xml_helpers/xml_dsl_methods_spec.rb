@@ -36,6 +36,12 @@ describe SupplejackCommon::XmlDslMethods do
       record.stub(:document) { Nokogiri.parse(%q{<doc><dc:item xmlns:dc="http://purl.org/dc/elements/1.1/">1</dc:item></doc>}) }
       record.fetch("//dc:item").to_a.should eq ["1"]
     end
+
+    it "should fetch just the attribute value" do
+      record.stub(:document) {Nokogiri.parse(%q{<head><meta name="DC.language" content="en" scheme="RFC1766"/> </head>})}
+
+      expect(record.fetch("//head/meta[@name='DC.language']/@content").to_a).to eq(["en"])
+    end
   end
   
   describe "#node" do
