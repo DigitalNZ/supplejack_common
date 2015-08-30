@@ -21,11 +21,25 @@ module SupplejackCommon
     def value
       return nodes if options[:object]
 
-      if nodes.is_a?(Array)
-        nodes.map(&method(:extract_node_value))
-      else
-        extract_node_value(nodes)
-      end
+      strategies = {
+        custom_sanitize: ->() {
+          if nodes.is_a?(Array)
+            nodes.map(&method(:extract_node_value))
+          else
+            extract_node_value(nodes)
+          end
+        },
+        normal: ->() {
+          if nodes.is_a?(Array)
+            nodes.map(&:text)
+          else
+            nodes.text
+          end
+        }
+      }
+      strategy = options[:sanitize_config] ? :custom_sanitize : :normal
+
+      strategies[strategy].call
     end
 
     private
@@ -45,10 +59,6 @@ module SupplejackCommon
     def extract_node_value(node)
       sanitized_value = Sanitize.fragment(node.to_html, options[:sanitize_config] || @default_sanitization_config).strip
       decoded_value = HTMLEntities.new.decode sanitized_value
-
-      if match = decoded_value.match(/.*=(?:"|')(.*)(?:"|')/)
-        return match.captures.first
-      end
 
       decoded_value
     end
