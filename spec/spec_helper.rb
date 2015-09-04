@@ -7,6 +7,9 @@
 
 require 'supplejack_common'
 require 'webmock/rspec'
+require 'simplecov'
+
+SimpleCov.start
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true

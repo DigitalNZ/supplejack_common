@@ -30,7 +30,7 @@ module SupplejackCommon
           end
         end
 
-        def records_json(url)
+        def records_json(url)         
           JsonPath.on(document(url), self._record_selector).try(:first)
         end
 
@@ -39,7 +39,7 @@ module SupplejackCommon
           records_json(url).map {|attributes| self.new(attributes) }
         end
 
-        def records(options={})
+        def records(options={})          
           SupplejackCommon::PaginatedCollection.new(self, self.pagination_options || {}, options)
         end
 
@@ -66,7 +66,7 @@ module SupplejackCommon
         @json
       end
 
-      def raw_data
+      def raw_data      
         document
       end
 
@@ -85,6 +85,7 @@ module SupplejackCommon
       end
 
       def fetch(path)
+        binding.pry
         value = JsonPath.on(document, path)
         SupplejackCommon::AttributeValue.new(value)
       end
