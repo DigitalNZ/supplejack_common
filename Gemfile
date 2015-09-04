@@ -12,10 +12,7 @@ gemspec
 
 gem 'oai', '~> 0.3.1'
 gem 'pry'
-<<<<<<< HEAD
-=======
 
 group :test do
   gem 'simplecov', require: false
 end
->>>>>>> db01fc3... Added Simplecov
