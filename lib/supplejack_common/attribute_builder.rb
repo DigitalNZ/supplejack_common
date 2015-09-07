@@ -43,7 +43,7 @@ module SupplejackCommon
           return evaluate_attribute_block(&block)
         rescue StandardError => e
           self.errors ||= []
-          self.errors << "Error in the block :) : #{e.message}"
+          self.errors << "Error in the block: #{e.message}"
           return nil
         end
       else
