@@ -31,7 +31,9 @@ module SupplejackCommon
         end
 
         def records_json(url)         
-          JsonPath.on(document(url), self._record_selector).try(:first)
+          records = JsonPath.on(document(url), self._record_selector).try(:first)
+          records = [records] if records.is_a? Hash
+          records
         end
 
         def fetch_records(url)
@@ -85,7 +87,6 @@ module SupplejackCommon
       end
 
       def fetch(path)
-        binding.pry
         value = JsonPath.on(document, path)
         SupplejackCommon::AttributeValue.new(value)
       end

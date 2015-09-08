@@ -36,12 +36,19 @@ describe SupplejackCommon::Json::Base do
   end
 
   describe ".records_json" do
-    let(:json) { %q{{"items": [{"title": "Record1"},{"title": "Record2"},{"title": "Record3"}]}} }
+    let(:json_example_1) { %q{{"items": [{"title": "Record1"},{"title": "Record2"},{"title": "Record3"}]}} }
+    let(:json_example_2) { %q{{"items": {"title": "Record1"}}} }
 
     it "returns an array of records with the parsed json" do
-      klass.stub(:document) { json }
+      klass.stub(:document) { json_example_1 }
       klass.record_selector "$.items"
       klass.records_json("http://goo.gle.com/1").should eq [{"title" => "Record1"}, {"title" => "Record2"}, {"title" => "Record3"}]
+    end
+
+    it "returns an array of records with the parsed json when json object is not array" do
+      klass.stub(:document) { json_example_2 }
+      klass.record_selector "$.items"
+      klass.records_json("http://goo.gle.com/1").should eq [{"title" => "Record1"}]
     end
   end
 
