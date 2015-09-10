@@ -14,7 +14,7 @@ describe SupplejackCommon::XpathOption do
   let(:xo) { SupplejackCommon::XpathOption.new(document, options) }
 
   describe "#value" do
-    let(:nodes) { mock(:nodes, to_html: "<br>Value<br>") }
+    let(:nodes) { mock(:nodes, text: "Value") }
     before { xo.stub(:nodes) { nodes } }
 
     it "returns the sanitized html from the nodes" do
@@ -22,7 +22,7 @@ describe SupplejackCommon::XpathOption do
     end
 
     it "returns the sanitized html from an array of NodeSets" do
-      xo.stub(:nodes) { [mock(:node_set, to_html: "Value")] }
+      xo.stub(:nodes) { [mock(:node_set, text: "Value")] }
       xo.value.should eq ["Value"]
     end
 
@@ -31,16 +31,24 @@ describe SupplejackCommon::XpathOption do
       xo.value.should eq nodes
     end
 
-    it "lets you specify what elements not to sanitize" do
-      xo.stub(:options){{sanitize_config: {elements: ['br']}}}
-      expect(xo.value).to eq("<br>Value<br>")
-    end
+    context "custom sanitization settings" do
+      let(:nodes) { mock(:nodes, to_html: "<br>Value<br>") }
+      before { xo.stub(:nodes) { nodes } }
 
-    it "does not encode special entities" do
-      node = mock(:nodes, to_html: "Test & Test")
-      xo.stub(:nodes) {node}
+      before do
+        xo.stub(:options){{sanitize_config: {elements: ['br']}}}
+      end
 
-      expect(xo.value).to eq("Test & Test")
+      it "lets you specify what elements not to sanitize" do
+        expect(xo.value).to eq("<br>Value<br>")
+      end
+
+      it "does not encode special entities" do
+        node = mock(:nodes, to_html: "<br>Test & Test<br>")
+        xo.stub(:nodes) {node}
+
+        expect(xo.value).to eq("<br>Test & Test<br>")
+      end
     end
   end
 
