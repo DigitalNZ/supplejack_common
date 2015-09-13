@@ -23,30 +23,35 @@ module SupplejackCommon
       @per_page             = pagination_options[:per_page]
       @page                 = pagination_options[:page]
       @type                 = pagination_options[:type]
-
       @options = options
       @counter = 0
     end
 
     def each(&block)
       klass.base_urls.each do |base_url|
-        @records = klass.fetch_records(next_url(base_url))
-        self.total = klass._total_results if paginated?
+        begin
+          @records = klass.fetch_records(next_url(base_url))
 
-        unless yield_from_records(&block)
-          return nil
-        end
+          self.total = klass._total_results if paginated?
 
-        if paginated?
-          while more_results? do
-            @records.clear
-            @records = klass.fetch_records(next_url(base_url))
+          unless yield_from_records(&block)
+            return nil
+          end
+        rescue RestClient::ResourceNotFound => e
+          puts "EXCEPTION: #{e.message}"
+          klass._errors[base_url] = e.message
+        ensure
+          if paginated?
+            while more_results? do
+              @records.clear
+              @records = klass.fetch_records(next_url(base_url))
 
-            unless yield_from_records(&block)
-              return nil
+              unless yield_from_records(&block)
+                return nil
+              end
             end
           end
-        end
+        end  
       end
     end
 
