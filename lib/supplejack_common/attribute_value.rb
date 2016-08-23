@@ -1,11 +1,14 @@
-# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# The Supplejack Common code is
+# Crown copyright (C) 2014, New Zealand Government,
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the
+# National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 module SupplejackCommon
+  #  AttributeValue
   class AttributeValue
 
     attr_reader :original_value
@@ -39,64 +42,75 @@ module SupplejackCommon
 
     def includes?(value)
       if value.is_a?(Regexp)
-        !!original_value.detect {|v| v.match(value) }
+        !!original_value.detect { |v| v.match(value) }
       else
         original_value.include?(value)
       end
     end
 
-    def as_json(options={})
+    def as_json(options = {})
       original_value
     end
 
-    alias_method  :include?, :includes?
+    alias_method :include?, :includes?
 
     def join(joiner)
       SupplejackCommon::Modifiers::Joiner.new(original_value, joiner).value
     end
 
     def find_with(regexp)
-      SupplejackCommon::Modifiers::FinderWith.new(original_value, regexp, :first).value
+      SupplejackCommon::Modifiers::FinderWith.new(original_value,
+                                                  regexp, :first).value
     end
 
     def find_all_with(regexp)
-      SupplejackCommon::Modifiers::FinderWith.new(original_value, regexp, :all).value
+      SupplejackCommon::Modifiers::FinderWith.new(original_value,
+                                                  regexp, :all).value
     end
 
     def find_without(regexp)
-      SupplejackCommon::Modifiers::FinderWithout.new(original_value, regexp, :first).value
+      SupplejackCommon::Modifiers::FinderWithout.new(original_value,
+                                                     regexp, :first).value
     end
 
     def find_all_without(regexp)
-      SupplejackCommon::Modifiers::FinderWithout.new(original_value, regexp, :all).value
+      SupplejackCommon::Modifiers::FinderWithout.new(original_value,
+                                                     regexp, :all).value
     end
 
     def mapping(replacement_rules)
-      SupplejackCommon::Modifiers::Mapper.new(original_value, replacement_rules).value
+      SupplejackCommon::Modifiers::Mapper.new(original_value,
+                                              replacement_rules).value
     end
 
-    def select(start_range, end_range=nil)
-      SupplejackCommon::Modifiers::RangeSelector.new(original_value, start_range, end_range).value
+    def select(start_range, end_range = nil)
+      SupplejackCommon::Modifiers::RangeSelector.new(original_value,
+                                                     start_range,
+                                                     end_range).value
     end
 
     def add(new_value)
-      SupplejackCommon::Modifiers::Adder.new(original_value, new_value).value
+      SupplejackCommon::Modifiers::Adder.new(original_value,
+                                             new_value).value
     end
 
     def split(split_value)
-      SupplejackCommon::Modifiers::Splitter.new(original_value, split_value).value
+      SupplejackCommon::Modifiers::Splitter.new(original_value,
+                                                split_value).value
     end
 
     def compact_whitespace
       SupplejackCommon::Modifiers::WhitespaceStripper.new(original_value).value
     end
 
-    def truncate(length, omission="...")
-      SupplejackCommon::Modifiers::Truncator.new(original_value, length, omission).value
+    def truncate(length, omission = '...')
+      SupplejackCommon::Modifiers::Truncator.new(original_value,
+                                                 length, omission).value
     end
 
-    def to_date(format=nil)
-      SupplejackCommon::Modifiers::DateParser.new(original_value, format).value
+    def to_date(format = nil)
+      SupplejackCommon::Modifiers::DateParser.new(original_value,
+                                                  format).value
     end
 
     def downcase
