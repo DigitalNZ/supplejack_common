@@ -1,14 +1,15 @@
-# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# The Supplejack Common code is
+# Crown copyright (C) 2014, New Zealand Government,
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the
+# National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 module SupplejackCommon
-  
+  # AttributeBuilder
   class AttributeBuilder
-
     attr_reader :record, :attribute_name, :options, :errors
 
     def initialize(record, attribute_name, options)
@@ -20,19 +21,19 @@ module SupplejackCommon
 
     def transform
       value = SupplejackCommon::Utils.array(attribute_value)
-      value = mapping_option(value, options[:mappings]) if options.has_key? :mappings
-      value = split_option(value, options[:separator]) if options.has_key? :separator
-      value = join_option(value, options[:join]) if options.has_key? :join
+      value = mapping_option(value, options[:mappings]) if options.key? :mappings
+      value = split_option(value, options[:separator]) if options.key? :separator
+      value = join_option(value, options[:join]) if options.key? :join
       value = strip_html_option(value)
       value = strip_whitespace_option(value)
       value = compact_whitespace(value)
-      value = truncate_option(value, options[:truncate]) if options.has_key? :truncate
-      value = parse_date_option(value, options[:date]) if options.has_key? :date
+      value = truncate_option(value, options[:truncate]) if options.key? :truncate
+      value = parse_date_option(value, options[:date]) if options.key? :date
       value.uniq
     end
 
     def attribute_value
-      return options[:default] if options.has_key? :default
+      return options[:default] if options.key? :default
       return record.strategy_value(options)
     end
 
@@ -65,11 +66,13 @@ module SupplejackCommon
     end
 
     def split_option(original_value, separator)
-      SupplejackCommon::Modifiers::Splitter.new(original_value, separator).modify
+      SupplejackCommon::Modifiers::Splitter.new(original_value,
+                                                separator).modify
     end
 
     def join_option(original_value, joiner)
-      SupplejackCommon::Modifiers::Joiner.new(original_value, joiner).modify
+      SupplejackCommon::Modifiers::Joiner.new(original_value,
+                                              joiner).modify
     end
 
     def strip_html_option(original_value)
@@ -81,7 +84,7 @@ module SupplejackCommon
     end
 
     def truncate_option(original_value, options)
-      omission = "..."
+      omission = '...'
       if options.is_a?(Hash)
         omission = options[:omission].to_s
         length = options[:length].to_i
@@ -89,15 +92,18 @@ module SupplejackCommon
         length = options
       end
 
-      SupplejackCommon::Modifiers::Truncator.new(original_value, length, omission).modify
+      SupplejackCommon::Modifiers::Truncator.new(original_value,
+                                                 length, omission).modify
     end
 
     def parse_date_option(original_value, date_format)
-      SupplejackCommon::Modifiers::DateParser.new(original_value, date_format).modify
+      SupplejackCommon::Modifiers::DateParser.new(original_value,
+                                                  date_format).modify
     end
 
-    def mapping_option(original_value, mappings={})
-      SupplejackCommon::Modifiers::Mapper.new(original_value, mappings).modify
+    def mapping_option(original_value, mappings = {})
+      SupplejackCommon::Modifiers::Mapper.new(original_value,
+                                              mappings).modify
     end
 
     def compact_whitespace(original_value)
