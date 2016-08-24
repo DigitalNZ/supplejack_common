@@ -1,11 +1,14 @@
-# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# The Supplejack Common code is
+# Crown copyright (C) 2014, New Zealand Government,
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the
+# National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 module SupplejackCommon
+  # SJ Json Class
   module Json
     class Base < SupplejackCommon::Base
 
@@ -41,7 +44,7 @@ module SupplejackCommon
           records_json(url).map {|attributes| self.new(attributes) }
         end
 
-        def records(options={})          
+        def records(options = {})
           SupplejackCommon::PaginatedCollection.new(self, self.pagination_options || {}, options)
         end
 
@@ -53,7 +56,7 @@ module SupplejackCommon
 
       end
 
-      def initialize(json, from_raw=false)
+      def initialize(json, from_raw = false)
         if json.is_a?(Hash)
           @json = json.to_json
         elsif json.is_a?(String)
@@ -76,7 +79,7 @@ module SupplejackCommon
         raw_data
       end
 
-      def strategy_value(options={})
+      def strategy_value(options = {})
         options ||= {}
         path = options[:path]
         return nil unless path.present?

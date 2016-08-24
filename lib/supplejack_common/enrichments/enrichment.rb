@@ -1,13 +1,15 @@
-# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# The Supplejack Common code is
+# Crown copyright (C) 2014, New Zealand Government,
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the
+# National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 module SupplejackCommon
+  # Enrichment Class
   class Enrichment < AbstractEnrichment
-
     # Internal attribute accessors
     attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes, :_rejection_rules
 
@@ -46,11 +48,11 @@ module SupplejackCommon
       self._required_attributes
     end
 
-    def namespaces(namespaces={})
+    def namespaces(namespaces = {})
       self._namespaces = namespaces
     end
 
-    def attribute(name, options={}, &block)
+    def attribute(name, options = {}, &block)
       self._attribute_definitions[name] = options || {}
       self._attribute_definitions[name][:block] = block if block_given?
     end

@@ -1,11 +1,14 @@
-# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# The Supplejack Common code is
+# Crown copyright (C) 2014, New Zealand Government,
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the
+# National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 module SupplejackCommon
+  # Scope Class
   class Scope
 
     def initialize(klass, options)
@@ -13,7 +16,7 @@ module SupplejackCommon
       @scope_options = options
     end
 
-    def attribute(name, options={})
+    def attribute(name, options = {})
       new_options = @scope_options.dup
       if_options = new_options[:if]
 
