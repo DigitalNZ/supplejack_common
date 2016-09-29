@@ -44,8 +44,9 @@ module SupplejackCommon
 
         def clear_definitions
           super
-          self._metadata_prefix = {}
-          self._set = {}
+          SupplejackCommon::Oai::Base._metadata_prefix[self.identifier] = nil
+          SupplejackCommon::Oai::Base._set[self.identifier] = nil
+          binding.pry
         end
 
         def metadata_prefix(prefix)
