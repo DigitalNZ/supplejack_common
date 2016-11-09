@@ -72,7 +72,8 @@ module SupplejackCommon
     end
 
     def request_url
-      RestClient::Request.execute(method: :get, url: self.url, timeout: self.request_timeout)
+      response = RestClient::Request.execute(method: :get, url: self.url, timeout: self.request_timeout)
+      response.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
     end
 
     def request_resource
@@ -92,7 +93,7 @@ module SupplejackCommon
         Sidekiq.logger.info "GET (#{real_time}): #{url}, started #{start_time.utc.iso8601}"
       end
 
-      response.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+      response
     end
   end
 end
