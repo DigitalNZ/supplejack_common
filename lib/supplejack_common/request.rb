@@ -92,8 +92,7 @@ module SupplejackCommon
         Sidekiq.logger.info "GET (#{real_time}): #{url}, started #{start_time.utc.iso8601}"
       end
 
-      response.encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '&#9633;')
-      response
+      response.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
     end
   end
 end
