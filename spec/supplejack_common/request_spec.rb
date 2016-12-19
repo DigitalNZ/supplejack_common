@@ -139,6 +139,12 @@ describe SupplejackCommon::Request do
       request_obj = klass.new("http://google.com", 60000, [{host: "google.com", delay: 5}])
       request_obj.request_url
     end
+
+    it "should get the response with invalid chars wiped out" do
+      RestClient::Request.stub(:execute) { "Good\x81D\x85ay" }
+      request_obj = klass.new("http://google.com", 60000, [{host: "google.com", delay: 5}])
+      request.request_resource.should eq "GoodDay"
+    end
   end
 
   describe "request_resource" do
