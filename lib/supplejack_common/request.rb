@@ -72,8 +72,7 @@ module SupplejackCommon
     end
 
     def request_url
-      response = RestClient::Request.execute(method: :get, url: self.url, timeout: self.request_timeout)
-      response.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+      RestClient::Request.execute(method: :get, url: self.url, timeout: self.request_timeout)
     end
 
     def request_resource
