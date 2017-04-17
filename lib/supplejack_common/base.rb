@@ -14,6 +14,8 @@ module SupplejackCommon
     include ActiveModel::Validations
     include SupplejackCommon::DSL
 
+    class_attribute :_errors
+
     class << self
       def identifier
         @identifier ||= begin
@@ -96,6 +98,7 @@ module SupplejackCommon
         self._deletion_rules[self.identifier] = nil
         self._priority[self.identifier] = nil
         self._match_concepts[self.identifier] = nil
+        self._errors = {}
       end
 
       def include_snippet(name)
