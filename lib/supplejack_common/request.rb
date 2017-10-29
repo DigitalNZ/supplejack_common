@@ -12,23 +12,25 @@ require 'redis'
 module SupplejackCommon
   # SJ Request class
   class Request
-
     class << self
-      def get(url, request_timeout, options=[])
-        self.new(url,request_timeout, options).get
+      def get(url, request_timeout, options = [], headers = {})
+        new(url, request_timeout, options, headers).get
       end
     end
 
-    attr_accessor :url, :throttling_options, :request_timeout
+    attr_accessor :url, :throttling_options, :request_timeout, :headers
 
-    def initialize(url, request_timeout, options=[])
+    def initialize(url, request_timeout, options = [], headers = {})
       # Prevents from escaping escaped URL
       # Sifter #6439
       @url = URI.escape(URI.unescape(url))
-      
+
       options ||= []
-      @throttling_options = Hash[options.map {|option| [option[:host], option[:delay]] }]
-      @request_timeout = request_timeout || 60000
+      @throttling_options = Hash[options.map do |option|
+        [option[:host], option[:delay]]
+      end]
+      @request_timeout = request_timeout || 60_000
+      @headers = headers
     end
 
     def uri
@@ -42,7 +44,7 @@ module SupplejackCommon
     def redis_lock_key
       "harvester.throttle.#{self.host}"
     end
- 
+
     def get
       acquire_lock do
         self.request_resource
@@ -53,14 +55,14 @@ module SupplejackCommon
       while(true)
         if SupplejackCommon.redis.setnx(redis_lock_key, 0)
           SupplejackCommon.redis.pexpire(redis_lock_key, delay)
-           
+
           Sidekiq.logger.info "Acquired lock for #{host}, requesting URL" if defined?(Sidekiq)
           return yield
         else
           pttl = SupplejackCommon.redis.pttl(redis_lock_key)
           SupplejackCommon.redis.pexpire(redis_lock_key, delay) if pttl == -1
           sleep_time = (pttl + 10) / 1000.0
- 
+
           Sidekiq.logger.info "Did not acquire lock for #{host}, sleeping for #{sleep_time}s" if defined?(Sidekiq)
           sleep(sleep_time) if sleep_time > 0
         end
@@ -72,7 +74,12 @@ module SupplejackCommon
     end
 
     def request_url
-      RestClient::Request.execute(method: :get, url: self.url, timeout: self.request_timeout)
+      RestClient::Request.execute(
+        method: :get,
+        url: url,
+        timeout: request_timeout,
+        headers: headers
+      )
     end
 
     def request_resource

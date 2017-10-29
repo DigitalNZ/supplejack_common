@@ -1,9 +1,9 @@
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 require "spec_helper"
 
@@ -48,18 +48,18 @@ describe SupplejackCommon::XmlDocumentMethods do
 
   describe ".with_each_file" do
     let(:file) { mock(:file) }
-    
+
     context "url is a url" do
       it "gets the url and yields it" do
-        SupplejackCommon::Request.should_receive(:get).with('http://google.co.nz', 60000, anything) {file}
-        expect{ |b| klass.send(:with_each_file, 'http://google.co.nz', &b) }.to yield_with_args(file) 
+        SupplejackCommon::Request.should_receive(:get).with('http://google.co.nz', 60000, anything, anything) {file}
+        expect{ |b| klass.send(:with_each_file, 'http://google.co.nz', &b) }.to yield_with_args(file)
       end
     end
 
     context "url is a file" do
       it "opens the file and yields it" do
         File.should_receive(:read).with('/data/foo') {file}
-        expect{ |b| klass.send(:with_each_file, 'file:///data/foo', &b) }.to yield_with_args(file) 
+        expect{ |b| klass.send(:with_each_file, 'file:///data/foo', &b) }.to yield_with_args(file)
       end
 
       context "filename ends with .tar.gz" do
@@ -71,7 +71,7 @@ describe SupplejackCommon::XmlDocumentMethods do
           Gem::Package::TarReader.should_receive(:new).with(gzipped_file) {tar}
           tar.should_receive(:rewind)
 
-          expect{ |b| klass.send(:with_each_file, 'file:///data/foo.tar.gz', &b) }.to yield_successive_args("file1", "file2") 
+          expect{ |b| klass.send(:with_each_file, 'file:///data/foo.tar.gz', &b) }.to yield_successive_args("file1", "file2")
         end
       end
     end

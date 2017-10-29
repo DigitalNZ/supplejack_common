@@ -1,9 +1,9 @@
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 module SupplejackCommon
   module Rss
@@ -31,7 +31,7 @@ module SupplejackCommon
         end
 
         def index_document(url)
-          xml = SupplejackCommon::Request.get(url, self._request_timeout, self._throttle)
+          xml = SupplejackCommon::Request.get(url, self._request_timeout, self._throttle, self._http_headers)
           Nokogiri::XML.parse(xml)
         end
       end

@@ -27,13 +27,13 @@ module SupplejackCommon
 
         def document(url)
           if url.match(/^https?/)
-            SupplejackCommon::Request.get(url, self._request_timeout, self._throttle)
+            SupplejackCommon::Request.get(url, self._request_timeout, self._throttle, self._http_headers)
           elsif url.match(/^file/)
             File.read(url.gsub(/file:\/\//, ""))
           end
         end
 
-        def records_json(url)         
+        def records_json(url)
           records = JsonPath.on(document(url), self._record_selector).try(:first)
           records = [records] if records.is_a? Hash
           records
@@ -71,7 +71,7 @@ module SupplejackCommon
         @json
       end
 
-      def raw_data      
+      def raw_data
         document
       end
 

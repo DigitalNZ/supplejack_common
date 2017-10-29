@@ -29,7 +29,7 @@ module SupplejackCommon
     end
 
     protected
-    
+
     def fetch_document
       SupplejackCommon::Request.get(url, request_timeout, throttling_options)
     end
