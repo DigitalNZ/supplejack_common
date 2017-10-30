@@ -4,7 +4,6 @@ rvm:
   - 2.1.5
 services:
   - redis-server
-cache: bundler
 bundler_args: --without production
 sudo: false
 notifications:
