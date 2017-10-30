@@ -11,7 +11,7 @@ module SupplejackCommon
   # Enrichment Class
   class Enrichment < AbstractEnrichment
     # Internal attribute accessors
-    attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes, :_rejection_rules
+    attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes, :_rejection_rules, :_http_headers
 
     attr_reader :block
 
@@ -50,6 +50,12 @@ module SupplejackCommon
 
     def namespaces(namespaces = {})
       self._namespaces = namespaces
+    end
+
+    # This takes a hash of HTTP headers
+    # eg { 'Authorization': 'something', 'api-key': 'somekey' }
+    def http_headers(headers)
+      self._http_headers = headers
     end
 
     def attribute(name, options = {}, &block)
