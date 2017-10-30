@@ -70,6 +70,7 @@ module SupplejackCommon
       options[:attributes][:requirements] = requirements if requirements.any?
       options[:throttling_options] = parser_class._throttle if parser_class._throttle.present?
       options[:namespaces] = self._namespaces if self._namespaces.present?
+      options[:http_headers] = self._http_headers if self._http_headers.present?
       options[:request_timeout] = parser_class._request_timeout if parser_class._request_timeout.present?
       @resource ||= resource_class.new(self._url, options)
     end
