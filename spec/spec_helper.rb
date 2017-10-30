@@ -8,7 +8,6 @@
 require 'supplejack_common'
 require 'webmock/rspec'
 require 'simplecov'
-require 'pry'
 
 SimpleCov.start
 
