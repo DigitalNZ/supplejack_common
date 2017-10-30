@@ -1,9 +1,9 @@
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 require 'rubygems/package'
 
@@ -14,7 +14,7 @@ module SupplejackCommon
     included do
       class_attribute :_record_format
     end
-		
+
 		module ClassMethods
 
       def xml_records(url)
@@ -42,7 +42,7 @@ module SupplejackCommon
       #
       def with_each_file(url, &block)
         if url.match(/^https?/)
-          yield SupplejackCommon::Request.get(url,self._request_timeout, self._throttle)
+          yield SupplejackCommon::Request.get(url,self._request_timeout, self._throttle, self._http_headers)
         elsif url.match(/^file/)
           url = url.gsub(/file:\/\//, "")
 

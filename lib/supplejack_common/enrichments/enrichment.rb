@@ -11,7 +11,7 @@ module SupplejackCommon
   # Enrichment Class
   class Enrichment < AbstractEnrichment
     # Internal attribute accessors
-    attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes, :_rejection_rules
+    attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes, :_rejection_rules, :_http_headers
 
     attr_reader :block
 
@@ -52,6 +52,12 @@ module SupplejackCommon
       self._namespaces = namespaces
     end
 
+    # This takes a hash of HTTP headers
+    # eg { 'Authorization': 'something', 'api-key': 'somekey' }
+    def http_headers(headers)
+      self._http_headers = headers
+    end
+
     def attribute(name, options = {}, &block)
       self._attribute_definitions[name] = options || {}
       self._attribute_definitions[name][:block] = block if block_given?
@@ -64,6 +70,7 @@ module SupplejackCommon
       options[:attributes][:requirements] = requirements if requirements.any?
       options[:throttling_options] = parser_class._throttle if parser_class._throttle.present?
       options[:namespaces] = self._namespaces if self._namespaces.present?
+      options[:http_headers] = self._http_headers if self._http_headers.present?
       options[:request_timeout] = parser_class._request_timeout if parser_class._request_timeout.present?
       @resource ||= resource_class.new(self._url, options)
     end

@@ -25,6 +25,7 @@ module SupplejackCommon
       class_attribute :_environment
       class_attribute :_priority
       class_attribute :_match_concepts
+      class_attribute :_http_headers
 
       self._base_urls = {}
       self._attribute_definitions = {}
@@ -37,11 +38,12 @@ module SupplejackCommon
       self._priority = {}
       self._request_timeout = nil
       self._match_concepts = {}
+      self._http_headers = {}
     end
 
     module ClassMethods
 
-      # DEPRECATED: source_id is no longer defined in the parser. 
+      # DEPRECATED: source_id is no longer defined in the parser.
       # This method stub exists to smooth the transition for existing parser
       # Needs to be removed soon - 2013-09-17
       def source_id(id)
@@ -50,6 +52,12 @@ module SupplejackCommon
       def base_url(url)
         self._base_urls[self.identifier] ||= []
         self._base_urls[self.identifier] += [url]
+      end
+
+      # This takes a hash of HTTP headers
+      # eg { 'Authorization': 'something', 'api-key': 'somekey' }
+      def http_headers(headers)
+        self._http_headers = headers
       end
 
       def basic_auth(username, password)

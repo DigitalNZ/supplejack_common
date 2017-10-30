@@ -1,14 +1,14 @@
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 require "spec_helper"
 
 describe SupplejackCommon::Json::Base do
-  
+
   let(:klass) { SupplejackCommon::Json::Base }
   let(:document) { double(:document) }
   let(:record) { double(:record).as_null_object }
@@ -58,7 +58,7 @@ describe SupplejackCommon::Json::Base do
     context "json web document" do
       it "stores the raw json" do
         klass._throttle = {}
-        SupplejackCommon::Request.should_receive(:get).with("http://google.com",60000, {}) { json }
+        SupplejackCommon::Request.should_receive(:get).with("http://google.com",60000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'} ) { json }
         klass.document("http://google.com").should eq json
       end
     end
@@ -91,7 +91,7 @@ describe SupplejackCommon::Json::Base do
 
     context "pagination options defined" do
 
-      before do 
+      before do
         klass.stub(:pagination_options) { { total_selector: "totalResults" } }
       end
 
@@ -162,7 +162,7 @@ describe SupplejackCommon::Json::Base do
   describe "#fetch" do
     let(:record) { klass.new({"dc:creator" => "John", "dc:author" => "Fede"}) }
     let(:document) { {"location" => 1234} }
-    
+
     before { record.stub(:document) { document } }
 
     it "returns the value object" do

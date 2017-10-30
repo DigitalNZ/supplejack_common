@@ -1,9 +1,9 @@
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 module SupplejackCommon
   module Xml
@@ -14,7 +14,7 @@ module SupplejackCommon
       include SupplejackCommon::Dsl::Sitemap
 
       self.clear_definitions
-      
+
       class_attribute :_record_selector
       class_attribute :_record_format
       class_attribute :_total_results
@@ -75,7 +75,7 @@ module SupplejackCommon
       def document
         @document ||= begin
           if @url
-            response = SupplejackCommon::Request.get(self.url, self._request_timeout, self._throttle)
+            response = SupplejackCommon::Request.get(self.url, self._request_timeout, self._throttle, self._http_headers)
             response = SupplejackCommon::Utils.add_html_tag(response) if format == :html
           elsif @original_xml
             response = @original_xml

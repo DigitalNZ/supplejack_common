@@ -1,9 +1,9 @@
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 require "spec_helper"
 
@@ -14,7 +14,7 @@ describe SupplejackCommon::DSL do
   before(:each) do
     klass.clear_definitions
   end
-  
+
   describe ".base_url" do
     it "adds the base_url" do
       klass.base_url "http://google.com"
@@ -26,6 +26,14 @@ describe SupplejackCommon::DSL do
       klass.base_url "http://apple.com"
       klass.base_urls.should include "http://apple.com"
       klass.base_urls.size.should eq 2
+    end
+  end
+
+  describe '.http_headers' do
+    it 'stores the header name and value' do
+      klass.http_headers({ 'Authorization': 'Token token="token"', 'x-api-key': 'gus' })
+
+      klass._http_headers.should eq({ 'Authorization': 'Token token="token"', 'x-api-key': 'gus' })
     end
   end
 
@@ -168,4 +176,5 @@ describe SupplejackCommon::DSL do
       klass._match_concepts[klass.identifier].should eq :create_or_match
     end
   end
+
 end

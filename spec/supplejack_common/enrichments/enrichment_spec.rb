@@ -1,15 +1,15 @@
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 require "spec_helper"
 
 describe SupplejackCommon::Enrichment do
 
-  class TestParser; 
+  class TestParser;
     def self._throttle; nil; end
   end
 
@@ -17,7 +17,7 @@ describe SupplejackCommon::Enrichment do
   let(:block) { Proc.new {} }
   let(:record) { mock(:record, id: 1234, attributes: {}) }
   let(:enrichment) { klass.new(:ndha_rights, {block: block}, record, TestParser) }
-  
+
   describe "#initialize" do
     it "sets the name and block" do
       enrichment.name.should eq :ndha_rights
@@ -201,6 +201,13 @@ describe SupplejackCommon::Enrichment do
       end
 
       enrichment.requirements[:tap_id].should eq 12345
+    end
+  end
+
+  describe '#http_headers' do
+    it 'returns the value of the http_headers' do
+      enrichment.http_headers({ 'Authorization': 'hello'})
+      enrichment._http_headers.should eq( { 'Authorization': 'hello'} )
     end
   end
 end
