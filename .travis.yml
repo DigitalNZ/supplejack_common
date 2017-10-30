@@ -4,8 +4,11 @@ rvm:
   - 2.1.5
 services:
   - redis-server
+cache: bundler
 bundler_args: --without production
 sudo: false
 notifications:
   slack:
     secure: Y7f09f0FnG2DV+SJezbMaNVKUQ4jkjlK3n6sjsbyTrMmPcdF0bkQrLRU3tgkcWrAORXpwZGnp6AypPJIPXaopTzpokOMWX2I19m0e9Csmq9K8G2A2ldOw8rBhEy6Fju958q1IomBoQsY6UXj9loQsGgNJXbbSzBhZWwJZpsL3qA=
+before_install:
+  gem update bundler
