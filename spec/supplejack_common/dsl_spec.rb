@@ -6,7 +6,6 @@
 # http://digitalnz.org/supplejack
 
 require "spec_helper"
-require 'pry'
 
 describe SupplejackCommon::DSL do
 
