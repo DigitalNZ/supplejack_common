@@ -8,6 +8,7 @@
 # http://digitalnz.org/supplejack
 
 require 'redis'
+require 'retriable'
 
 module SupplejackCommon
   # SJ Request class
@@ -74,7 +75,7 @@ module SupplejackCommon
     end
 
     def request_url
-      Retriable.retriable(tries: 5) do
+      ::Retriable.retriable(tries: 5) do
         RestClient::Request.execute(
           method: :get,
           url: url,
