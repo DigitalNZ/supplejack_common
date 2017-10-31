@@ -74,12 +74,14 @@ module SupplejackCommon
     end
 
     def request_url
-      RestClient::Request.execute(
-        method: :get,
-        url: url,
-        timeout: request_timeout,
-        headers: headers
-      )
+      Retriable.retriable(tries: 5) do
+        RestClient::Request.execute(
+          method: :get,
+          url: url,
+          timeout: request_timeout,
+          headers: headers
+        )
+      end
     end
 
     def request_resource
