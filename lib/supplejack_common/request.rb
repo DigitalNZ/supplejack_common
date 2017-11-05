@@ -76,7 +76,7 @@ module SupplejackCommon
 
     def request_url
       ::Retriable.retriable(tries: 5, base_interval: 1, multiplier: 2) do
-        Sidekiq.logger.info "Retrying RestClient request #{url}"
+        ::Sidekiq.logger.info "Retrying RestClient request #{url}" if defined?(Sidekiq)
         RestClient::Request.execute(
           method: :get,
           url: url,

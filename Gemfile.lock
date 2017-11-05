@@ -57,7 +57,7 @@ GEM
     faraday_middleware (0.9.1)
       faraday (>= 0.7.4, < 0.10)
     htmlentities (4.3.4)
-    i18n (0.9.0)
+    i18n (0.9.1)
       concurrent-ruby (~> 1.0)
     json (1.8.6)
     jsonpath (0.5.8)
