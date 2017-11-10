@@ -14,6 +14,7 @@ PATH
       nokogiri
       redis (~> 3)
       rest-client (~> 1.6.7)
+      retriable
       sanitize
       tzinfo
 
@@ -39,11 +40,12 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.3.2)
-    bson (3.2.6)
+    bson (3.2.7)
     builder (3.2.2)
     chronic (0.10.2)
     coderay (1.0.9)
-    connection_pool (2.2.0)
+    concurrent-ruby (1.0.5)
+    connection_pool (2.2.1)
     crack (0.3.1)
     crass (1.0.2)
     diff-lcs (1.1.3)
@@ -55,15 +57,16 @@ GEM
     faraday_middleware (0.9.1)
       faraday (>= 0.7.4, < 0.10)
     htmlentities (4.3.4)
-    i18n (0.7.0)
-    json (1.8.3)
+    i18n (0.9.1)
+      concurrent-ruby (~> 1.0)
+    json (1.8.6)
     jsonpath (0.5.8)
       multi_json
     method_source (0.8.1)
     mime-types (1.25.1)
-    mimemagic (0.3.1)
-    mini_portile2 (2.0.0)
-    minitest (5.8.4)
+    mimemagic (0.3.2)
+    mini_portile2 (2.3.0)
+    minitest (5.10.3)
     mongoid (4.0.0)
       activemodel (~> 4.0)
       moped (~> 2.0.0)
@@ -75,16 +78,16 @@ GEM
       optionable (~> 0.2.0)
     multi_json (1.11.2)
     multipart-post (2.0.0)
-    nokogiri (1.6.7.2)
-      mini_portile2 (~> 2.0.0.rc2)
-    nokogumbo (1.4.7)
+    nokogiri (1.8.1)
+      mini_portile2 (~> 2.3.0)
+    nokogumbo (1.4.13)
       nokogiri
     oai (0.3.1)
       builder (>= 2.0.0)
       faraday
       faraday_middleware
     optionable (0.2.0)
-    origin (2.2.0)
+    origin (2.3.1)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -93,9 +96,10 @@ GEM
     rack-test (0.6.3)
       rack (>= 1.0)
     rake (10.0.2)
-    redis (3.2.2)
+    redis (3.3.5)
     rest-client (1.6.9)
       mime-types (~> 1.16)
+    retriable (3.1.1)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)
       rspec-expectations (~> 2.11.0)
@@ -104,7 +108,7 @@ GEM
     rspec-expectations (2.11.3)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.11.3)
-    sanitize (4.0.1)
+    sanitize (4.5.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
       nokogumbo (~> 1.4.1)
@@ -114,8 +118,8 @@ GEM
       simplecov-html (~> 0.9.0)
     simplecov-html (0.9.0)
     slop (3.4.4)
-    thread_safe (0.3.5)
-    tzinfo (1.2.2)
+    thread_safe (0.3.6)
+    tzinfo (1.2.4)
       thread_safe (~> 0.1)
     webmock (1.8.11)
       addressable (>= 2.2.7)
@@ -134,4 +138,4 @@ DEPENDENCIES
   webmock (~> 1.8)
 
 BUNDLED WITH
-   1.11.2
+   1.15.4

@@ -8,6 +8,7 @@
 # http://digitalnz.org/supplejack
 
 require 'redis'
+require 'retriable'
 
 module SupplejackCommon
   # SJ Request class
@@ -74,12 +75,15 @@ module SupplejackCommon
     end
 
     def request_url
-      RestClient::Request.execute(
-        method: :get,
-        url: url,
-        timeout: request_timeout,
-        headers: headers
-      )
+      ::Retriable.retriable(tries: 5, base_interval: 1, multiplier: 2) do
+        ::Sidekiq.logger.info "Retrying RestClient request #{url}" if defined?(Sidekiq)
+        RestClient::Request.execute(
+          method: :get,
+          url: url,
+          timeout: request_timeout,
+          headers: headers
+        )
+      end
     end
 
     def request_resource

@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
@@ -40,6 +40,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "json",            "~> 1.8.3"
   gem.add_runtime_dependency "sanitize"
   gem.add_runtime_dependency "htmlentities"
+  gem.add_runtime_dependency 'retriable'
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec",      "~> 2.11.0"
