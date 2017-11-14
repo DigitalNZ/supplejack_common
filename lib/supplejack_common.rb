@@ -39,7 +39,6 @@ require 'supplejack_common/oai'
 require 'supplejack_common/rss'
 require 'supplejack_common/xml'
 require 'supplejack_common/json'
-require 'supplejack_common/tapuhi'
 require 'supplejack_common/sitemap'
 
 require 'supplejack_common/parser/supplejack_common'

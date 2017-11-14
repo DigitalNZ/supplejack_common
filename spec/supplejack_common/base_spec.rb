@@ -1,9 +1,9 @@
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 require 'spec_helper'
 
@@ -140,7 +140,7 @@ describe SupplejackCommon::Base do
       end
 
       it "finds the snippet by name and environment" do
-        klass.stub_chain(:parent, :name) { "TAPUHI::Staging" }
+        klass.stub_chain(:parent, :name) { "OAI::Staging" }
         Snippet.should_receive(:find_by_name).with("snip", :staging)
         klass.include_snippet("snip")
       end
@@ -191,7 +191,7 @@ describe SupplejackCommon::Base do
 
   describe "#set_attribute_values" do
     let(:record) { klass.new }
-    
+
     it "should set the priority" do
       klass.priority 2
       record.set_attribute_values

@@ -100,13 +100,6 @@ describe SupplejackCommon::DSL do
         klass.enrichment_definitions[:ndha_rights].should eq({block: block})
       end
     end
-
-    context "without block" do
-      it "adds a enrichment definition with options" do
-        klass.enrichment :tapuhi, type: "TapuhiRelationships"
-        klass.enrichment_definitions[:tapuhi].should eq({type: "TapuhiRelationships"})
-      end
-    end
   end
 
   describe ".with_options" do
