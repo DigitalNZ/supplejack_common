@@ -9,7 +9,3 @@
 
 require 'supplejack_common/enrichments/abstract_enrichment'
 require 'supplejack_common/enrichments/enrichment'
-require 'supplejack_common/enrichments/base_tapuhi_enrichment'
-require 'supplejack_common/enrichments/tapuhi_authorities_enrichment'
-require 'supplejack_common/enrichments/tapuhi_records_enrichment'
-require 'supplejack_common/enrichments/tapuhi_groups_enrichment'

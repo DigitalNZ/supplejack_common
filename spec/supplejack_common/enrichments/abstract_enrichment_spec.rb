@@ -1,9 +1,9 @@
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 require "spec_helper"
 
@@ -63,7 +63,7 @@ describe SupplejackCommon::AbstractEnrichment do
 
   context "priority is specified as -1" do
     let(:enrichment) { klass.new(:ndha_rights, {priority: -1}, record, nil) }
-    
+
     it "has a priority of -1" do
       enrichment.attributes[:priority].should eq -1
     end
@@ -74,11 +74,11 @@ describe SupplejackCommon::AbstractEnrichment do
   end
 
   it "implements a before method that does nothing" do
-    ->{klass.before(:tapuhi)}.should_not raise_error
+    ->{klass.before(:method)}.should_not raise_error
   end
 
   it "implements a after method that does nothing" do
-    ->{klass.after(:tapuhi)}.should_not raise_error
+    ->{klass.after(:method)}.should_not raise_error
   end
 
 end
