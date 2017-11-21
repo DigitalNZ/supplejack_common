@@ -7,12 +7,6 @@
 # National Library of NZ and the Department of Internal Affairs.
 # http://digitalnz.org/supplejack
 
-begin
-  require 'action_view/vendor/html-scanner'
-rescue Exception => e
-  require 'action_controller/vendor/html-scanner' 
-end
-
 module SupplejackCommon
   module Modifiers
     class HtmlStripper < AbstractModifier       
@@ -29,7 +23,7 @@ module SupplejackCommon
       end
 
       def self.full_sanitizer
-        @full_sanitizer ||= HTML::FullSanitizer.new
+        @full_sanitizer ||= Rails::Html::FullSanitizer.new
       end
 
       def strip_tags(html)
