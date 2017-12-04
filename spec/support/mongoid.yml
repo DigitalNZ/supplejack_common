@@ -6,7 +6,7 @@
 # http://digitalnz.org/supplejack 
 
 test:
-  sessions:
+  clients:
     default:
       database: harvester_test
       hosts:
