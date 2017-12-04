@@ -15,6 +15,7 @@ require 'oai'
 require 'rest_client'
 require 'jsonpath'
 require 'chronic'
+require 'rails-html-sanitizer'
 
 require 'supplejack_common/version'
 require 'supplejack_common/exceptions'
