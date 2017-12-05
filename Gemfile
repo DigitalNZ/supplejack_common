@@ -11,7 +11,7 @@ gemspec
 
 gem 'oai', '~> 0.3.1'
 gem 'pry'
-gem 'rails-html-sanitizer'
+gem 'loofah'
 
 group :test do
   gem 'simplecov', require: false

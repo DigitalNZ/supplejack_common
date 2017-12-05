@@ -8,7 +8,7 @@
 require 'supplejack_common'
 require 'webmock/rspec'
 require 'simplecov'
-require 'rails-html-sanitizer'
+require 'loofah'
 
 SimpleCov.start
 

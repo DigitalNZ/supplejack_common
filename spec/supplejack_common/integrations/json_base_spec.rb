@@ -53,7 +53,7 @@ describe SupplejackCommon::Json::Base do
   end
 
   it "gets the thumbnail_url" do
-    record.thumbnail_url.should eq ["http://bhl.ait.co.at/templates/bhle/sampledata/cachedImage.php?maxSize=200&amp;filename=http://www.biodiversitylibrary.org/pagethumb/25449335"]
+    record.thumbnail_url.should eq ["http://bhl.ait.co.at/templates/bhle/sampledata/cachedImage.php?maxSize=200&filename=http://www.biodiversitylibrary.org/pagethumb/25449335"]
   end
 
   it "gets nested keys" do

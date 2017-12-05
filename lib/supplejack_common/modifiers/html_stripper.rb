@@ -22,13 +22,9 @@ module SupplejackCommon
         end
       end
 
-      def self.full_sanitizer
-        @full_sanitizer ||= Rails::Html::FullSanitizer.new
-      end
-
       def strip_tags(html)
         html = validate_encoding(html)
-        self.class.full_sanitizer.sanitize(html)
+        Loofah.fragment(html).text(encode_special_chars: false)
       end
 
       def validate_encoding(html)
