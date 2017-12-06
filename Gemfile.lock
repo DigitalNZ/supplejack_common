@@ -9,10 +9,10 @@ PATH
       htmlentities
       json (~> 1.8.3)
       jsonpath (~> 0.5.0)
+      loofah
       mimemagic
       mongoid
       nokogiri
-      rails-html-sanitizer
       redis
       rest-client (~> 1.6.7)
       retriable
@@ -134,10 +134,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  loofah
   mock_redis
   oai (~> 0.3.1)
   pry
-  rails-html-sanitizer
   rake
   rspec (~> 2.11.0)
   simplecov
