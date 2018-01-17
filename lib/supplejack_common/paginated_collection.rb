@@ -15,17 +15,19 @@ module SupplejackCommon
     attr_reader :klass, :options
 
     attr_reader :page_parameter, :per_page_parameter, :per_page, :page, :counter
-    attr_accessor :total
+    attr_accessor :total, :next_page_token
     
     def initialize(klass, pagination_options={}, options={})
       @klass = klass
 
       pagination_options ||= {}
-      @page_parameter       = pagination_options[:page_parameter]
-      @per_page_parameter   = pagination_options[:per_page_parameter]
-      @per_page             = pagination_options[:per_page]
-      @page                 = pagination_options[:page]
-      @type                 = pagination_options[:type]
+      @page_parameter             = pagination_options[:page_parameter]
+      @per_page_parameter         = pagination_options[:per_page_parameter]
+      @per_page                   = pagination_options[:per_page]
+      @page                       = pagination_options[:page]
+      @type                       = pagination_options[:type]
+      @tokenised                  = pagination_options[:tokenised] || false
+      @next_page_token_location   = pagination_options[:next_page_token_location]
 
       @options = options
       @counter = 0
@@ -35,6 +37,8 @@ module SupplejackCommon
       klass.base_urls.each do |base_url|
         @records = klass.fetch_records(next_url(base_url))
         self.total = klass._total_results if paginated?
+        self.next_page_token = klass._next_page_token if paginated?
+        # binding.pry
 
         unless yield_from_records(&block)
           return nil
@@ -57,10 +61,16 @@ module SupplejackCommon
 
     def next_url(url)
       if paginated?
-        joiner = url.match(/\?/) ? "&" : "?"
-        url = "#{url}#{joiner}#{url_options.to_query}"
-        increment_page_counter!
-        url
+          joiner = url.match(/\?/) ? "&" : "?"
+        if @tokenised
+          binding.pry
+          @page = next_page_token
+          url = "#{url}#{joiner}#{url_options.to_query}"
+        else
+          url = "#{url}#{joiner}#{url_options.to_query}"
+          increment_page_counter!
+          url
+        end
       else
         url
       end
@@ -100,6 +110,14 @@ module SupplejackCommon
 
     def paginated?
       page && per_page
+    end
+
+    def tokenised?
+      @tokenised
+    end
+
+    def next_page_token
+
     end
 
     def yield_from_records(&block)
