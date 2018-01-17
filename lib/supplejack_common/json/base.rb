@@ -16,6 +16,7 @@ module SupplejackCommon
 
       class_attribute :_record_selector
       class_attribute :_total_results
+      class_attribute :_next_page_token
 
       attr_reader :json
 
@@ -41,6 +42,7 @@ module SupplejackCommon
 
         def fetch_records(url)
           self._total_results ||= JsonPath.on(document(url), self.pagination_options[:total_selector]).first if pagination_options
+          self._next_page_token ||= JsonPath.on(document(url), self.pagination_options[:next_page_token_location]).first if pagination_options
           records_json(url).map {|attributes| self.new(attributes) }
         end
 
@@ -53,10 +55,10 @@ module SupplejackCommon
           self._record_selector = nil
           self._total_results = nil
         end
-
       end
 
       def initialize(json, from_raw = false)
+        self.class.pagination_options[:page] = self._next_page_token
         if json.is_a?(Hash)
           @json = json.to_json
         elsif json.is_a?(String)
