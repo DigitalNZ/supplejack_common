@@ -15,7 +15,7 @@ module SupplejackCommon
     attr_reader :klass, :options
 
     attr_reader :page_parameter, :per_page_parameter, :per_page, :page, :counter
-    
+
     def initialize(klass, pagination_options={}, options={})
       @klass = klass
 
@@ -81,7 +81,15 @@ module SupplejackCommon
     end
 
     def current_page
-      return 0 if @tokenised
+      if @tokenised
+        if self.klass.next_page_token(@next_page_token_location).present?
+          return 0
+        else
+          return total_pages + 1
+        end
+      end
+
+      else
 
       if page_pagination?
         @page
