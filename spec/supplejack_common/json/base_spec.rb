@@ -86,12 +86,20 @@ describe SupplejackCommon::Json::Base do
       klass._request_timeout = 60000
       SupplejackCommon::Request.should_receive(:get).with("http://google.com",60000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'} ).and_return { json }
       klass.document("http://google.com")
-      expect(klass.total_results("total_results_selector")).to eq 500.0
+      expect(klass.total_results("$.total_results_selector")).to eq 500.0
     end
   end
 
   describe ".next_page_token" do
-
+    let(:json) { {"description": "Some json!", "your_next_page": "1234"}.to_json}
+    it "returns the total results from the json document" do
+      klass._throttle = {}
+      klass.http_headers({ 'Authorization': 'Token token="token"', 'x-api-key': 'gus' })
+      klass._request_timeout = 60000
+      SupplejackCommon::Request.should_receive(:get).with("http://google.com",60000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'} ).and_return { json }
+      klass.document("http://google.com")
+      expect(klass.next_page_token("$.your_next_page")).to eq "1234"
+    end
   end
 
   describe ".fetch_records" do
