@@ -50,7 +50,7 @@ describe SupplejackCommon::PaginatedCollection do
         collection.stub(:paginated?) { true }
         collection.stub(:url_options) { {page: 1, per_page: 10} }
         collection.klass.stub(:base_urls) { ["http://go.gle/", "http://dnz.harvest/1"]}
-        SupplejackCommon::Base.stub(:_total_results) { 1 }
+        SupplejackCommon::Base.stub(:total_results) { 1 }
       end
 
       it "should call fetch records with a paginated url" do
@@ -135,7 +135,7 @@ describe SupplejackCommon::PaginatedCollection do
 
   describe "#total_pages" do
     it "returns the total number of pages" do
-      collection.stub(:total) { 36 }
+      SupplejackCommon::Base.stub(:total_results) { 40 }
       collection.stub(:per_page) { 10 }
       collection.send(:total_pages).should eq 4
     end
