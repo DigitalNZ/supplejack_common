@@ -98,9 +98,8 @@ describe SupplejackCommon::Json::Base do
       end
 
       it 'should set the total results if the json expression returns string' do
-        JsonPath.should_receive(:on).with(document, "totalResults") { [22] }
-        klass.fetch_records("http://google.com")
-        klass._total_results.should eq 22
+        JsonPath.should_receive(:on).with(klass._document, "totalResults") { [22] }
+        klass.total_results("totalResults").should eq 22
       end
     end
   end
@@ -112,10 +111,10 @@ describe SupplejackCommon::Json::Base do
       klass._record_selector.should be_nil
     end
 
-    it "clears the total results" do
-      klass._total_results = 100
+    it "clears the _document" do
+      klass._document = {a: 123}
       klass.clear_definitions
-      klass._total_results.should be_nil
+      klass._document.should be_nil
     end
   end
 
