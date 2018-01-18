@@ -87,11 +87,7 @@ module SupplejackCommon
         else
           return total_pages + 1
         end
-      end
-
-      else
-
-      if page_pagination?
+      elsif page_pagination?
         @page
       else
         ((page - 1) / per_page) + 1
