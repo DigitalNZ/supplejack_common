@@ -60,7 +60,7 @@ module SupplejackCommon
       if paginated?
           joiner = url.match(/\?/) ? "&" : "?"
         if @tokenised
-          @page = self.klass._document.present? ? JsonPath.on(self.klass._document, @next_page_token_location).try(:first) : nil
+          @page = self.klass._document.present? ? self.klass.next_page_token(@next_page_token_location) : nil
           url = "#{url}#{joiner}#{url_options.to_query}"
         else
           url = "#{url}#{joiner}#{url_options.to_query}"
@@ -77,8 +77,7 @@ module SupplejackCommon
     end
 
     def page_pagination?
-      true
-      # @type == "page"
+      @type == "page"
     end
 
     def current_page
@@ -92,7 +91,7 @@ module SupplejackCommon
     end
 
     def total_pages
-      (JsonPath.on(self.klass._document, @total_selector).try(:first).to_f / per_page).ceil
+      (self.klass.total_pages(@total_selector) / per_page).ceil
     end
 
     def increment_page_counter!
