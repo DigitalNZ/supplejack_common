@@ -15,7 +15,6 @@ module SupplejackCommon
     attr_reader :klass, :options
 
     attr_reader :page_parameter, :per_page_parameter, :per_page, :page, :counter
-    attr_accessor :total, :next_page_token
     
     def initialize(klass, pagination_options={}, options={})
       @klass = klass
@@ -28,6 +27,7 @@ module SupplejackCommon
       @type                       = pagination_options[:type]
       @tokenised                  = pagination_options[:tokenised] || false
       @next_page_token_location   = pagination_options[:next_page_token_location]
+      @total_selector             = pagination_options[:total_selector]
 
       @options = options
       @counter = 0
@@ -36,8 +36,6 @@ module SupplejackCommon
     def each(&block)
       klass.base_urls.each do |base_url|
         @records = klass.fetch_records(next_url(base_url))
-        self.total = klass._total_results if paginated?
-        self.next_page_token = klass._next_page_token if paginated?
 
         unless yield_from_records(&block)
           return nil
@@ -62,7 +60,7 @@ module SupplejackCommon
       if paginated?
           joiner = url.match(/\?/) ? "&" : "?"
         if @tokenised
-          @page = self.klass._document.present? ? JSON.parse(self.klass._document)['nextPageToken'] : nil
+          @page = self.klass._document.present? ? JsonPath.on(self.klass._document, @next_page_token_location).try(:first) : nil
           url = "#{url}#{joiner}#{url_options.to_query}"
         else
           url = "#{url}#{joiner}#{url_options.to_query}"
@@ -94,7 +92,7 @@ module SupplejackCommon
     end
 
     def total_pages
-      (total.to_f / per_page).ceil
+      (JsonPath.on(self.klass._document, @total_selector).try(:first).to_f / per_page).ceil
     end
 
     def increment_page_counter!
@@ -115,10 +113,6 @@ module SupplejackCommon
 
     def tokenised?
       @tokenised
-    end
-
-    def next_page_token
-
     end
 
     def yield_from_records(&block)
