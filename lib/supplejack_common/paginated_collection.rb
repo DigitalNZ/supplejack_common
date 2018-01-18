@@ -38,7 +38,6 @@ module SupplejackCommon
         @records = klass.fetch_records(next_url(base_url))
         self.total = klass._total_results if paginated?
         self.next_page_token = klass._next_page_token if paginated?
-        # binding.pry
 
         unless yield_from_records(&block)
           return nil
@@ -63,8 +62,7 @@ module SupplejackCommon
       if paginated?
           joiner = url.match(/\?/) ? "&" : "?"
         if @tokenised
-          binding.pry
-          @page = next_page_token
+          @page = self.klass._document.present? ? JSON.parse(self.klass._document)['nextPageToken'] : nil
           url = "#{url}#{joiner}#{url_options.to_query}"
         else
           url = "#{url}#{joiner}#{url_options.to_query}"
@@ -81,10 +79,13 @@ module SupplejackCommon
     end
 
     def page_pagination?
-      @type == "page"
+      true
+      # @type == "page"
     end
 
     def current_page
+      return 0 if @tokenised
+
       if page_pagination?
         @page
       else
@@ -109,7 +110,7 @@ module SupplejackCommon
     end
 
     def paginated?
-      page && per_page
+      (page && per_page) || @tokenised
     end
 
     def tokenised?

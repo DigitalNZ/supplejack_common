@@ -17,6 +17,7 @@ module SupplejackCommon
       class_attribute :_record_selector
       class_attribute :_total_results
       class_attribute :_next_page_token
+      class_attribute :_document
 
       attr_reader :json
 
@@ -28,7 +29,8 @@ module SupplejackCommon
 
         def document(url)
           if url.match(/^https?/)
-            SupplejackCommon::Request.get(url, self._request_timeout, self._throttle, self._http_headers)
+            self._document = SupplejackCommon::Request.get(url, self._request_timeout, self._throttle, self._http_headers)
+            self._document
           elsif url.match(/^file/)
             File.read(url.gsub(/file:\/\//, ""))
           end
