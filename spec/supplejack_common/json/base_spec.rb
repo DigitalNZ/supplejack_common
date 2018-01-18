@@ -61,6 +61,13 @@ describe SupplejackCommon::Json::Base do
         SupplejackCommon::Request.should_receive(:get).with("http://google.com",60000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'} ) { json }
         klass.document("http://google.com").should eq json
       end
+
+      it 'stores json document at _document class attribute' do
+        klass._throttle = {}
+        SupplejackCommon::Request.should_receive(:get).with("http://google.com",60000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'} ) { json }
+        klass.document("http://google.com")
+        expect(klass._document).to equal json
+      end
     end
 
     context "json files" do
@@ -82,11 +89,6 @@ describe SupplejackCommon::Json::Base do
     it "initializes record for every json record" do
       klass.should_receive(:new).once.with({"title" => "Record1"}) { record }
       klass.fetch_records("http://google.com").should eq [record]
-    end
-
-    it "should not set total results" do
-      klass.fetch_records("http://google.com")
-      klass._total_results.should be_nil
     end
 
     context "pagination options defined" do
