@@ -38,7 +38,7 @@ module SupplejackCommon
           JsonPath.on(self._document, next_page_token_location).try(:first)
         end
 
-        def total_pages(total_selector)
+        def total_results(total_selector)
           JsonPath.on(self._document, total_selector).try(:first).to_f
         end
 
