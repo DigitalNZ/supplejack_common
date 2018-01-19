@@ -153,6 +153,28 @@ describe SupplejackCommon::PaginatedCollection do
         collection.send(:current_page).should eq 3
       end
     end
+
+    context "tokenised pagination" do
+      let(:params) { {
+        page_parameter: "page",
+        type: "page",
+        tokenised: true,
+        per_page_parameter: "per_page",
+        per_page: 5,
+        next_page_token_location: "next_page_token",
+        page: 1
+        }}
+      let(:collection) { klass.new(SupplejackCommon::Base, params, {limit: 1}) }
+
+      before do
+        SupplejackCommon::Base.stub(:next_page_token) {'abc_1234'}
+        SupplejackCommon::Base.stub(:_document) {true}
+      end
+
+      it "returns 0" do
+        expect(collection.send(:current_page)).to eq 0
+      end
+    end
   end
 
   describe "#total_pages" do
