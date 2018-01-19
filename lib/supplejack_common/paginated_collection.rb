@@ -81,13 +81,7 @@ module SupplejackCommon
     end
 
     def current_page
-      if @tokenised
-        if self.klass.next_page_token(@next_page_token_location).present?
-          return 0
-        else
-          return total_pages + 1
-        end
-      elsif page_pagination?
+      if page_pagination?
         @page
       else
         ((page - 1) / per_page) + 1
@@ -107,6 +101,9 @@ module SupplejackCommon
     end
 
     def more_results?
+      if @tokenised
+        return self.klass.next_page_token(@next_page_token_location).present?
+      end
       current_page <= total_pages
     end
 
