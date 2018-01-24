@@ -58,8 +58,19 @@ describe SupplejackCommon::Json::Base do
     context "json web document" do
       it "stores the raw json" do
         klass._throttle = {}
+        klass.http_headers({ 'Authorization': 'Token token="token"', 'x-api-key': 'gus' })
+        klass._request_timeout = 60000
         SupplejackCommon::Request.should_receive(:get).with("http://google.com",60000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'} ) { json }
         klass.document("http://google.com").should eq json
+      end
+
+      it 'stores json document at _document class attribute' do
+        klass._throttle = {}
+        klass.http_headers({ 'Authorization': 'Token token="token"', 'x-api-key': 'gus' })
+        klass._request_timeout = 60000
+        SupplejackCommon::Request.should_receive(:get).with("http://google.com",60000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'} ) { json }
+        klass.document("http://google.com")
+        expect(klass._document).to equal json
       end
     end
 
@@ -68,6 +79,30 @@ describe SupplejackCommon::Json::Base do
         File.should_receive(:read).with("file:///data/sites/data.json".gsub(/file:\/\//, "")) { json }
         klass.document("file:///data/sites/data.json").should eq json
       end
+    end
+  end
+
+  describe ".total_results" do
+    let(:json) { {"description": "Some json!", "total_results_selector": 500}.to_json}
+    it "returns the total results from the json document" do
+      klass._throttle = {}
+      klass.http_headers({ 'Authorization': 'Token token="token"', 'x-api-key': 'gus' })
+      klass._request_timeout = 60000
+      SupplejackCommon::Request.should_receive(:get).with("http://google.com",60000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'} ).and_return { json }
+      klass.document("http://google.com")
+      expect(klass.total_results("$.total_results_selector")).to eq 500.0
+    end
+  end
+
+  describe ".next_page_token" do
+    let(:json) { {"description": "Some json!", "your_next_page": "1234"}.to_json}
+    it "returns the total results from the json document" do
+      klass._throttle = {}
+      klass.http_headers({ 'Authorization': 'Token token="token"', 'x-api-key': 'gus' })
+      klass._request_timeout = 60000
+      SupplejackCommon::Request.should_receive(:get).with("http://google.com",60000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'} ).and_return { json }
+      klass.document("http://google.com")
+      expect(klass.next_page_token("$.your_next_page")).to eq "1234"
     end
   end
 
@@ -84,11 +119,6 @@ describe SupplejackCommon::Json::Base do
       klass.fetch_records("http://google.com").should eq [record]
     end
 
-    it "should not set total results" do
-      klass.fetch_records("http://google.com")
-      klass._total_results.should be_nil
-    end
-
     context "pagination options defined" do
 
       before do
@@ -96,9 +126,8 @@ describe SupplejackCommon::Json::Base do
       end
 
       it 'should set the total results if the json expression returns string' do
-        JsonPath.should_receive(:on).with(document, "totalResults") { [22] }
-        klass.fetch_records("http://google.com")
-        klass._total_results.should eq 22
+        JsonPath.should_receive(:on).with(klass._document, "totalResults") { [22] }
+        klass.total_results("totalResults").should eq 22
       end
     end
   end
@@ -110,10 +139,10 @@ describe SupplejackCommon::Json::Base do
       klass._record_selector.should be_nil
     end
 
-    it "clears the total results" do
-      klass._total_results = 100
+    it "clears the _document" do
+      klass._document = {a: 123}
       klass.clear_definitions
-      klass._total_results.should be_nil
+      klass._document.should be_nil
     end
   end
 

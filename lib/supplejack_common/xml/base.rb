@@ -44,6 +44,10 @@ module SupplejackCommon
           self._total_results = nil
           self._record_format = nil
         end
+
+        def total_results(_total_selector)
+          self._total_results
+        end
       end
 
       attr_accessor :original_xml

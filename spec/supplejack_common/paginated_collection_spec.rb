@@ -1,18 +1,18 @@
 # The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# and is licensed under the GNU General Public License, version 3.
+# See https://github.com/DigitalNZ/supplejack for details.
+#
+# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
+# http://digitalnz.org/supplejack
 
 require "spec_helper"
 
 describe SupplejackCommon::PaginatedCollection do
-  
+
   let(:klass) { SupplejackCommon::PaginatedCollection }
   let(:collection) { klass.new(SupplejackCommon::Base, {page_parameter: "page", type: "item", per_page_parameter: "per_page", per_page: 5, page: 1}, {limit: 1}) }
 
-  
+
   describe "#initialize" do
     it "assigns the klass" do
       collection.klass.should eq SupplejackCommon::Base
@@ -32,7 +32,7 @@ describe SupplejackCommon::PaginatedCollection do
   end
 
   describe "#each" do
-    before do 
+    before do
       collection.klass.stub(:base_urls) { ["http://go.gle/", "http://dnz.harvest/1"]}
       collection.stub(:yield_from_records) { true }
       collection.stub(:paginated?) { false }
@@ -46,11 +46,11 @@ describe SupplejackCommon::PaginatedCollection do
 
     context "paginated" do
 
-      before do 
+      before do
         collection.stub(:paginated?) { true }
         collection.stub(:url_options) { {page: 1, per_page: 10} }
         collection.klass.stub(:base_urls) { ["http://go.gle/", "http://dnz.harvest/1"]}
-        SupplejackCommon::Base.stub(:_total_results) { 1 }
+        SupplejackCommon::Base.stub(:total_results) { 1 }
       end
 
       it "should call fetch records with a paginated url" do
@@ -75,11 +75,11 @@ describe SupplejackCommon::PaginatedCollection do
   describe "#next_url" do
     context "paginated" do
 
-      before do 
+      before do
         collection.stub(:paginated?) { true }
         collection.stub(:url_options) { {page: 1, per_page: 10} }
       end
-      
+
       it "returns the url with paginated options" do
         collection.send(:next_url, "http://go.gle/").should eq "http://go.gle/?page=1&per_page=10"
       end
@@ -95,6 +95,28 @@ describe SupplejackCommon::PaginatedCollection do
 
       it "returns the url passed" do
         collection.send(:next_url, "http://goog.gle").should eq "http://goog.gle"
+      end
+    end
+
+    context "tokenised pagination" do
+      let(:params) { {
+        page_parameter: "page",
+        type: "item",
+        tokenised: true,
+        per_page_parameter: "per_page",
+        per_page: 5,
+        next_page_token_location: "next_page_token",
+        page: 1
+        }}
+      let(:collection) { klass.new(SupplejackCommon::Base, params, {limit: 1}) }
+
+      before do
+        SupplejackCommon::Base.stub(:next_page_token) {'abc_1234'}
+        SupplejackCommon::Base.stub(:_document) {true}
+      end
+
+      it "does some things" do
+        expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&page=abc_1234&per_page=5"
       end
     end
   end
@@ -135,7 +157,7 @@ describe SupplejackCommon::PaginatedCollection do
 
   describe "#total_pages" do
     it "returns the total number of pages" do
-      collection.stub(:total) { 36 }
+      SupplejackCommon::Base.stub(:total_results) { 40 }
       collection.stub(:per_page) { 10 }
       collection.send(:total_pages).should eq 4
     end

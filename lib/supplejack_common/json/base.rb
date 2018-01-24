@@ -15,7 +15,7 @@ module SupplejackCommon
       self.clear_definitions
 
       class_attribute :_record_selector
-      class_attribute :_total_results
+      class_attribute :_document
 
       attr_reader :json
 
@@ -27,10 +27,19 @@ module SupplejackCommon
 
         def document(url)
           if url.match(/^https?/)
-            SupplejackCommon::Request.get(url, self._request_timeout, self._throttle, self._http_headers)
+            self._document = SupplejackCommon::Request.get(url, self._request_timeout, self._throttle, self._http_headers)
+            self._document
           elsif url.match(/^file/)
             File.read(url.gsub(/file:\/\//, ""))
           end
+        end
+
+        def next_page_token(next_page_token_location)
+          JsonPath.on(self._document, next_page_token_location).try(:first)
+        end
+
+        def total_results(total_selector)
+          JsonPath.on(self._document, total_selector).try(:first).to_f
         end
 
         def records_json(url)
@@ -40,7 +49,6 @@ module SupplejackCommon
         end
 
         def fetch_records(url)
-          self._total_results ||= JsonPath.on(document(url), self.pagination_options[:total_selector]).first if pagination_options
           records_json(url).map {|attributes| self.new(attributes) }
         end
 
@@ -51,9 +59,8 @@ module SupplejackCommon
         def clear_definitions
           super
           self._record_selector = nil
-          self._total_results = nil
+          self._document = nil
         end
-
       end
 
       def initialize(json, from_raw = false)
