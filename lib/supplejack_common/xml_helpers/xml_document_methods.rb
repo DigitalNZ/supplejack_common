@@ -23,7 +23,7 @@ module SupplejackCommon
           document = parse_document(file)
           self._document = document
           xml_nodes += document.xpath(self._record_selector, self._namespaces).map {|node| new(node, url) }
-          if pagination_options.include?(:total_selector)
+          if pagination_options&.include?(:total_selector)
             if self.pagination_options[:total_selector].start_with?("/")
               self._total_results ||= document.xpath(self.pagination_options[:total_selector]).text.to_i
             else
