@@ -18,8 +18,17 @@ module SupplejackCommon
       class_attribute :_record_selector
       class_attribute :_record_format
       class_attribute :_total_results
+      class_attribute :_document
 
       class << self
+        def record_selector(xpath)
+          self._record_selector = xpath
+        end
+
+        def next_page_token(next_page_token_location)
+          _document.xpath('//o:resumptionToken', self._namespaces).first.text
+        end
+
         def records(options={})
           options.reverse_merge!(limit: nil)
           klass = !!self._sitemap_entry_selector ? SupplejackCommon::Sitemap::PaginatedCollection : SupplejackCommon::PaginatedCollection
@@ -34,15 +43,13 @@ module SupplejackCommon
           self._record_format = format.to_sym
         end
 
-        def record_selector(xpath)
-          self._record_selector = xpath
-        end
 
         def clear_definitions
           super
           self._record_selector = nil
           self._total_results = nil
           self._record_format = nil
+          self._document = nil
         end
 
         def total_results(_total_selector)
