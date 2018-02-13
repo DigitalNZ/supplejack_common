@@ -16,6 +16,20 @@ describe SupplejackCommon::Xml::Base do
     klass.clear_definitions
   end
 
+  describe ".record_selector" do
+    it 'assignes the record selector xpath class attributed' do
+      klass.record_selector("//o:ListRecords/o:record")
+      expect(klass._record_selector).to eq "//o:ListRecords/o:record"
+    end
+  end
+
+  describe "next_page_token" do
+    it 'returns the next page token from the document of xml' do
+      klass._document = Nokogiri::XML.parse "<NextPageToken>token</NextPageToken>"
+      expect(klass.next_page_token('//NextPageToken')).to eq 'token'
+    end
+  end
+
   describe ".records" do
     it "returns an object of type SupplejackCommon::Sitemap::PaginatedCollection when sitemap_entry_selector is set" do
       klass.should_receive(:_sitemap_entry_selector).twice.and_return("//loc")
