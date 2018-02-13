@@ -100,7 +100,7 @@ describe SupplejackCommon::PaginatedCollection do
 
     context "tokenised pagination" do
       let(:params) { {
-        page_parameter: "page",
+        page_parameter: "page-parameter",
         type: "item",
         tokenised: true,
         per_page_parameter: "per_page",
@@ -115,9 +115,33 @@ describe SupplejackCommon::PaginatedCollection do
         SupplejackCommon::Base.stub(:_document) {true}
       end
 
-      it "does some things" do
-        expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&page=abc_1234&per_page=5"
+      it "generates the next url" do
+        expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&page-parameter=abc_1234&per_page=5"
       end
+    end
+
+    context "with initial parameter" do
+        let(:params) { {
+          page_parameter: "page-parameter",
+          type: "item",
+          tokenised: true,
+          initial_param: 'initial-paramater=true'
+        }}
+        let(:collection) { klass.new(SupplejackCommon::Base, params, {limit: 1}) }
+
+        before do
+          SupplejackCommon::Base.stub(:next_page_token) {'abc_1234'}
+          SupplejackCommon::Base.stub(:_document) {true}
+        end
+
+        it "generates a url with an initial parameter" do
+          expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&initial-paramater=true"
+        end
+
+        it 'generates next url without initial parameter after the first call' do
+          expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&initial-paramater=true"
+          expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&page-parameter=abc_1234"
+        end
     end
   end
 
