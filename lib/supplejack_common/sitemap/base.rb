@@ -14,6 +14,7 @@ module SupplejackCommon
 
     	class_attribute :_record_selector
     	class_attribute :_namespaces
+      class_attribute :_document
 
     	class << self
     		def fetch_entries(url=nil)
