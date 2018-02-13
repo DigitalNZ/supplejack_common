@@ -149,6 +149,11 @@ describe SupplejackCommon::PaginatedCollection do
     it "returns a hash with the url options" do
       collection.send(:url_options).should eq({"page" => 1, "per_page" => 5})
     end
+
+    it "removes nil keys from the hash of url options" do
+      collection = klass.new(SupplejackCommon::Base, {page_parameter: "page", page: 1, type: "item", per_page_parameter: nil}) 
+        collection.send(:url_options).should eq({"page" => 1})
+    end
   end
 
   describe "#current_page" do
