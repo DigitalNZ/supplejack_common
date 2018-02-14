@@ -100,9 +100,8 @@ describe SupplejackCommon::PaginatedCollection do
 
     context "tokenised pagination" do
       let(:params) { {
-        page_parameter: "page",
-        type: "item",
-        tokenised: true,
+        page_parameter: "page-parameter",
+        type: "token",
         per_page_parameter: "per_page",
         per_page: 5,
         next_page_token_location: "next_page_token",
@@ -115,15 +114,43 @@ describe SupplejackCommon::PaginatedCollection do
         SupplejackCommon::Base.stub(:_document) {true}
       end
 
-      it "does some things" do
-        expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&page=abc_1234&per_page=5"
+      it "generates the next url" do
+        expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&page-parameter=abc_1234&per_page=5"
       end
+    end
+
+    context "with initial parameter" do
+        let(:params) { {
+          page_parameter: "page-parameter",
+          type: "token",
+          initial_param: 'initial-paramater=true'
+        }}
+        let(:collection) { klass.new(SupplejackCommon::Base, params, {limit: 1}) }
+
+        before do
+          SupplejackCommon::Base.stub(:next_page_token) {'abc_1234'}
+          SupplejackCommon::Base.stub(:_document) {true}
+        end
+
+        it "generates a url with an initial parameter" do
+          expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&initial-paramater=true"
+        end
+
+        it 'generates next url without initial parameter after the first call' do
+          expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&initial-paramater=true"
+          expect(collection.send(:next_url, "http://go.gle/?sort=asc")).to eq "http://go.gle/?sort=asc&page-parameter=abc_1234"
+        end
     end
   end
 
   describe "#url_options" do
     it "returns a hash with the url options" do
       collection.send(:url_options).should eq({"page" => 1, "per_page" => 5})
+    end
+
+    it "removes nil keys from the hash of url options" do
+      collection = klass.new(SupplejackCommon::Base, {page_parameter: "page", page: 1, type: "item", per_page_parameter: nil}) 
+        collection.send(:url_options).should eq({"page" => 1})
     end
   end
 

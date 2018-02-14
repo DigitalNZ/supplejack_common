@@ -25,9 +25,9 @@ module SupplejackCommon
       @per_page                   = pagination_options[:per_page]
       @page                       = pagination_options[:page]
       @type                       = pagination_options[:type]
-      @tokenised                  = pagination_options[:tokenised] || false
       @next_page_token_location   = pagination_options[:next_page_token_location]
       @total_selector             = pagination_options[:total_selector]
+      @initial_param              = pagination_options[:initial_param]
 
       @options = options
       @counter = 0
@@ -56,16 +56,24 @@ module SupplejackCommon
 
     private
 
+    def initial_url(url, joiner)
+      url = "#{url}#{joiner}#{@initial_param}"
+      @initial_param = nil
+      url
+    end
+
     def next_url(url)
       if paginated?
           joiner = url.match(/\?/) ? "&" : "?"
-        if @tokenised
+        if tokenised?
           @page = self.klass._document.present? ? self.klass.next_page_token(@next_page_token_location) : nil
-          url = "#{url}#{joiner}#{url_options.to_query}"
+          result = "#{url}#{joiner}#{url_options.to_query}"
+          result = initial_url(url, joiner) if @initial_param.present?
+          result
         else
-          url = "#{url}#{joiner}#{url_options.to_query}"
+          result = "#{url}#{joiner}#{url_options.to_query}"
           increment_page_counter!
-          url
+          result
         end
       else
         url
@@ -73,7 +81,10 @@ module SupplejackCommon
     end
 
     def url_options
-      {page_parameter => page, per_page_parameter => per_page}
+      options = {}
+      options[page_parameter] = page if page_parameter.present?
+      options[per_page_parameter] = per_page if per_page_parameter.present?
+      options
     end
 
     def page_pagination?
@@ -101,18 +112,18 @@ module SupplejackCommon
     end
 
     def more_results?
-      if @tokenised
+      if tokenised?
         return self.klass.next_page_token(@next_page_token_location).present?
       end
       current_page <= total_pages
     end
 
     def paginated?
-      (page && per_page) || @tokenised
+      (page && per_page) || tokenised?
     end
 
     def tokenised?
-      @tokenised
+      @type == 'token'
     end
 
     def yield_from_records(&block)
