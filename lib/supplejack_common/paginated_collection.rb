@@ -67,12 +67,13 @@ module SupplejackCommon
           joiner = url.match(/\?/) ? "&" : "?"
         if tokenised?
           @page = self.klass._document.present? ? self.klass.next_page_token(@next_page_token_location) : nil
-          return initial_url(url, joiner) if @initial_param.present?
-          url = "#{url}#{joiner}#{url_options.to_query}"
+          result = "#{url}#{joiner}#{url_options.to_query}"
+          result = initial_url(url, joiner) if @initial_param.present?
+          result
         else
-          url = "#{url}#{joiner}#{url_options.to_query}"
+          result = "#{url}#{joiner}#{url_options.to_query}"
           increment_page_counter!
-          url
+          result
         end
       else
         url
