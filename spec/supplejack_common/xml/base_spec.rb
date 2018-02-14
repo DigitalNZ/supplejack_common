@@ -23,7 +23,7 @@ describe SupplejackCommon::Xml::Base do
     end
   end
 
-  describe "next_page_token" do
+  describe ".next_page_token" do
     it 'returns the next page token from the document of xml' do
       klass._document = Nokogiri::XML.parse "<NextPageToken>token</NextPageToken>"
       expect(klass.next_page_token('//NextPageToken')).to eq 'token'
