@@ -123,7 +123,7 @@ module SupplejackCommon
     end
 
     def tokenised?
-      @type == 'tokenised'
+      @type == 'token'
     end
 
     def yield_from_records(&block)

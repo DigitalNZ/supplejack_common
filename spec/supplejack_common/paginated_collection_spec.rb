@@ -101,7 +101,7 @@ describe SupplejackCommon::PaginatedCollection do
     context "tokenised pagination" do
       let(:params) { {
         page_parameter: "page-parameter",
-        type: "tokenised",
+        type: "token",
         per_page_parameter: "per_page",
         per_page: 5,
         next_page_token_location: "next_page_token",
@@ -122,7 +122,7 @@ describe SupplejackCommon::PaginatedCollection do
     context "with initial parameter" do
         let(:params) { {
           page_parameter: "page-parameter",
-          type: "tokenised",
+          type: "token",
           initial_param: 'initial-paramater=true'
         }}
         let(:collection) { klass.new(SupplejackCommon::Base, params, {limit: 1}) }
