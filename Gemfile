@@ -9,11 +9,12 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in supplejack_common.gemspec
 gemspec
 
+gem 'loofah'
 gem 'oai', '~> 0.3.1'
 gem 'pry'
-gem 'loofah'
+gem 'rubocop', require: false
 
 group :test do
-  gem 'simplecov', require: false
   gem 'mock_redis'
+  gem 'simplecov', require: false
 end
