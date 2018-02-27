@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
   module Modifiers
     class WhitespaceStripper < AbstractModifier
-        
       attr_reader :original_value
 
       def initialize(original_value)
@@ -13,7 +14,6 @@ module SupplejackCommon
           v.is_a?(String) ? v.strip : v
         end
       end
-      
     end
   end
 end

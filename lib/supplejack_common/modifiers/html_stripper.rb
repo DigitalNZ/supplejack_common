@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
   module Modifiers
-    class HtmlStripper < AbstractModifier       
+    class HtmlStripper < AbstractModifier
       attr_reader :original_value
 
       def initialize(original_value)
@@ -19,9 +21,8 @@ module SupplejackCommon
       end
 
       def validate_encoding(html)
-        return html.dup.force_encoding('UTF-8').encode('UTF-16', invalid: :replace, replace: '').encode('UTF-8')
+        html.dup.force_encoding('UTF-8').encode('UTF-16', invalid: :replace, replace: '').encode('UTF-8')
       end
-
     end
   end
 end

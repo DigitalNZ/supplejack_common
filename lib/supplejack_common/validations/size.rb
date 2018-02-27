@@ -1,10 +1,9 @@
-
+# frozen_string_literal: true
 
 module ActiveModel
   # == Active Model Length Validator
   module Validations
     class SizeValidator < LengthValidator
-
       def validate_each(record, attribute, value)
         value = Array(value)
         value_length = value.length
@@ -22,7 +21,6 @@ module ActiveModel
           record.errors.add(attribute, MESSAGES[key], errors_options)
         end
       end
-
     end
   end
 end

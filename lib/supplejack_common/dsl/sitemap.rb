@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
   module Dsl
     module Sitemap

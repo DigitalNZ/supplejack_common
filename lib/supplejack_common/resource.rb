@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
   # SJ Resources
   class Resource
@@ -12,12 +14,12 @@ module SupplejackCommon
       @http_headers = options[:http_headers] || {}
     end
 
-    def strategy_value(options)
-      raise NotImplementedError.new('All subclasses of SupplejackCommon::Resource must override #strategy_value.')
+    def strategy_value(_options)
+      raise NotImplementedError, 'All subclasses of SupplejackCommon::Resource must override #strategy_value.'
     end
 
-    def fetch(params)
-      raise NotImplementedError.new('All subclasses of SupplejackCommon::Resource must override #fetch.')
+    def fetch(_params)
+      raise NotImplementedError, 'All subclasses of SupplejackCommon::Resource must override #fetch.'
     end
 
     protected

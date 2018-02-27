@@ -1,24 +1,23 @@
+# frozen_string_literal: true
 
-
-require "spec_helper"
+require 'spec_helper'
 
 describe SupplejackCommon::Modifiers::HtmlStripper do
-
   let(:klass) { SupplejackCommon::Modifiers::HtmlStripper }
-  let(:stripper) { klass.new(" cats ") }
+  let(:stripper) { klass.new(' cats ') }
 
-  describe "#initialize" do
-    it "assigns the original_value" do
-      stripper.original_value.should eq [" cats "]
+  describe '#initialize' do
+    it 'assigns the original_value' do
+      stripper.original_value.should eq [' cats ']
     end
   end
 
-  describe "#modify" do
+  describe '#modify' do
     let(:html_string) { "<div id='top'>Stripped</div>" }
 
-    it "strips html characters from a string" do
+    it 'strips html characters from a string' do
       stripper.stub(:original_value) { [html_string] }
-      stripper.modify.should eq ["Stripped"]
+      stripper.modify.should eq ['Stripped']
     end
 
     it "doesn't try to strip_html from non strings" do
@@ -30,7 +29,7 @@ describe SupplejackCommon::Modifiers::HtmlStripper do
     it 'removes invalid encoded characters' do
       invalid_html = 'Something with invalid characters \x80 and tags.'
       stripper.stub(:original_value) { [invalid_html] }
-      stripper.modify.should eq ["Something with invalid characters \\x80 and tags."]
+      stripper.modify.should eq ['Something with invalid characters \\x80 and tags.']
     end
   end
 end

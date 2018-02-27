@@ -1,14 +1,14 @@
-
+# frozen_string_literal: true
 
 module SupplejackCommon
   class XmlResource < Resource
     include SupplejackCommon::XmlDslMethods
 
-    def initialize(url, options={})
+    def initialize(url, options = {})
       super
       self.class.namespaces(options[:namespaces] || {})
     end
-    
+
     def document
       @document ||= begin
         Nokogiri::XML.parse(fetch_document)

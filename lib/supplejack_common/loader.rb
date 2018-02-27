@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
   # Loader Class
   class Loader
-
     attr_accessor :parser, :load_error, :environment
 
     def initialize(parser, environment)
@@ -20,11 +21,11 @@ module SupplejackCommon
 
     def create_tempfile
       FileUtils.mkdir_p("#{SupplejackCommon.parser_base_path}/#{parser.strategy}")
-      File.open(path, "w") {|f| f.write(content_with_encoding) }
+      File.open(path, 'w') { |f| f.write(content_with_encoding) }
     end
 
     def parser_class_name
-      parser.name.gsub(/\s/, "_").camelize
+      parser.name.gsub(/\s/, '_').camelize
     end
 
     def parser_class_name_with_module
