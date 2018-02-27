@@ -1,5 +1,3 @@
-
-
 module SupplejackCommon
   module Sitemap
     class Base < SupplejackCommon::Base

@@ -1,5 +1,3 @@
-
-
 module SupplejackCommon
   module Rss
     class Base < SupplejackCommon::Base

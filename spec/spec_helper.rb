@@ -1,5 +1,3 @@
-
-
 require 'supplejack_common'
 require 'webmock/rspec'
 require 'simplecov'

@@ -1,5 +1,3 @@
-
-
 module SupplejackCommon
   module Xml
     class Base < SupplejackCommon::Base
