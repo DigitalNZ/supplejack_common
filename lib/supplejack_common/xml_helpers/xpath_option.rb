@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require 'sanitize'
 require 'htmlentities'
@@ -6,7 +7,7 @@ module SupplejackCommon
   class XpathOption
     attr_reader :document, :options, :namespace_definitions
 
-    def initialize(document, options, namespace_definitions={})
+    def initialize(document, options, namespace_definitions = {})
       @document = document
       @options = options
       @namespace_definitions = namespace_definitions || {}
@@ -17,14 +18,14 @@ module SupplejackCommon
       return nodes if options[:object]
 
       strategies = {
-        custom_sanitize: ->() {
+        custom_sanitize: lambda {
           if nodes.is_a?(Array)
             nodes.map(&method(:extract_node_value))
           else
             extract_node_value(nodes)
           end
         },
-        normal: ->() {
+        normal: lambda {
           if nodes.is_a?(Array)
             nodes.map(&:text)
           else
@@ -45,7 +46,7 @@ module SupplejackCommon
       @nodes = []
 
       xpath_expressions.each do |xpath|
-        @nodes += document.xpath("#{xpath_value(xpath)}", namespace_definitions)
+        @nodes += document.xpath(xpath_value(xpath).to_s, namespace_definitions)
       end
 
       @nodes

@@ -1,13 +1,12 @@
-
+# frozen_string_literal: true
 
 module SupplejackCommon
   module Oai
     class PaginatedCollection < SupplejackCommon::PaginatedCollection
-
       include Enumerable
 
       attr_reader :client, :options, :klass, :limit
-          
+
       def initialize(client, options, klass)
         @client = client
         @limit = options.delete(:limit)

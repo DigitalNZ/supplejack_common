@@ -1,8 +1,7 @@
-
+# frozen_string_literal: true
 
 module OAI
   class Record
-
     attr_accessor :element
 
     def initialize(element)

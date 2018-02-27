@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
   module Modifiers
     class Truncator < AbstractModifier
-
       attr_reader :original_value, :length, :omission
 
       def initialize(original_value, length, omission = '...')

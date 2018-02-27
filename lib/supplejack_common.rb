@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/all'
 require 'active_model'
 require 'mongoid'

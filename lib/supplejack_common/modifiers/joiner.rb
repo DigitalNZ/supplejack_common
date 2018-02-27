@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
   module Modifiers
     class Joiner < AbstractModifier
-        
       attr_reader :original_value, :joiner
 
       def initialize(original_value, joiner)
@@ -11,7 +12,7 @@ module SupplejackCommon
 
       def modify
         [original_value.join(joiner)]
-      end      
+      end
     end
   end
 end

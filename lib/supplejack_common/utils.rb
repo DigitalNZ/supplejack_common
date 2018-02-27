@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'benchmark'
 
 module SupplejackCommon
@@ -22,14 +24,14 @@ module SupplejackCommon
     end
 
     def add_html_tag(html)
-      unless html.match(/(<(!DOCTYPE )?html.*>)|(<\?xml.*\?>)/i)
+      unless html =~ /(<(!DOCTYPE )?html.*>)|(<\?xml.*\?>)/i
         html = "<html>#{html}</html>"
       end
       html
     end
 
-    def add_namespaces(xml, namespaces={})
-      namespaces_string = namespaces.map {|k,v| "#{k}='#{v}'" }.join(" ")
+    def add_namespaces(xml, namespaces = {})
+      namespaces_string = namespaces.map { |k, v| "#{k}='#{v}'" }.join(' ')
       "<root #{namespaces_string}>#{xml}</root>"
     end
   end

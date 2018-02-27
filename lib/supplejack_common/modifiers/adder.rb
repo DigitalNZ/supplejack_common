@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
   module Modifiers
     class Adder < AbstractModifier
-
       attr_reader :new_value
 
       def initialize(original_value, new_value)

@@ -15,7 +15,7 @@ module OAI
         Faraday.new(url: @base.clone) do |builder|
           follow_redirects = options.fetch(:redirects, true)
           if follow_redirects
-            count = follow_redirects.is_a?(Fixnum) ? follow_redirects : 5
+            count = follow_redirects.is_a?(Integer) ? follow_redirects : 5
 
             require 'faraday_middleware'
             builder.response :follow_redirects, limit: count
@@ -34,7 +34,7 @@ module OAI
         begin
           require 'rubygems'
           require 'xml/libxml'
-        rescue
+        rescue StandardError
           raise OAI::Exception, 'xml/libxml not available'
         end
       when 'rexml'

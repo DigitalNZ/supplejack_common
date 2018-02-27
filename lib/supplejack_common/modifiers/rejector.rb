@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
   module Modifiers
     class Rejector < AbstractModifier
-        
       attr_reader :original_value, :regex
 
       def initialize(original_value, regex)
@@ -10,7 +11,7 @@ module SupplejackCommon
       end
 
       def modify
-        original_value.reject_if { |v| v.match }
+        original_value.reject_if(&:match)
       end
     end
   end

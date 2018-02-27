@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
-	# FragmentWrap
+  # FragmentWrap
   class FragmentWrap
-    
     attr_reader :fragment
 
     def initialize(fragment)

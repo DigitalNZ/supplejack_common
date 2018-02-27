@@ -1,8 +1,7 @@
-
+# frozen_string_literal: true
 
 module SupplejackCommon
   class JsonResource < Resource
-    
     def document
       @document ||= JSON.parse(fetch_document)
     end
@@ -13,7 +12,7 @@ module SupplejackCommon
       return nil unless path.present?
 
       if path.is_a?(Array)
-        path.map {|p| document[p] }
+        path.map { |p| document[p] }
       else
         document[path]
       end
@@ -25,7 +24,7 @@ module SupplejackCommon
     end
 
     def requirements
-      self.attributes[:requirements]
+      attributes[:requirements]
     end
   end
 end

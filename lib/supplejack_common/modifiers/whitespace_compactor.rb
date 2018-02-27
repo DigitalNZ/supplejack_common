@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module SupplejackCommon
   module Modifiers
     class WhitespaceCompactor < AbstractModifier
-        
       attr_reader :original_value
 
       def initialize(original_value)
@@ -10,10 +11,9 @@ module SupplejackCommon
 
       def modify
         original_value.map do |v|
-          v.is_a?(String) ? v.gsub(/\s+/,' ') : v
+          v.is_a?(String) ? v.gsub(/\s+/, ' ') : v
         end
       end
-      
     end
   end
 end
