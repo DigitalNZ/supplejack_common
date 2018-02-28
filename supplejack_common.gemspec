@@ -43,7 +43,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "htmlentities"
   gem.add_runtime_dependency 'retriable'
 
-  gem.add_development_dependency "rake"
+  gem.add_development_dependency "rake",       '< 11.0'
   gem.add_development_dependency "rspec",      "~> 2.11.0"
   gem.add_development_dependency "webmock",    "~> 1.8"
 end
