@@ -31,7 +31,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "mongoid"
 
   gem.add_runtime_dependency "nokogiri"
-  gem.add_runtime_dependency "rest-client",     "~> 1.6.7"
+  gem.add_runtime_dependency "rest-client"
   gem.add_runtime_dependency "jsonpath",        "~> 0.5.0"
   gem.add_runtime_dependency "chronic",         "<= 0.10.2"
   gem.add_runtime_dependency "tzinfo"
@@ -43,7 +43,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "htmlentities"
   gem.add_runtime_dependency 'retriable'
 
-  gem.add_development_dependency "rake"
+  gem.add_development_dependency "rake",       '< 11.0'
   gem.add_development_dependency "rspec",      "~> 2.11.0"
   gem.add_development_dependency "webmock",    "~> 1.8"
 end
