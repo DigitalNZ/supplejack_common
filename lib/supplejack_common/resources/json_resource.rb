@@ -1,13 +1,7 @@
-# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# frozen_string_literal: true
 
 module SupplejackCommon
   class JsonResource < Resource
-    
     def document
       @document ||= JSON.parse(fetch_document)
     end
@@ -18,7 +12,7 @@ module SupplejackCommon
       return nil unless path.present?
 
       if path.is_a?(Array)
-        path.map {|p| document[p] }
+        path.map { |p| document[p] }
       else
         document[path]
       end
@@ -30,7 +24,7 @@ module SupplejackCommon
     end
 
     def requirements
-      self.attributes[:requirements]
+      attributes[:requirements]
     end
   end
 end

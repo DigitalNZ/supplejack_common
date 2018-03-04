@@ -1,16 +1,8 @@
-# The Supplejack Common code is
-# Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3.
-# See https://github.com/DigitalNZ/supplejack for details.
-#
-# Supplejack was created by DigitalNZ at the
-# National Library of NZ and the Department of Internal Affairs.
-# http://digitalnz.org/supplejack
+# frozen_string_literal: true
 
 module SupplejackCommon
   module Modifiers
     class RangeSelector < AbstractModifier
-
       def initialize(original_value, start_range, end_range = nil)
         @original_value = original_value
         @start_range = start_range
@@ -20,13 +12,13 @@ module SupplejackCommon
       def start_range
         return 0 if @start_range == :first
         return -1 if @start_range == :last
-        return @start_range-1 if @start_range > 0
+        return @start_range - 1 if @start_range.positive?
         @start_range
       end
 
       def end_range
         return -1 if @end_range == :last
-        return @end_range-1 if @end_range && @end_range > 0
+        return @end_range - 1 if @end_range&.positive?
         @end_range
       end
 

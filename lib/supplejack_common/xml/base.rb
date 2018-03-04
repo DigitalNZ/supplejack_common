@@ -1,9 +1,4 @@
-# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3.
-# See https://github.com/DigitalNZ/supplejack for details.
-#
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs.
-# http://digitalnz.org/supplejack
+# frozen_string_literal: true
 
 module SupplejackCommon
   module Xml
@@ -13,7 +8,7 @@ module SupplejackCommon
       include SupplejackCommon::XmlDocumentMethods
       include SupplejackCommon::Dsl::Sitemap
 
-      self.clear_definitions
+      clear_definitions
 
       class_attribute :_record_selector
       class_attribute :_record_format
@@ -26,23 +21,22 @@ module SupplejackCommon
         end
 
         def next_page_token(next_page_token_location)
-          self._document.xpath(next_page_token_location, self._namespaces).first.text
+          _document.xpath(next_page_token_location, _namespaces).first.text
         end
 
-        def records(options={})
+        def records(options = {})
           options.reverse_merge!(limit: nil)
-          klass = !!self._sitemap_entry_selector ? SupplejackCommon::Sitemap::PaginatedCollection : SupplejackCommon::PaginatedCollection
-          klass.new(self, self.pagination_options, options)
+          klass = !!_sitemap_entry_selector ? SupplejackCommon::Sitemap::PaginatedCollection : SupplejackCommon::PaginatedCollection
+          klass.new(self, pagination_options, options)
         end
 
-        def fetch_records(url=nil)
+        def fetch_records(url = nil)
           xml_records(url)
         end
 
         def record_format(format)
           self._record_format = format.to_sym
         end
-
 
         def clear_definitions
           super
@@ -53,13 +47,13 @@ module SupplejackCommon
         end
 
         def total_results(_total_selector)
-          self._total_results
+          _total_results
         end
       end
 
       attr_accessor :original_xml
 
-      def initialize(node, url=nil, from_raw=false)
+      def initialize(node, url = nil, from_raw = false)
         if from_raw
           @original_xml = node
         else
@@ -77,7 +71,7 @@ module SupplejackCommon
 
       def url
         if self.class.basic_auth_credentials
-          @url.gsub("http://", "http://#{self.class.basic_auth_credentials[:username]}:#{self.class.basic_auth_credentials[:password]}@")
+          @url.gsub('http://', "http://#{self.class.basic_auth_credentials[:username]}:#{self.class.basic_auth_credentials[:password]}@")
         else
           @url
         end
@@ -86,7 +80,7 @@ module SupplejackCommon
       def document
         @document ||= begin
           if @url
-            response = SupplejackCommon::Request.get(self.url, self._request_timeout, self._throttle, self._http_headers)
+            response = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers)
             response = SupplejackCommon::Utils.add_html_tag(response) if format == :html
           elsif @original_xml
             response = @original_xml
@@ -99,7 +93,6 @@ module SupplejackCommon
           end
         end
       end
-
     end
   end
 end

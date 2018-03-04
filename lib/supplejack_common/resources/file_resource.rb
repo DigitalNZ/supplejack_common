@@ -1,21 +1,15 @@
-# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# frozen_string_literal: true
 
 require 'dimensions'
 require 'mimemagic'
 
 module SupplejackCommon
   class FileResource < Resource
-
     def document
       @document ||= begin
         file = Tempfile.new('small_image')
         file.binmode
-        file.write(self.fetch_document)
+        file.write(fetch_document)
         file
       end
     end
@@ -23,8 +17,8 @@ module SupplejackCommon
     def attributes
       return @attributes unless @attributes.empty?
 
-      [:size, :height, :width, :mime_type, :extension, :url].each do |attribute|
-        @attributes[attribute] = self.send(attribute)
+      %i[size height width mime_type extension url].each do |attribute|
+        @attributes[attribute] = send(attribute)
       end
 
       @attributes
@@ -36,8 +30,8 @@ module SupplejackCommon
 
     def dimensions
       @dimensions ||= begin
-      # Dimensions gem doesn't yet have the ability to read a file from memory, so we have to flush the 
-      # contents of the Tempfile to the OS so that it reads the dimensions correctly
+        # Dimensions gem doesn't yet have the ability to read a file from memory, so we have to flush the
+        # contents of the Tempfile to the OS so that it reads the dimensions correctly
         if document
           document.flush
           Dimensions.dimensions(document)
@@ -54,7 +48,7 @@ module SupplejackCommon
     end
 
     def mime_magic
-      @mime_magic ||= MimeMagic.by_path(self.url) || MimeMagic.by_magic(self.document)
+      @mime_magic ||= MimeMagic.by_path(url) || MimeMagic.by_magic(document)
     end
 
     def mime_type
@@ -62,25 +56,22 @@ module SupplejackCommon
     end
 
     def extension
-      extension = File.extname(self.url)[1..-1].to_s.downcase
-      
-      unless extension.length.between?(1,5)
+      extension = File.extname(url)[1..-1].to_s.downcase
+
+      unless extension.length.between?(1, 5)
         extensions = mime_magic.try(:extensions) || []
-        extensions.delete("jpe")
+        extensions.delete('jpe')
         extension = extensions.first
       end
       extension
     end
 
     def fetch(value)
-      self.public_send(value.to_sym)
+      public_send(value.to_sym)
     end
 
     def strategy_value(options)
-      if options[:field].present?
-        fetch(options[:field])
-      end
+      fetch(options[:field]) if options[:field].present?
     end
-    
   end
 end

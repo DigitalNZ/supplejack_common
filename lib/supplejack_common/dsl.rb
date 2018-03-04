@@ -1,11 +1,4 @@
-# The Supplejack Common code is
-# Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3.
-# See https://github.com/DigitalNZ/supplejack for details.
-#
-# Supplejack was created by DigitalNZ at the
-# National Library of NZ and the Department of Internal Affairs.
-# http://digitalnz.org/supplejack
+# frozen_string_literal: true
 
 module SupplejackCommon
   # DSLs for supplejack
@@ -42,16 +35,14 @@ module SupplejackCommon
     end
 
     module ClassMethods
-
       # DEPRECATED: source_id is no longer defined in the parser.
       # This method stub exists to smooth the transition for existing parser
       # Needs to be removed soon - 2013-09-17
-      def source_id(id)
-      end
+      def source_id(id); end
 
       def base_url(url)
-        self._base_urls[self.identifier] ||= []
-        self._base_urls[self.identifier] += [url]
+        _base_urls[identifier] ||= []
+        _base_urls[identifier] += [url]
       end
 
       # This takes a hash of HTTP headers
@@ -61,18 +52,18 @@ module SupplejackCommon
       end
 
       def basic_auth(username, password)
-        self._basic_auth[self.identifier] = {username: username, password: password}
+        _basic_auth[identifier] = { username: username, password: password }
       end
 
-      def paginate(options={})
-        self._pagination_options[self.identifier] = options
+      def paginate(options = {})
+        _pagination_options[identifier] = options
       end
 
-      def attribute(name, options={}, &block)
-        self._attribute_definitions[self.identifier] ||= {}
-        self._attribute_definitions[self.identifier][name] = options || {}
+      def attribute(name, options = {}, &block)
+        _attribute_definitions[identifier] ||= {}
+        _attribute_definitions[identifier][name] = options || {}
 
-        self._attribute_definitions[self.identifier][name][:block] = block if block_given?
+        _attribute_definitions[identifier][name][:block] = block if block_given?
       end
 
       def attributes(*args, &block)
@@ -83,27 +74,27 @@ module SupplejackCommon
         end
       end
 
-      def enrichment(name, options={}, &block)
-        self._enrichment_definitions[self.identifier] ||= {}
-        self._enrichment_definitions[self.identifier][name] = options || {}
+      def enrichment(name, options = {}, &block)
+        _enrichment_definitions[identifier] ||= {}
+        _enrichment_definitions[identifier][name] = options || {}
 
-        self._enrichment_definitions[self.identifier][name][:block] = block if block_given?
+        _enrichment_definitions[identifier][name][:block] = block if block_given?
       end
 
-      def with_options(options={}, &block)
+      def with_options(options = {})
         yield(SupplejackCommon::Scope.new(self, options))
       end
 
       def reject_if(&block)
-        self._rejection_rules[self.identifier] ||= []
-        self._rejection_rules[self.identifier] += [block]
+        _rejection_rules[identifier] ||= []
+        _rejection_rules[identifier] += [block]
       end
 
       def delete_if(&block)
-        self._deletion_rules[self.identifier] = block
+        _deletion_rules[identifier] = block
       end
 
-      def throttle(options={})
+      def throttle(options = {})
         self._throttle ||= []
         self._throttle << options
       end
@@ -113,11 +104,11 @@ module SupplejackCommon
       end
 
       def priority(priority)
-        self._priority[self.identifier] = priority
+        _priority[identifier] = priority
       end
 
       def match_concepts(match_concepts)
-        self._match_concepts[self.identifier] = match_concepts
+        _match_concepts[identifier] = match_concepts
       end
     end
   end

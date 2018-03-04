@@ -1,21 +1,13 @@
-# The Supplejack Common code is
-# Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3.
-# See https://github.com/DigitalNZ/supplejack for details.
-#
-# Supplejack was created by DigitalNZ at the
-# National Library of NZ and the Department of Internal Affairs.
-# http://digitalnz.org/supplejack
+# frozen_string_literal: true
 
 module SupplejackCommon
   #  AttributeValue
   class AttributeValue
-
     attr_reader :original_value
-    
+
     def initialize(original_value)
       @original_value = Array(original_value)
-      @original_value = @original_value.delete_if { |v| v == "" or v.nil? }
+      @original_value = @original_value.delete_if { |v| (v == '') || v.nil? }
       @original_value = self.class.deep_clone(@original_value)
     end
 
@@ -37,7 +29,7 @@ module SupplejackCommon
 
     def +(attribute_value)
       attribute_value = attribute_value.original_value if attribute_value.is_a?(AttributeValue)
-      self.class.new(self.original_value + Array(attribute_value).uniq)
+      self.class.new(original_value + Array(attribute_value).uniq)
     end
 
     def includes?(value)
@@ -48,11 +40,11 @@ module SupplejackCommon
       end
     end
 
-    def as_json(options = {})
+    def as_json(_options = {})
       original_value
     end
 
-    alias_method :include?, :includes?
+    alias include? includes?
 
     def join(joiner)
       SupplejackCommon::Modifiers::Joiner.new(original_value, joiner).value

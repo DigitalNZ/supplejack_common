@@ -1,11 +1,5 @@
-# The Supplejack Common code is
-# Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3.
-# See https://github.com/DigitalNZ/supplejack for details.
-#
-# Supplejack was created by DigitalNZ at the
-# National Library of NZ and the Department of Internal Affairs.
-# http://digitalnz.org/supplejack
+
+# frozen_string_literal: true
 
 module SupplejackCommon
   # AttributeBuilder
@@ -34,11 +28,15 @@ module SupplejackCommon
 
     def attribute_value
       return options[:default] if options.key? :default
-      return record.strategy_value(options)
+      record.strategy_value(options)
     end
 
     def value
-      if block = options[:block] rescue nil
+      if block = begin
+                   options[:block]
+                 rescue StandardError
+                   nil
+                 end
         begin
           record.attributes[attribute_name] = transform
           return evaluate_attribute_block(&block)
@@ -58,7 +56,7 @@ module SupplejackCommon
 
       block_result = strip_html_option(block_result)
       block_result = strip_whitespace_option(block_result)
-    
+
       unless block_result.is_a?(SupplejackCommon::AttributeValue)
         block_result = SupplejackCommon::AttributeValue.new(block_result)
       end

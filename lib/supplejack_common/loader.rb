@@ -1,16 +1,8 @@
-# The Supplejack Common code is
-# Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3.
-# See https://github.com/DigitalNZ/supplejack for details.
-#
-# Supplejack was created by DigitalNZ at the
-# National Library of NZ and the Department of Internal Affairs.
-# http://digitalnz.org/supplejack
+# frozen_string_literal: true
 
 module SupplejackCommon
   # Loader Class
   class Loader
-
     attr_accessor :parser, :load_error, :environment
 
     def initialize(parser, environment)
@@ -29,11 +21,11 @@ module SupplejackCommon
 
     def create_tempfile
       FileUtils.mkdir_p("#{SupplejackCommon.parser_base_path}/#{parser.strategy}")
-      File.open(path, "w") {|f| f.write(content_with_encoding) }
+      File.open(path, 'w') { |f| f.write(content_with_encoding) }
     end
 
     def parser_class_name
-      parser.name.gsub(/\s/, "_").camelize
+      parser.name.gsub(/\s/, '_').camelize
     end
 
     def parser_class_name_with_module

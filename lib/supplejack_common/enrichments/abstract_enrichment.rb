@@ -1,11 +1,4 @@
-# The Supplejack Common code is
-# Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3.
-# See https://github.com/DigitalNZ/supplejack for details.
-#
-# Supplejack was created by DigitalNZ at the
-# National Library of NZ and the Department of Internal Affairs.
-# http://digitalnz.org/supplejack
+# frozen_string_literal: true
 
 module SupplejackCommon
   #  AbstractEnrichment Class
@@ -19,7 +12,7 @@ module SupplejackCommon
       @record = record
       @parser_class = parser_class
       @record_attributes = Hash.new do |hash, key|
-        hash[key] = Hash.new {|hash, key| hash[key] = Set.new()}
+        hash[key] = Hash.new { |hash, key| hash[key] = Set.new }
         hash[key][:priority] = options[:priority] || 1
         hash[key][:source_id] = self.name.to_s
         hash[key]
@@ -36,11 +29,11 @@ module SupplejackCommon
     end
 
     def set_attribute_values
-      raise NotImplementedError.new("All subclasses of SupplejackCommon::AbstractEnrichment must override #set_attribute_values.")
+      raise NotImplementedError, 'All subclasses of SupplejackCommon::AbstractEnrichment must override #set_attribute_values.'
     end
 
     def enrichable?
-      raise NotImplementedError.new("All subclasses of SupplejackCommon::AbstractEnrichment must override #enrichable?.")
+      raise NotImplementedError, 'All subclasses of SupplejackCommon::AbstractEnrichment must override #enrichable?.'
     end
 
     def attributes
@@ -50,15 +43,16 @@ module SupplejackCommon
     # these hooks are called before and after Enrichment job
     class << self
       def before(source_id); end
+
       def after(source_id); end
     end
-    
+
     private
 
-    #change to internal identifier?
+    # change to internal identifier?
     def find_record(tap_id)
       return nil unless tap_id.present?
-      record.class.where("fragments.dc_identifier" => "tap:#{tap_id}").first
+      record.class.where('fragments.dc_identifier' => "tap:#{tap_id}").first
     end
   end
 end

@@ -1,11 +1,4 @@
-# The Supplejack Common code is
-# Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3.
-# See https://github.com/DigitalNZ/supplejack for details.
-#
-# Supplejack was created by DigitalNZ at the
-# National Library of NZ and the Department of Internal Affairs.
-# http://digitalnz.org/supplejack
+# frozen_string_literal: true
 
 module SupplejackCommon
   # SJ Resources
@@ -21,12 +14,12 @@ module SupplejackCommon
       @http_headers = options[:http_headers] || {}
     end
 
-    def strategy_value(options)
-      raise NotImplementedError.new('All subclasses of SupplejackCommon::Resource must override #strategy_value.')
+    def strategy_value(_options)
+      raise NotImplementedError, 'All subclasses of SupplejackCommon::Resource must override #strategy_value.'
     end
 
-    def fetch(params)
-      raise NotImplementedError.new('All subclasses of SupplejackCommon::Resource must override #fetch.')
+    def fetch(_params)
+      raise NotImplementedError, 'All subclasses of SupplejackCommon::Resource must override #fetch.'
     end
 
     protected

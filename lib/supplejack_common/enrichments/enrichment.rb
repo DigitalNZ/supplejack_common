@@ -1,11 +1,4 @@
-# The Supplejack Common code is
-# Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3.
-# See https://github.com/DigitalNZ/supplejack for details.
-#
-# Supplejack was created by DigitalNZ at the
-# National Library of NZ and the Department of Internal Affairs.
-# http://digitalnz.org/supplejack
+# frozen_string_literal: true
 
 module SupplejackCommon
   # Enrichment Class
@@ -21,7 +14,7 @@ module SupplejackCommon
       @_attribute_definitions = {}
       @_required_attributes = {}
       @_rejection_rules = {}
-      self.instance_eval(&block)
+      instance_eval(&block)
     end
 
     def url(url)
@@ -33,7 +26,7 @@ module SupplejackCommon
     end
 
     def reject_if(&block)
-      self._rejection_rules[self.identifier] = block
+      _rejection_rules[identifier] = block
     end
 
     def format(format)
@@ -41,11 +34,15 @@ module SupplejackCommon
     end
 
     def requires(name, &block)
-      self._required_attributes[name] = self.instance_eval(&block) rescue nil
+      _required_attributes[name] = begin
+                                     instance_eval(&block)
+                                   rescue StandardError
+                                     nil
+                                   end
     end
 
     def requirements
-      self._required_attributes
+      _required_attributes
     end
 
     def namespaces(namespaces = {})
@@ -59,29 +56,29 @@ module SupplejackCommon
     end
 
     def attribute(name, options = {}, &block)
-      self._attribute_definitions[name] = options || {}
-      self._attribute_definitions[name][:block] = block if block_given?
+      _attribute_definitions[name] = options || {}
+      _attribute_definitions[name][:block] = block if block_given?
     end
 
     def resource
       resource_class = "SupplejackCommon::#{_format.to_s.capitalize}Resource".constantize
       options = {}
-      options[:attributes] = self.attributes if self.attributes.present?
+      options[:attributes] = attributes if attributes.present?
       options[:attributes][:requirements] = requirements if requirements.any?
       options[:throttling_options] = parser_class._throttle if parser_class._throttle.present?
-      options[:namespaces] = self._namespaces if self._namespaces.present?
-      options[:http_headers] = self._http_headers if self._http_headers.present?
+      options[:namespaces] = _namespaces if _namespaces.present?
+      options[:http_headers] = _http_headers if _http_headers.present?
       options[:request_timeout] = parser_class._request_timeout if parser_class._request_timeout.present?
-      @resource ||= resource_class.new(self._url, options)
+      @resource ||= resource_class.new(_url, options)
     end
 
     def set_attribute_values
-      self._attribute_definitions.each do |name, options|
+      _attribute_definitions.each do |name, options|
         builder = AttributeBuilder.new(resource, name, options)
         value = builder.value
         attributes[name] ||= nil
         if builder.errors.any?
-          self.errors[name] = builder.errors
+          errors[name] = builder.errors
         else
           attributes[name] = value if value.present?
         end
@@ -89,14 +86,14 @@ module SupplejackCommon
     end
 
     def enrichable?
-      self._required_attributes.each do |attribute, value|
+      _required_attributes.each do |_attribute, value|
         return false if value.nil?
       end
 
-      rejection_block = self._rejection_rules[self.identifier]
+      rejection_block = _rejection_rules[identifier]
 
       return true if rejection_block.nil?
-      return !self.instance_eval(&rejection_block)
+      !instance_eval(&rejection_block)
     end
   end
 end

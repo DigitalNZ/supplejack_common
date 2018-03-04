@@ -1,9 +1,4 @@
-# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# frozen_string_literal: true
 
 module SupplejackCommon
   module Oai
@@ -11,9 +6,9 @@ module SupplejackCommon
       include SupplejackCommon::XmlDslMethods
       include SupplejackCommon::XmlDataMethods
 
-      self.clear_definitions
+      clear_definitions
 
-      VALID_RECORDS_OPTIONS = [:from, :limit]
+      VALID_RECORDS_OPTIONS = %i[from limit].freeze
 
       attr_reader :original_xml
 
@@ -27,46 +22,45 @@ module SupplejackCommon
         attr_reader :response
 
         def client
-          @client ||= OAI::Client.new(self.base_urls.first)
+          @client ||= OAI::Client.new(base_urls.first)
         end
 
-        def records(options={})
-          options = options.keep_if {|key| VALID_RECORDS_OPTIONS.include?(key) }
+        def records(options = {})
+          options = options.keep_if { |key| VALID_RECORDS_OPTIONS.include?(key) }
           options[:metadata_prefix] = get_metadata_prefix if get_metadata_prefix.present?
           options[:set] = get_set if get_set.present?
-          
+
           SupplejackCommon::Oai::PaginatedCollection.new(client, options, self)
         end
 
         def resumption_token
-          self.response.try(:resumption_token)
+          response.try(:resumption_token)
         end
 
         def clear_definitions
           super
-          SupplejackCommon::Oai::Base._metadata_prefix[self.identifier] = nil
-          SupplejackCommon::Oai::Base._set[self.identifier] = nil
+          SupplejackCommon::Oai::Base._metadata_prefix[identifier] = nil
+          SupplejackCommon::Oai::Base._set[identifier] = nil
         end
 
         def metadata_prefix(prefix)
-          self._metadata_prefix[self.identifier] = prefix
+          _metadata_prefix[identifier] = prefix
         end
 
         def get_metadata_prefix
-          self._metadata_prefix[self.identifier]
+          _metadata_prefix[identifier]
         end
 
         def set(name)
-          self._set[self.identifier] = name
+          _set[identifier] = name
         end
 
         def get_set
-          self._set[self.identifier]
+          _set[identifier]
         end
-
       end
 
-      def initialize(xml, from_raw=false)
+      def initialize(xml, from_raw = false)
         @original_xml = xml
         @original_xml = xml.element.to_s if xml.respond_to?(:element)
         super

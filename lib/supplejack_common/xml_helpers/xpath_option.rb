@@ -1,9 +1,5 @@
-# The Supplejack Common code is Crown copyright (C) 2014, New Zealand Government,
-# and is licensed under the GNU General Public License, version 3. 
-# See https://github.com/DigitalNZ/supplejack for details. 
-# 
-# Supplejack was created by DigitalNZ at the National Library of NZ and the Department of Internal Affairs. 
-# http://digitalnz.org/supplejack 
+# frozen_string_literal: true
+
 require 'sanitize'
 require 'htmlentities'
 
@@ -11,7 +7,7 @@ module SupplejackCommon
   class XpathOption
     attr_reader :document, :options, :namespace_definitions
 
-    def initialize(document, options, namespace_definitions={})
+    def initialize(document, options, namespace_definitions = {})
       @document = document
       @options = options
       @namespace_definitions = namespace_definitions || {}
@@ -22,14 +18,14 @@ module SupplejackCommon
       return nodes if options[:object]
 
       strategies = {
-        custom_sanitize: ->() {
+        custom_sanitize: lambda {
           if nodes.is_a?(Array)
             nodes.map(&method(:extract_node_value))
           else
             extract_node_value(nodes)
           end
         },
-        normal: ->() {
+        normal: lambda {
           if nodes.is_a?(Array)
             nodes.map(&:text)
           else
@@ -50,7 +46,7 @@ module SupplejackCommon
       @nodes = []
 
       xpath_expressions.each do |xpath|
-        @nodes += document.xpath("#{xpath_value(xpath)}", namespace_definitions)
+        @nodes += document.xpath(xpath_value(xpath).to_s, namespace_definitions)
       end
 
       @nodes
