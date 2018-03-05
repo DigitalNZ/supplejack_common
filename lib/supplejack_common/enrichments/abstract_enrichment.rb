@@ -21,11 +21,11 @@ module SupplejackCommon
     end
 
     def primary
-      @primary ||= SupplejackCommon::FragmentWrap.new(record.fragments.where(priority: 0).first)
+      @primary ||= SupplejackCommon::FragmentWrap.new(record.fragments.select { |f| f.priority.zero? }.first)
     end
 
     def record_fragment(source_id)
-      SupplejackCommon::FragmentWrap.new(record.fragments.where(source_id: source_id).first)
+      SupplejackCommon::FragmentWrap.new(record.fragments.select { |f| f.source_id == source_id }.first)
     end
 
     def set_attribute_values
@@ -45,14 +45,6 @@ module SupplejackCommon
       def before(source_id); end
 
       def after(source_id); end
-    end
-
-    private
-
-    # change to internal identifier?
-    def find_record(tap_id)
-      return nil unless tap_id.present?
-      record.class.where('fragments.dc_identifier' => "tap:#{tap_id}").first
     end
   end
 end

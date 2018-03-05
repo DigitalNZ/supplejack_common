@@ -4,16 +4,11 @@ require 'spec_helper'
 
 describe SupplejackCommon::AbstractEnrichment do
   let(:klass) { SupplejackCommon::AbstractEnrichment }
-  let(:record) { mock(:record, id: 1234, attributes: {}) }
+  let(:fragment) { mock(:fragment, priority: 0, source_id: :ndha) }
+  let(:record) { mock(:record, id: 1234, attributes: {}, fragments: [fragment]) }
   let(:enrichment) { klass.new(:ndha_rights, {}, record, nil) }
 
   describe '#primary' do
-    let(:fragment) { mock(:fragment).as_null_object }
-
-    before do
-      record.stub_chain(:fragments, :where).with(priority: 0) { [fragment] }
-    end
-
     it 'returns a wrapped fragment' do
       enrichment.primary.fragment.should eq fragment
     end
@@ -24,29 +19,12 @@ describe SupplejackCommon::AbstractEnrichment do
   end
 
   describe '#record_fragment' do
-    let(:fragment) { mock(:fragment).as_null_object }
-
-    before do
-      record.stub_chain(:fragments, :where).with(source_id: :ndha) { [fragment] }
-    end
-
     it 'returns a wrapped fragment' do
       enrichment.record_fragment(:ndha).fragment.should eq fragment
     end
 
     it 'should initialize a FragmentWrap object' do
       enrichment.record_fragment(:ndha).should be_a SupplejackCommon::FragmentWrap
-    end
-  end
-
-  describe '#find_record' do
-    it 'should find record with tap id' do
-      record.class.should_receive(:where).with('fragments.dc_identifier' => 'tap:12345') { %w[1 2] }
-      enrichment.send(:find_record, '12345').should eq '1'
-    end
-
-    it 'should return nil if the tap_id is nil' do
-      enrichment.send(:find_record, nil).should eq nil
     end
   end
 

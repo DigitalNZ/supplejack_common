@@ -11,8 +11,9 @@ describe SupplejackCommon::Enrichment do
   end
 
   let(:klass) { SupplejackCommon::Enrichment }
+  let(:fragment) { mock(:fragment, priority: 0) }
   let(:block) { proc {} }
-  let(:record) { mock(:record, id: 1234, attributes: {}) }
+  let(:record) { mock(:record, id: 1234, attributes: {}, fragments: [fragment]) }
   let(:enrichment) { klass.new(:ndha_rights, { block: block }, record, TestParser) }
 
   describe '#initialize' do
@@ -145,12 +146,6 @@ describe SupplejackCommon::Enrichment do
   end
 
   describe '#primary' do
-    let(:fragment) { mock(:fragment).as_null_object }
-
-    before do
-      record.stub_chain(:fragments, :where).with(priority: 0) { [fragment] }
-    end
-
     it 'returns a wrapped fragment' do
       enrichment.primary.fragment.should eq fragment
     end
