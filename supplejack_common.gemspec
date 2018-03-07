@@ -12,17 +12,12 @@ Gem::Specification.new do |gem|
   gem.description   = 'Supplejack Common provides a DSL to harvest records of different sources'
   gem.summary       = 'Supplejack Common provides a DSL to harvest records of different sources'
   gem.homepage      = ''
-
   gem.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
-
   gem.add_runtime_dependency 'actionpack'
   gem.add_runtime_dependency 'activesupport'
-  gem.add_runtime_dependency 'mongoid'
-  gem.add_runtime_dependency 'redis'
-
   gem.add_runtime_dependency 'chronic', '<= 0.10.2'
   gem.add_runtime_dependency 'dimensions'
   gem.add_runtime_dependency 'htmlentities'
@@ -30,13 +25,14 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'jsonpath', '~> 0.5.0'
   gem.add_runtime_dependency 'loofah'
   gem.add_runtime_dependency 'mimemagic'
+  gem.add_runtime_dependency 'mongoid'
   gem.add_runtime_dependency 'nokogiri'
-  gem.add_runtime_dependency 'rest-client', '~> 1.6.7'
+  gem.add_runtime_dependency 'redis'
+  gem.add_runtime_dependency 'rest-client'
   gem.add_runtime_dependency 'retriable'
+  gem.add_development_dependency 'rake', '< 11.0'
+  gem.add_development_dependency 'rspec', '~> 2.11.0'
   gem.add_runtime_dependency 'sanitize'
   gem.add_runtime_dependency 'tzinfo'
-
-  gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'rspec',      '~> 2.11.0'
-  gem.add_development_dependency 'webmock',    '~> 1.8'
+  gem.add_development_dependency 'webmock', '~> 1.8'
 end
