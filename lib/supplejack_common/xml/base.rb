@@ -21,7 +21,7 @@ module SupplejackCommon
         end
 
         def next_page_token(next_page_token_location)
-          _document.xpath(next_page_token_location, _namespaces).first.text
+          _document.xpath(next_page_token_location, _namespaces).first&.text
         end
 
         def records(options = {})
