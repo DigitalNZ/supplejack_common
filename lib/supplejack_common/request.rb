@@ -43,7 +43,7 @@ module SupplejackCommon
       acquire_lock do
         begin
           request_resource
-        rescue RestClient::NotFound => e
+        rescue RestClient::NotFound
           Sidekiq.logger.info 'Record not found, moving on..'
           next
         end
