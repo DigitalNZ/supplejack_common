@@ -41,7 +41,12 @@ module SupplejackCommon
 
     def get
       acquire_lock do
-        request_resource
+        begin
+          request_resource
+        rescue RestClient::NotFound
+          Sidekiq.logger.info 'Record not found, moving on..'
+          next
+        end
       end
     end
 
