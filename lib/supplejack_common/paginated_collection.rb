@@ -33,7 +33,7 @@ module SupplejackCommon
         return nil unless yield_from_records(&block)
 
         next unless paginated? || scroll?
-        while more_results? || scroll?
+        while more_results?
           @records.clear
           @records = klass.fetch_records(next_url(base_url))
 
@@ -107,6 +107,7 @@ module SupplejackCommon
     end
 
     def more_results?
+      return true if scroll?
       if tokenised?
         return klass.next_page_token(@next_page_token_location).present?
       end
