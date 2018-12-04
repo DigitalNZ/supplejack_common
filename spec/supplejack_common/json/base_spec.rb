@@ -74,6 +74,17 @@ describe SupplejackCommon::Json::Base do
         klass.document('file:///data/sites/data.json').should eq json
       end
     end
+
+    context 'scroll api' do
+      it 'stores the raw json' do
+        klass._throttle = {}
+        klass.http_headers('x-api-key': 'key')
+        klass._request_timeout = 60_000
+        SupplejackCommon::Request.should_receive(:scroll).with('http://google.com/_scroll', 60_000, {}, 'x-api-key': 'key') { json }
+        klass.document('http://google.com/_scroll')
+        expect(klass._document).to eq json
+      end
+    end
   end
 
   describe '.total_results' do
