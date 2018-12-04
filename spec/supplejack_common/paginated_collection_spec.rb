@@ -109,6 +109,32 @@ describe SupplejackCommon::PaginatedCollection do
       end
     end
 
+    context 'scroll API' do
+      let(:params) { { type: 'scroll' } }
+      let(:collection) { klass.new(SupplejackCommon::Base, params) }
+
+
+      context 'when the _document is present' do
+        before do
+          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(headers: OpenStruct.new(location: '/scroll/scroll_token/pages')) }
+        end
+
+        it 'generates the next url based on the header :location in the response' do
+          expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/scroll/scroll_token/pages'
+        end
+      end
+
+      context 'when the _document is not present' do
+        before do
+          SupplejackCommon::Base.stub(:_document) { nil }
+        end
+
+        it 'uses the url that it was instantiated with' do
+          expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll'
+        end
+      end
+    end
+
     context 'with initial parameter' do
       let(:params) do
         { page_parameter: 'page-parameter',

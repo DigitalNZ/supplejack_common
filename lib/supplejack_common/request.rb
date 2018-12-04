@@ -19,8 +19,6 @@ module SupplejackCommon
     attr_accessor :url, :throttling_options, :request_timeout, :headers
 
     def initialize(url, request_timeout, options = [], headers = {})
-      # Prevents from escaping escaped URL
-      # Sifter #6439
       @url = URI.escape(URI.unescape(url))
 
       options ||= []

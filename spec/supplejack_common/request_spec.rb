@@ -84,6 +84,32 @@ describe SupplejackCommon::Request do
     end
   end
 
+  describe '#scroll' do
+    let(:initial_request)    { klass.new('http://google.com/collection/_scroll', 10_000, {}, { 'x-api-key' => 'key' }) }
+    let(:subsequent_request) { klass.new('http://google.com/collection/scroll', 10_000, {}, { 'x-api-key' => 'key' }) }
+
+    it 'should aquire the lock' do
+      request.should_receive(:acquire_lock)
+      request.scroll
+    end
+
+    it 'should do a POST request initially and NOT follow redirects' do
+      RestClient::Request.should_receive(:execute).with(method: :post,
+                                                        url: 'http://google.com/collection/_scroll',
+                                                        timeout: 10_000,
+                                                        headers: { 'x-api-key' => 'key' }, max_redirects: 0)
+      initial_request.scroll
+    end
+
+    it 'should follow up with subsequent GET requests and NOT follow redirects' do
+      RestClient::Request.should_receive(:execute).with(method: :get,
+                                                        url: 'http://google.com/collection/scroll',
+                                                        timeout: 10_000,
+                                                        headers: { 'x-api-key' => 'key' }, max_redirects: 0)
+      subsequent_request.scroll
+    end
+  end
+
   describe '#acquire_lock' do
     let(:mock_redis) { double(:redis).as_null_object }
 

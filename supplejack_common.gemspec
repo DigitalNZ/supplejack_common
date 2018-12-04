@@ -35,4 +35,5 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'sanitize'
   gem.add_runtime_dependency 'tzinfo'
   gem.add_development_dependency 'webmock', '~> 1.8'
+  gem.add_development_dependency 'pry-byebug'
 end
