@@ -10,6 +10,10 @@ module SupplejackCommon
       def get(url, request_timeout, options = [], headers = {})
         new(url, request_timeout, options, headers).get
       end
+
+      def scroll(url, request_timeout, options = [], headers = {})
+        new(url, request_timeout, options, headers).scroll
+      end
     end
 
     attr_accessor :url, :throttling_options, :request_timeout, :headers
@@ -46,6 +50,21 @@ module SupplejackCommon
         rescue RestClient::NotFound
           Sidekiq.logger.info 'Record not found, moving on..'
           next
+        end
+      end
+    end
+
+    def scroll
+      acquire_lock do
+        if url.include? '_scroll'
+          # The Te Papa scroll API requires you to do a post for the first request
+          http_verb = :post
+        else
+          http_verb = :get
+        end
+
+        RestClient::Request.execute(method: http_verb, url: url, timeout: request_timeout, headers: headers, max_redirects: 0) do |response, _request, _result|
+          response
         end
       end
     end

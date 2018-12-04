@@ -17,7 +17,10 @@ module SupplejackCommon
         end
 
         def document(url)
-          if url =~ /^https?/
+          if url.include?('_scroll') || url.include?('/scroll')
+            self._document = SupplejackCommon::Request.scroll(url, _request_timeout, _throttle, _http_headers)
+            _document
+          elsif url =~ /^https?/
             self._document = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers)
             _document
           elsif url =~ /^file/

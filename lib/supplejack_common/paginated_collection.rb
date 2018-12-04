@@ -32,8 +32,8 @@ module SupplejackCommon
 
         return nil unless yield_from_records(&block)
 
-        next unless paginated?
-        while more_results?
+        next unless paginated? || scroll?
+        while more_results? || scroll?
           @records.clear
           @records = klass.fetch_records(next_url(base_url))
 
@@ -62,6 +62,13 @@ module SupplejackCommon
           result = "#{url}#{joiner}#{url_options.to_query}"
           increment_page_counter!
           result
+        end
+      elsif scroll?
+        if klass._document.present?
+          base_url = url.match('(?<base_url>.+\/collection)')[:base_url]
+          base_url + klass._document.headers[:location]
+        else
+          url
         end
       else
         url
@@ -112,6 +119,10 @@ module SupplejackCommon
 
     def tokenised?
       @type == 'token'
+    end
+
+    def scroll?
+      @type == 'scroll'
     end
 
     def yield_from_records
