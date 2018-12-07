@@ -22,7 +22,7 @@ module SupplejackCommon
         attr_reader :response
 
         def client
-          @client ||= OAI::Client.new(base_urls.first)
+          @client ||= OAI::Client.new(base_urls.first, {}, _proxy)
         end
 
         def records(options = {})

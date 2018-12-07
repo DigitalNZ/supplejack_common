@@ -7,14 +7,14 @@ module SupplejackCommon
   # SJ Request class
   class Request
     class << self
-      def get(url, request_timeout, options = [], headers = {})
-        new(url, request_timeout, options, headers).get
+      def get(url, request_timeout, options = [], headers = {}, proxy = nil)
+        new(url, request_timeout, options, headers, proxy).get
       end
     end
 
-    attr_accessor :url, :throttling_options, :request_timeout, :headers
+    attr_accessor :url, :throttling_options, :request_timeout, :headers, :proxy
 
-    def initialize(url, request_timeout, options = [], headers = {})
+    def initialize(url, request_timeout, options = [], headers = {}, proxy = nil)
       # Prevents from escaping escaped URL
       # Sifter #6439
       @url = URI.escape(URI.unescape(url))
@@ -25,6 +25,7 @@ module SupplejackCommon
       end]
       @request_timeout = request_timeout || 60_000
       @headers = headers
+      @proxy = proxy
     end
 
     def uri
@@ -79,7 +80,8 @@ module SupplejackCommon
           method: :get,
           url: url,
           timeout: request_timeout,
-          headers: headers
+          headers: headers,
+          proxy: proxy
         )
       end
     end

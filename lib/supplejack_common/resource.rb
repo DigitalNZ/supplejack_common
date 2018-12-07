@@ -25,7 +25,7 @@ module SupplejackCommon
     protected
 
     def fetch_document
-      SupplejackCommon::Request.get(url, request_timeout, throttling_options, http_headers)
+      SupplejackCommon::Request.get(url, request_timeout, throttling_options, http_headers, _proxy)
     end
   end
 end

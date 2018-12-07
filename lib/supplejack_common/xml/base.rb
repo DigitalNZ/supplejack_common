@@ -80,7 +80,7 @@ module SupplejackCommon
       def document
         @document ||= begin
           if @url
-            response = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers)
+            response = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
             response = SupplejackCommon::Utils.add_html_tag(response) if format == :html
           elsif @original_xml
             response = @original_xml
