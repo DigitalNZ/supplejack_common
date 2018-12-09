@@ -54,7 +54,7 @@ describe SupplejackCommon::Json::Base do
         klass._throttle = {}
         klass.http_headers('Authorization': 'Token token="token"', 'x-api-key': 'gus')
         klass._request_timeout = 60_000
-        SupplejackCommon::Request.should_receive(:get).with('http://google.com', 60_000, {}, 'Authorization': 'Token token="token"', 'x-api-key': 'gus') { json }
+        SupplejackCommon::Request.should_receive(:get).with('http://google.com', 60_000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'}, nil) { json }
         klass.document('http://google.com').should eq json
       end
 
@@ -62,7 +62,7 @@ describe SupplejackCommon::Json::Base do
         klass._throttle = {}
         klass.http_headers('Authorization': 'Token token="token"', 'x-api-key': 'gus')
         klass._request_timeout = 60_000
-        SupplejackCommon::Request.should_receive(:get).with('http://google.com', 60_000, {}, 'Authorization': 'Token token="token"', 'x-api-key': 'gus') { json }
+        SupplejackCommon::Request.should_receive(:get).with('http://google.com', 60_000, {}, {'Authorization': 'Token token="token"', 'x-api-key': 'gus'}, nil) { json }
         klass.document('http://google.com')
         expect(klass._document).to equal json
       end
@@ -82,7 +82,7 @@ describe SupplejackCommon::Json::Base do
       klass._throttle = {}
       klass.http_headers('Authorization' => 'Token token="token"', 'x-api-key' => 'gus')
       klass._request_timeout = 60_000
-      SupplejackCommon::Request.should_receive(:get).with('http://google.com', 60_000, {}, 'Authorization' => 'Token token="token"', 'x-api-key' => 'gus').and_return { json }
+      SupplejackCommon::Request.should_receive(:get).with('http://google.com', 60_000, {}, {'Authorization' => 'Token token="token"', 'x-api-key' => 'gus'}, nil).and_return { json }
       klass.document('http://google.com')
       expect(klass.total_results('$.total_results_selector')).to eq 500.0
     end
@@ -94,7 +94,7 @@ describe SupplejackCommon::Json::Base do
       klass._throttle = {}
       klass.http_headers('Authorization' => 'Token token="token"', 'x-api-key' => 'gus')
       klass._request_timeout = 60_000
-      SupplejackCommon::Request.should_receive(:get).with('http://google.com', 60_000, {}, 'Authorization' => 'Token token="token"', 'x-api-key' => 'gus').and_return { json }
+      SupplejackCommon::Request.should_receive(:get).with('http://google.com', 60_000, {}, {'Authorization' => 'Token token="token"', 'x-api-key' => 'gus'}, nil).and_return { json }
       klass.document('http://google.com')
       expect(klass.next_page_token('$.your_next_page')).to eq '1234'
     end

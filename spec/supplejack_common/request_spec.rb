@@ -16,7 +16,7 @@ describe SupplejackCommon::Request do
     end
 
     it 'initializes a request object' do
-      klass.should_receive(:new).with('google.com', nil, [{ delay: 1 }], {}) { request }
+      klass.should_receive(:new).with('google.com', nil, [{ delay: 1 }], {}, nil) { request }
       klass.get('google.com', nil, [{ delay: 1 }])
     end
 
@@ -139,7 +139,8 @@ describe SupplejackCommon::Request do
       RestClient::Request.should_receive(:execute).with(method: :get,
                                                         url: 'http://google.com',
                                                         timeout: 60_000,
-                                                        headers: { 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken' })
+                                                        headers: { 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken' },
+                                                        proxy: nil)
       request_obj = klass.new('http://google.com', 60_000, [{ host: 'google.com', delay: 5 }], 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken')
       request_obj.request_url
     end

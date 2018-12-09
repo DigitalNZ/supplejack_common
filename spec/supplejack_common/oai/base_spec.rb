@@ -19,7 +19,7 @@ describe SupplejackCommon::Oai::Base do
   describe '.client' do
     it 'initializes a new OAI client' do
       klass.base_url 'http://google.com'
-      OAI::Client.should_receive(:new).with('http://google.com')
+      OAI::Client.should_receive(:new).with('http://google.com', {}, nil)
       klass.client
     end
   end
