@@ -77,7 +77,7 @@ module SupplejackCommon
       end
     end
     # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     def url_options
       options = {}
