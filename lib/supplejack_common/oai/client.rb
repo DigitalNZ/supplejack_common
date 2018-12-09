@@ -28,7 +28,6 @@ module OAI
         end
       end
 
-
       # load appropriate parser
       case @parser
       when 'libxml'
