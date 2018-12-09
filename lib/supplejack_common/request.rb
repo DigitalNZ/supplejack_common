@@ -54,12 +54,12 @@ module SupplejackCommon
 
     def scroll
       acquire_lock do
-        if url.include? '_scroll'
-          # The Te Papa scroll API requires you to do a post for the first request
-          http_verb = :post
-        else
-          http_verb = :get
-        end
+        http_verb = if url.include? '_scroll'
+                      # The Te Papa scroll API requires you to do a post for the first request
+                      :post
+                    else
+                      :get
+                    end
 
         RestClient::Request.execute(method: http_verb, url: url, timeout: request_timeout, headers: headers, max_redirects: 0) do |response, _request, _result|
           response

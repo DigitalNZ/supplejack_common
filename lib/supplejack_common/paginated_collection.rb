@@ -50,6 +50,8 @@ module SupplejackCommon
       url
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def next_url(url)
       if paginated?
         joiner = url =~ /\?/ ? '&' : '?'
@@ -74,6 +76,8 @@ module SupplejackCommon
         url
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
 
     def url_options
       options = {}

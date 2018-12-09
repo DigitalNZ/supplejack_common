@@ -85,8 +85,8 @@ describe SupplejackCommon::Request do
   end
 
   describe '#scroll' do
-    let(:initial_request)    { klass.new('http://google.com/collection/_scroll', 10_000, {}, { 'x-api-key' => 'key' }) }
-    let(:subsequent_request) { klass.new('http://google.com/collection/scroll', 10_000, {}, { 'x-api-key' => 'key' }) }
+    let(:initial_request)    { klass.new('http://google.com/collection/_scroll', 10_000, {}, 'x-api-key' => 'key') }
+    let(:subsequent_request) { klass.new('http://google.com/collection/scroll', 10_000, {}, 'x-api-key' => 'key') }
 
     it 'should aquire the lock' do
       request.should_receive(:acquire_lock)

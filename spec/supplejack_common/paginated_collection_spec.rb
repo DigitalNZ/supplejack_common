@@ -113,7 +113,6 @@ describe SupplejackCommon::PaginatedCollection do
       let(:params) { { type: 'scroll' } }
       let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
-
       context 'when the _document is present' do
         before do
           SupplejackCommon::Base.stub(:_document) { OpenStruct.new(headers: OpenStruct.new(location: '/scroll/scroll_token/pages')) }
