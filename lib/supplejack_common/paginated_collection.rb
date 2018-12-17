@@ -111,7 +111,10 @@ module SupplejackCommon
     end
 
     def more_results?
-      return true if scroll?
+      if scroll?
+        return klass._document.code == 303
+      end
+
       if tokenised?
         return klass.next_page_token(@next_page_token_location).present?
       end

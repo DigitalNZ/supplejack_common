@@ -37,9 +37,13 @@ module SupplejackCommon
         end
 
         def records_json(url)
-          records = JsonPath.on(document(url), _record_selector).try(:first)
-          records = [records] if records.is_a? Hash
-          records
+          begin
+            records = JsonPath.on(document(url), _record_selector).try(:first)
+            records = [records] if records.is_a? Hash
+            records
+          rescue StandardError => e
+            []
+          end
         end
 
         def fetch_records(url)
