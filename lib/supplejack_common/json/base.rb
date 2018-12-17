@@ -28,6 +28,29 @@ module SupplejackCommon
           end
         end
 
+        def next_scroll_url
+          _document.headers[:location]
+        end
+
+        def continue_scrolling?
+          url = base_urls.first.match('(?<base_url>.+\/collection)')[:base_url]
+          url += next_scroll_url
+
+          # response = RestClient::Request.execute(method: :head, url: url, timeout: _request_timeout, headers: _http_headers, max_redirects: 0) do |response|
+          #   response
+          # end
+
+          # The isue appears to be that we only check what the status code is after we have attempted to parse the JSON document.
+          # This results in the JSON::ParserError
+          # We need to check the status code before we parse the document, incase it is broken. 
+          return true
+
+          #
+          # Sidekiq.logger.info "Response status #{response.code} !!"
+          #
+          # return response.code == 303
+        end
+
         def next_page_token(next_page_token_location)
           JsonPath.on(_document, next_page_token_location).try(:first)
         end
@@ -37,13 +60,9 @@ module SupplejackCommon
         end
 
         def records_json(url)
-          begin
-            records = JsonPath.on(document(url), _record_selector).try(:first)
-            records = [records] if records.is_a? Hash
-            records
-          rescue StandardError => e
-            []
-          end
+          records = JsonPath.on(document(url), _record_selector).try(:first)
+          records = [records] if records.is_a? Hash
+          records
         end
 
         def fetch_records(url)

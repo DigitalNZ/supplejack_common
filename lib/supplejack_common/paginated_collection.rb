@@ -68,7 +68,7 @@ module SupplejackCommon
       elsif scroll?
         if klass._document.present?
           base_url = url.match('(?<base_url>.+\/collection)')[:base_url]
-          base_url + klass._document.headers[:location]
+          base_url + klass.next_scroll_url
         else
           url
         end
@@ -111,9 +111,7 @@ module SupplejackCommon
     end
 
     def more_results?
-      if scroll?
-        return klass._document.code == 303
-      end
+      return klass.continue_scrolling? if scroll?
 
       if tokenised?
         return klass.next_page_token(@next_page_token_location).present?
