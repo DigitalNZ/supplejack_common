@@ -30,8 +30,8 @@ describe SupplejackCommon::Json::Base do
   end
 
   describe '.records_json' do
-    let(:json_example_1) { '{"items": [{"title": "Record1"},{"title": "Record2"},{"title": "Record3"}]}' }
-    let(:json_example_2) { '{"items": {"title": "Record1"}}' }
+    let(:json_example_1) { RestClient::Response.create('{"items": [{"title": "Record1"}, {"title": "Record2"}, {"title": "Record3"}]}', double.as_null_object, double.as_null_object) }
+    let(:json_example_2) { RestClient::Response.create('{"items": {"title": "Record1"}}', double.as_null_object, double.as_null_object) }
 
     it 'returns an array of records with the parsed json' do
       klass.stub(:document) { json_example_1 }
