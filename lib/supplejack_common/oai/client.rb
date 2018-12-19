@@ -44,10 +44,10 @@ module OAI
         raise OAI::Exception, "unknown parser: #{@parser}"
       end
     end
-  end
 
-  def get(uri)
-    response = @http_client.get("?#{uri.query}")
-    response.body
+    def get(uri)
+      response = @http_client.get("?#{uri.query}")
+      response.body
+    end
   end
 end
