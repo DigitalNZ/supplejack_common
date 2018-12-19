@@ -27,6 +27,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'mimemagic'
   gem.add_runtime_dependency 'mongoid'
   gem.add_runtime_dependency 'nokogiri'
+  gem.add_development_dependency 'pry-byebug'
   gem.add_runtime_dependency 'redis'
   gem.add_runtime_dependency 'rest-client'
   gem.add_runtime_dependency 'retriable'

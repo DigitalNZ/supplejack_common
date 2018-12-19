@@ -17,7 +17,10 @@ module SupplejackCommon
         end
 
         def document(url)
-          if url =~ /^https?/
+          if url.include?('scroll')
+            self._document = SupplejackCommon::Request.scroll(url, _request_timeout, _throttle, _http_headers)
+            _document
+          elsif url =~ /^https?/
             self._document = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers)
             _document
           elsif url =~ /^file/
@@ -34,7 +37,10 @@ module SupplejackCommon
         end
 
         def records_json(url)
-          records = JsonPath.on(document(url), _record_selector).try(:first)
+          new_document = document(url)
+          return [] if new_document.code == 204
+
+          records = JsonPath.on(new_document, _record_selector).try(:first)
           records = [records] if records.is_a? Hash
           records
         end

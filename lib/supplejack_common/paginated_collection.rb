@@ -32,7 +32,8 @@ module SupplejackCommon
 
         return nil unless yield_from_records(&block)
 
-        next unless paginated?
+        next unless paginated? || scroll?
+
         while more_results?
           @records.clear
           @records = klass.fetch_records(next_url(base_url))
@@ -50,6 +51,8 @@ module SupplejackCommon
       url
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def next_url(url)
       if paginated?
         joiner = url =~ /\?/ ? '&' : '?'
@@ -63,10 +66,19 @@ module SupplejackCommon
           increment_page_counter!
           result
         end
+      elsif scroll?
+        if klass._document.present?
+          base_url = url.match('(?<base_url>.+\/collection)')[:base_url]
+          base_url + klass._document.headers[:location]
+        else
+          url
+        end
       else
         url
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     def url_options
       options = {}
@@ -100,6 +112,8 @@ module SupplejackCommon
     end
 
     def more_results?
+      return klass._document.code == 303 if scroll?
+
       if tokenised?
         return klass.next_page_token(@next_page_token_location).present?
       end
@@ -112,6 +126,10 @@ module SupplejackCommon
 
     def tokenised?
       @type == 'token'
+    end
+
+    def scroll?
+      @type == 'scroll'
     end
 
     def yield_from_records
