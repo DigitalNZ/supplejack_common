@@ -6,13 +6,13 @@
 module OAI
   # lib/supplejack_common/client.rb
   class Client
-    def initialize(base_url, options = {})
+    def initialize(base_url, options = {}, proxy = nil)
       @base = URI.parse base_url
       @debug = options.fetch(:debug, false)
       @parser = options.fetch(:parser, 'rexml')
 
       @http_client = options.fetch(:http) do
-        Faraday.new(url: @base.clone) do |builder|
+        Faraday.new(url: @base.clone, proxy: proxy) do |builder|
           follow_redirects = options.fetch(:redirects, true)
           if follow_redirects
             count = follow_redirects.is_a?(Integer) ? follow_redirects : 5
@@ -43,6 +43,11 @@ module OAI
       else
         raise OAI::Exception, "unknown parser: #{@parser}"
       end
+    end
+
+    def get(uri)
+      response = @http_client.get("?#{uri.query}")
+      response.body
     end
   end
 end

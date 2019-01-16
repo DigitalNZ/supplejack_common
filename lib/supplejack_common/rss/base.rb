@@ -26,7 +26,7 @@ module SupplejackCommon
         end
 
         def index_document(url)
-          xml = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers)
+          xml = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
           Nokogiri::XML.parse(xml)
         end
       end

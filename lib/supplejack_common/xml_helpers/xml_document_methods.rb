@@ -36,7 +36,7 @@ module SupplejackCommon
       #
       def with_each_file(url)
         if url =~ /^https?/
-          yield SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers)
+          yield SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
         elsif url =~ /^file/
           url = url.gsub(%r{file:\/\/}, '')
 

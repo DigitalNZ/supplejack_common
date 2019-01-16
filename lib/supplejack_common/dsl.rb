@@ -19,6 +19,7 @@ module SupplejackCommon
       class_attribute :_priority
       class_attribute :_match_concepts
       class_attribute :_http_headers
+      class_attribute :_proxy
 
       self._base_urls = {}
       self._attribute_definitions = {}
@@ -32,6 +33,7 @@ module SupplejackCommon
       self._request_timeout = nil
       self._match_concepts = {}
       self._http_headers = {}
+      self._proxy = nil
     end
 
     module ClassMethods
@@ -109,6 +111,10 @@ module SupplejackCommon
 
       def match_concepts(match_concepts)
         _match_concepts[identifier] = match_concepts
+      end
+
+      def proxy(url)
+        self._proxy = url
       end
     end
   end

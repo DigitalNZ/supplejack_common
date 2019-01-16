@@ -21,7 +21,7 @@ module SupplejackCommon
             self._document = SupplejackCommon::Request.scroll(url, _request_timeout, _throttle, _http_headers)
             _document
           elsif url =~ /^https?/
-            self._document = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers)
+            self._document = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
             _document
           elsif url =~ /^file/
             File.read(url.gsub(/file:\/\//, ''))

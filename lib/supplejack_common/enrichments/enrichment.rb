@@ -4,7 +4,9 @@ module SupplejackCommon
   # Enrichment Class
   class Enrichment < AbstractEnrichment
     # Internal attribute accessors
-    attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions, :_required_attributes, :_rejection_rules, :_http_headers
+    attr_accessor :_url, :_format, :_namespaces, :_attribute_definitions,
+                  :_required_attributes, :_rejection_rules, :_http_headers,
+                  :_proxy
 
     attr_reader :block
 
@@ -55,11 +57,17 @@ module SupplejackCommon
       self._http_headers = headers
     end
 
+    def proxy(url)
+      self._proxy = url
+    end
+
     def attribute(name, options = {}, &block)
       _attribute_definitions[name] = options || {}
       _attribute_definitions[name][:block] = block if block_given?
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity
     def resource
       resource_class = "SupplejackCommon::#{_format.to_s.capitalize}Resource".constantize
       options = {}
@@ -69,8 +77,11 @@ module SupplejackCommon
       options[:namespaces] = _namespaces if _namespaces.present?
       options[:http_headers] = _http_headers if _http_headers.present?
       options[:request_timeout] = parser_class._request_timeout if parser_class._request_timeout.present?
+      options[:proxy] = _proxy if _proxy.present?
       @resource ||= resource_class.new(_url, options)
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     def set_attribute_values
       _attribute_definitions.each do |name, options|
