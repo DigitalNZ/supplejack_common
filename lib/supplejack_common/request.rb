@@ -108,7 +108,7 @@ module SupplejackCommon
 
         if proxy
           ActionCable.server.broadcast(
-            "preview_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+            "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
             status_log: "This url is being requested through the following proxy: #{proxy}"
           )
         end
@@ -151,7 +151,7 @@ module SupplejackCommon
         "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
         status_log: CodeRay.scan(response.body, content_type).html(line_numbers: :table).html_safe
       )
-      
+
       response
     end
   end
