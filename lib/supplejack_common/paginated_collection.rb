@@ -24,7 +24,8 @@ module SupplejackCommon
 
       @channel_options = {
         user_id: options[:user_id],
-        parser_id: options[:parser_id]
+        parser_id: options[:parser_id],
+        environment: options[:environment]
       }
 
       @options = options
@@ -142,9 +143,8 @@ module SupplejackCommon
         record.set_attribute_values
 
         if record.rejected?
-          # TODO channel name environment update
           ActionCable.server.broadcast(
-            "preview_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+            "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
             status_log: "Record with title #{record.title.first} has been rejected due to failing reject_if conditions in the parser."
           )
 

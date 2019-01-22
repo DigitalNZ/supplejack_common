@@ -94,15 +94,14 @@ module SupplejackCommon
     def request_url
       ::Retriable.retriable(tries: 5, base_interval: 1, multiplier: 2) do
         ::Sidekiq.logger.info "Retrying RestClient request #{url}" if defined?(Sidekiq)
-        # TODO: Update the name of the channel to match the environment that we are sending data too
         ActionCable.server.broadcast(
-          "preview_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+          "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
           status_log: "Requesting URL: #{url}"
         )
 
         if headers.present?
           ActionCable.server.broadcast(
-            "preview_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+            "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
             status_log: "This URL is being requested with the following headers: #{headers}"
           )
         end
@@ -148,12 +147,11 @@ module SupplejackCommon
                         :json
                       end
 
-      # TODO: Update the name of the channel to match the environment that we are sending data too
       ActionCable.server.broadcast(
-        "preview_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+        "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
         status_log: CodeRay.scan(response.body, content_type).html(line_numbers: :table).html_safe
       )
-
+      
       response
     end
   end
