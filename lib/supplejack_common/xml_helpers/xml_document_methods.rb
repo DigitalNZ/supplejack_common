@@ -11,9 +11,9 @@ module SupplejackCommon
     end
 
     module ClassMethods
-      def xml_records(url)
+      def xml_records(url, channel_options)
         xml_nodes = []
-        with_each_file(url) do |file|
+        with_each_file(url, channel_options) do |file|
           document = parse_document(file)
           self._document = document
           xml_nodes += document.xpath(_record_selector, _namespaces).map { |node| new(node, url) }
@@ -34,9 +34,9 @@ module SupplejackCommon
       # For single xml files and external urls, this will only be one file
       # For tar.gz this will yield once for each file in the tar
       #
-      def with_each_file(url)
+      def with_each_file(url, channel_options = {})
         if url =~ /^https?/
-          yield SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
+          yield SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy, channel_options)
         elsif url =~ /^file/
           url = url.gsub(%r{file:\/\/}, '')
 

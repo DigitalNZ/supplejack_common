@@ -30,8 +30,8 @@ module SupplejackCommon
           klass.new(self, pagination_options, options)
         end
 
-        def fetch_records(url = nil)
-          xml_records(url)
+        def fetch_records(url = nil, channel_options = {})
+          xml_records(url, channel_options)
         end
 
         def record_format(format)

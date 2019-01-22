@@ -7,8 +7,8 @@ module SupplejackCommon
   # SJ Request class
   class Request
     class << self
-      def get(url, request_timeout, options = [], headers = {}, proxy = nil)
-        new(url, request_timeout, options, headers, proxy).get
+      def get(url, request_timeout, options = [], headers = {}, proxy = nil, channel_options = {})
+        new(url, request_timeout, options, headers, proxy, channel_options).get
       end
 
       def scroll(url, request_timeout, options = [], headers = {})
@@ -16,9 +16,9 @@ module SupplejackCommon
       end
     end
 
-    attr_accessor :url, :throttling_options, :request_timeout, :headers, :proxy
+    attr_accessor :url, :throttling_options, :request_timeout, :headers, :proxy, :channel_options
 
-    def initialize(url, request_timeout, options = [], headers = {}, proxy = nil)
+    def initialize(url, request_timeout, options = [], headers = {}, proxy = nil, channel_options = {})
       @url = URI.escape(URI.unescape(url))
 
       options ||= []
@@ -28,6 +28,7 @@ module SupplejackCommon
       @request_timeout = request_timeout || 60_000
       @headers = headers
       @proxy = proxy
+      @channel_options = channel_options
     end
 
     def uri
@@ -93,6 +94,26 @@ module SupplejackCommon
     def request_url
       ::Retriable.retriable(tries: 5, base_interval: 1, multiplier: 2) do
         ::Sidekiq.logger.info "Retrying RestClient request #{url}" if defined?(Sidekiq)
+        # TODO: Update the name of the channel to match the environment that we are sending data too
+        ActionCable.server.broadcast(
+          "preview_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+          status_log: "Requesting URL: #{url}"
+        )
+
+        if headers.present?
+          ActionCable.server.broadcast(
+            "preview_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+            status_log: "This URL is being requested with the following headers: #{headers}"
+          )
+        end
+
+        if proxy
+          ActionCable.server.broadcast(
+            "preview_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+            status_log: "This url is being requested through the following proxy: #{proxy}"
+          )
+        end
+
         RestClient::Request.execute(
           method: :get,
           url: url,
@@ -111,6 +132,7 @@ module SupplejackCommon
         response = if defined?(Rails) && ::SupplejackCommon.caching_enabled
                      Rails.cache.fetch(url, expires_in: 10.minutes) { request_url }
                    else
+
                      request_url
                    end
       end
@@ -119,6 +141,18 @@ module SupplejackCommon
         real_time = measure.real.round(4)
         Sidekiq.logger.info "GET (#{real_time}): #{url}, started #{start_time.utc.iso8601}"
       end
+
+      content_type = if response.headers[:content_type].include? 'xml'
+                        :xml
+                      else
+                        :json
+                      end
+
+      # TODO: Update the name of the channel to match the environment that we are sending data too
+      ActionCable.server.broadcast(
+        "preview_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+        status_log: CodeRay.scan(response.body, content_type).html(line_numbers: :table).html_safe
+      )
 
       response
     end
