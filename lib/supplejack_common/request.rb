@@ -94,19 +94,21 @@ module SupplejackCommon
     def request_url
       ::Retriable.retriable(tries: 5, base_interval: 1, multiplier: 2) do
         ::Sidekiq.logger.info "Retrying RestClient request #{url}" if defined?(Sidekiq)
-        ActionCable.server.broadcast(
-          "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
-          status_log: "Requesting URL: #{url}"
-        )
+        if defined?(ActionCable)
+          ::ActionCable.server.broadcast(
+            "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+            status_log: "Requesting URL: #{url}"
+          )
+        end
 
-        if headers.present?
+        if headers.present? && defined?(ActionCable)
           ActionCable.server.broadcast(
             "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
             status_log: "This URL is being requested with the following headers: #{headers}"
           )
         end
 
-        if proxy
+        if proxy && defined?(ActionCable)
           ActionCable.server.broadcast(
             "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
             status_log: "This url is being requested through the following proxy: #{proxy}"
@@ -143,14 +145,18 @@ module SupplejackCommon
 
       content_type = if response.headers[:content_type].include? 'xml'
                         :xml
+                      elsif response.headers[:content_type].include? 'html'
+                        :html
                       else
                         :json
                       end
 
-      ActionCable.server.broadcast(
-        "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
-        status_log: CodeRay.scan(response.body, content_type).html(line_numbers: :table).html_safe
-      )
+      if defined?(ActionCable)
+        ActionCable.server.broadcast(
+          "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+          status_log: CodeRay.scan(response.body, content_type).html(line_numbers: :table).html_safe
+        )
+      end
 
       response
     end

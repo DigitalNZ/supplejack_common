@@ -11,7 +11,7 @@ module SupplejackCommon
     end
 
     module ClassMethods
-      def xml_records(url, channel_options)
+      def xml_records(url, channel_options = {})
         xml_nodes = []
         with_each_file(url, channel_options) do |file|
           document = parse_document(file)

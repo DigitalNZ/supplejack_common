@@ -18,14 +18,23 @@ module SupplejackCommon
       class_attribute :_set
       self._set = {}
 
+      class_attribute :_channel_options
+      self._channel_options = {}
+
       class << self
         attr_reader :response
 
         def client
-          @client ||= OAI::Client.new(base_urls.first, {}, _proxy)
+          @client ||= OAI::Client.new(base_urls.first, {}, _proxy, _channel_options)
         end
 
         def records(options = {})
+          self._channel_options = {
+            user_id: options[:user_id],
+            parser_id: options[:parser_id],
+            environment: options[:environment]
+          }
+
           options = options.keep_if { |key| VALID_RECORDS_OPTIONS.include?(key) }
           options[:metadata_prefix] = get_metadata_prefix if get_metadata_prefix.present?
           options[:set] = get_set if get_set.present?

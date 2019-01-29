@@ -7,10 +7,10 @@ require_relative 'parsers/xml_sitemap_parser'
 describe SupplejackCommon::Xml::Base do
   before do
     urls_xml = File.read('spec/supplejack_common/integrations/source_data/xml_sitemap_parser_urls.xml')
-    stub_request(:get, 'http://www.nzonscreen.com/api/title/').to_return(status: 200, body: urls_xml)
+    stub_request(:get, 'http://www.nzonscreen.com/api/title/').to_return(status: 200, body: urls_xml, headers: { content_type: 'xml' })
 
     record_xml = File.read('spec/supplejack_common/integrations/source_data/xml_sitemap_parser_record.xml')
-    stub_request(:get, 'http://www.nzonscreen.com/api/title/weekly-review-no-395-1949').to_return(status: 200, body: record_xml)
+    stub_request(:get, 'http://www.nzonscreen.com/api/title/weekly-review-no-395-1949').to_return(status: 200, body: record_xml, headers: { content_type: 'xml' })
   end
 
   let!(:record) { XmlSitemapParser.records.first }

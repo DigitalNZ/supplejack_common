@@ -7,7 +7,7 @@ require_relative 'parsers/xml_parser'
 describe SupplejackCommon::Xml::Base do
   before do
     xml = File.read('spec/supplejack_common/integrations/source_data/xml_parser_records.xml')
-    stub_request(:get, 'http://digitalnz.org/xml').to_return(status: 200, body: xml)
+    stub_request(:get, 'http://digitalnz.org/xml').to_return(status: 200, body: xml, headers: { content_type: 'xml' })
   end
 
   let!(:record) { XmlParser.records.first }
