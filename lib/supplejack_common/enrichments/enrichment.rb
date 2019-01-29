@@ -95,7 +95,7 @@ module SupplejackCommon
     end
 
     def enrichable?
-      _required_attributes.each_value do |value|
+      _required_attributes.each do |_attribute, value|
         return false if value.nil?
       end
 
