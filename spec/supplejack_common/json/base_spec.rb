@@ -80,7 +80,7 @@ describe SupplejackCommon::Json::Base do
         klass._throttle = {}
         klass.http_headers('x-api-key': 'key')
         klass._request_timeout = 60_000
-        SupplejackCommon::Request.should_receive(:scroll).with('http://google.com/_scroll', 60_000, {}, {'x-api-key': 'key'}, {}) { json }
+        SupplejackCommon::Request.should_receive(:scroll).with('http://google.com/_scroll', 60_000, {}, { 'x-api-key': 'key' }, {}) { json }
         klass.document('http://google.com/_scroll', {})
         expect(klass._document).to eq json
       end
@@ -89,7 +89,7 @@ describe SupplejackCommon::Json::Base do
         klass._throttle = {}
         klass.http_headers('x-api-key': 'key')
         klass._request_timeout = 60_000
-        SupplejackCommon::Request.should_receive(:scroll).with('http://google.com/scroll', 60_000, {}, {'x-api-key': 'key'}, {}) { json }
+        SupplejackCommon::Request.should_receive(:scroll).with('http://google.com/scroll', 60_000, {}, { 'x-api-key': 'key' }, {}) { json }
         klass.document('http://google.com/scroll', {})
         expect(klass._document).to eq json
       end

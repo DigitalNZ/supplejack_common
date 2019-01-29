@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe SupplejackCommon::Request do
   let!(:klass) { SupplejackCommon::Request }
-  let!(:request) { klass.new('http://google.com/titles/1', 10_000, {}, { content_type: 'hello' }) }
+  let!(:request) { klass.new('http://google.com/titles/1', 10_000, {}, content_type: 'hello') }
 
   before(:each) do
     RestClient::Request.stub(:execute) { request }
