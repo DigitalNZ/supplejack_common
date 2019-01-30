@@ -61,7 +61,7 @@ module OAI
       if defined?(ActionCable)
         ActionCable.server.broadcast(
           "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
-          status_log: CodeRay.scan(response.body, :xml).html(line_numbers: :table).html_safe
+          status_log: ::CodeRay.scan(response.body, :xml).html(line_numbers: :table).html_safe
         )
       end
 
