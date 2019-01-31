@@ -16,10 +16,10 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
-  gem.add_runtime_dependency 'coderay'
   gem.add_runtime_dependency 'actionpack'
   gem.add_runtime_dependency 'activesupport'
   gem.add_runtime_dependency 'chronic', '<= 0.10.2'
+  gem.add_runtime_dependency 'coderay'
   gem.add_runtime_dependency 'dimensions'
   gem.add_runtime_dependency 'htmlentities'
   gem.add_runtime_dependency 'json', '~> 1.8.3'
