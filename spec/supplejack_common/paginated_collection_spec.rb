@@ -32,8 +32,8 @@ describe SupplejackCommon::PaginatedCollection do
     end
 
     it 'should process all base_urls' do
-      SupplejackCommon::Base.should_receive(:fetch_records).with('http://go.gle/')
-      SupplejackCommon::Base.should_receive(:fetch_records).with('http://dnz.harvest/1')
+      SupplejackCommon::Base.should_receive(:fetch_records).with('http://go.gle/', user_id: nil, parser_id: nil, environment: nil)
+      SupplejackCommon::Base.should_receive(:fetch_records).with('http://dnz.harvest/1', user_id: nil, parser_id: nil, environment: nil)
       collection.each { ; }
     end
 
@@ -46,8 +46,8 @@ describe SupplejackCommon::PaginatedCollection do
       end
 
       it 'should call fetch records with a paginated url' do
-        SupplejackCommon::Base.should_receive(:fetch_records).with('http://go.gle/?page=1&per_page=10')
-        SupplejackCommon::Base.should_receive(:fetch_records).with('http://dnz.harvest/1?page=1&per_page=10')
+        SupplejackCommon::Base.should_receive(:fetch_records).with('http://go.gle/?page=1&per_page=10', user_id: nil, parser_id: nil, environment: nil)
+        SupplejackCommon::Base.should_receive(:fetch_records).with('http://dnz.harvest/1?page=1&per_page=10', user_id: nil, parser_id: nil, environment: nil)
         collection.each { ; }
       end
     end

@@ -7,7 +7,7 @@ require_relative 'parsers/json_parser'
 describe SupplejackCommon::Json::Base do
   before do
     json = File.read('spec/supplejack_common/integrations/source_data/json_records.json')
-    stub_request(:get, 'http://api.europeana.eu/records.json').to_return(status: 200, body: json)
+    stub_request(:get, 'http://api.europeana.eu/records.json').to_return(status: 200, body: json, headers: { content_type: 'json' })
   end
 
   let!(:record) { JsonParser.records.first }

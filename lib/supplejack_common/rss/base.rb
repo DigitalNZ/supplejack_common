@@ -19,14 +19,14 @@ module SupplejackCommon
           SupplejackCommon::PaginatedCollection.new(self, {}, options)
         end
 
-        def fetch_records(url)
-          document = index_document(url)
+        def fetch_records(url, channel_options = {})
+          document = index_document(url, channel_options)
           xml_nodes = document.xpath(_record_selector, _namespaces)
           xml_nodes.map { |node| new(node) }
         end
 
-        def index_document(url)
-          xml = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
+        def index_document(url, channel_options)
+          xml = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy, channel_options)
           Nokogiri::XML.parse(xml)
         end
       end

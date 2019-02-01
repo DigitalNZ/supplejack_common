@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'actionpack'
   gem.add_runtime_dependency 'activesupport'
   gem.add_runtime_dependency 'chronic', '<= 0.10.2'
+  gem.add_runtime_dependency 'coderay'
   gem.add_runtime_dependency 'dimensions'
   gem.add_runtime_dependency 'htmlentities'
   gem.add_runtime_dependency 'json', '~> 1.8.3'
@@ -36,4 +37,5 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'sanitize'
   gem.add_runtime_dependency 'tzinfo'
   gem.add_development_dependency 'webmock', '~> 1.8'
+  gem.add_runtime_dependency 'actioncable'
 end

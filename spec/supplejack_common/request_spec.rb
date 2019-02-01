@@ -4,10 +4,10 @@ require 'spec_helper'
 
 describe SupplejackCommon::Request do
   let!(:klass) { SupplejackCommon::Request }
-  let!(:request) { klass.new('http://google.com/titles/1', 10_000) }
+  let!(:request) { klass.new('http://google.com/titles/1', 10_000, {}, content_type: 'hello') }
 
   before(:each) do
-    RestClient::Request.stub(:execute) { 'body' }
+    RestClient::Request.stub(:execute) { request }
   end
 
   describe '.get' do
@@ -16,7 +16,7 @@ describe SupplejackCommon::Request do
     end
 
     it 'initializes a request object' do
-      klass.should_receive(:new).with('google.com', nil, [{ delay: 1 }], {}, nil) { request }
+      klass.should_receive(:new).with('google.com', nil, [{ delay: 1 }], {}, nil, {}) { request }
       klass.get('google.com', nil, [{ delay: 1 }])
     end
 
@@ -169,13 +169,6 @@ describe SupplejackCommon::Request do
                                                         proxy: nil)
       request_obj = klass.new('http://google.com', 60_000, [{ host: 'google.com', delay: 5 }], 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken')
       request_obj.request_url
-    end
-  end
-
-  describe 'request_resource' do
-    it 'should request the resource and return it' do
-      request.should_receive(:request_url) { 'body' }
-      request.request_resource.should eq 'body'
     end
   end
 end

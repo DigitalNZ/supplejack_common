@@ -138,6 +138,7 @@ module SupplejackCommon
 
     def rejected?
       return false if self.class.rejection_rules.nil?
+
       self.class.rejection_rules.any? do |r|
         instance_eval(&r)
       end

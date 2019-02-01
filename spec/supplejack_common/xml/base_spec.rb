@@ -52,7 +52,7 @@ describe SupplejackCommon::Xml::Base do
 
   describe '.fetch_records' do
     it 'initializes a set of xml records' do
-      klass.should_receive(:xml_records).with(nil) { [] }
+      klass.should_receive(:xml_records).with(nil, {}) { [] }
       klass.fetch_records
     end
   end

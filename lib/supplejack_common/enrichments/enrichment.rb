@@ -66,7 +66,6 @@ module SupplejackCommon
       _attribute_definitions[name][:block] = block if block_given?
     end
 
-    # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/CyclomaticComplexity
     def resource
       resource_class = "SupplejackCommon::#{_format.to_s.capitalize}Resource".constantize
@@ -80,7 +79,6 @@ module SupplejackCommon
       options[:proxy] = _proxy if _proxy.present?
       @resource ||= resource_class.new(_url, options)
     end
-    # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/CyclomaticComplexity
 
     def set_attribute_values
@@ -97,7 +95,7 @@ module SupplejackCommon
     end
 
     def enrichable?
-      _required_attributes.each do |_attribute, value|
+      _required_attributes.each_value do |value|
         return false if value.nil?
       end
 

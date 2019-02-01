@@ -45,7 +45,7 @@ describe SupplejackCommon::XmlDocumentMethods do
 
     context 'url is a url' do
       it 'gets the url and yields it' do
-        SupplejackCommon::Request.should_receive(:get).with('http://google.co.nz', 60_000, anything, anything, anything) { file }
+        SupplejackCommon::Request.should_receive(:get).with('http://google.co.nz', 60_000, anything, anything, anything, anything) { file }
         expect { |b| klass.send(:with_each_file, 'http://google.co.nz', &b) }.to yield_with_args(file)
       end
     end

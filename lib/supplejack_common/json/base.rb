@@ -16,12 +16,12 @@ module SupplejackCommon
           self._record_selector = path
         end
 
-        def document(url)
+        def document(url, channel_options)
           if url.include?('scroll')
-            self._document = SupplejackCommon::Request.scroll(url, _request_timeout, _throttle, _http_headers)
+            self._document = SupplejackCommon::Request.scroll(url, _request_timeout, _throttle, _http_headers, channel_options)
             _document
           elsif url =~ /^https?/
-            self._document = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
+            self._document = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy, channel_options)
             _document
           elsif url =~ /^file/
             File.read(url.gsub(/file:\/\//, ''))
@@ -36,8 +36,8 @@ module SupplejackCommon
           JsonPath.on(_document, total_selector).try(:first).to_f
         end
 
-        def records_json(url)
-          new_document = document(url)
+        def records_json(url, channel_options = {})
+          new_document = document(url, channel_options)
           return [] if new_document.code == 204
 
           records = JsonPath.on(new_document, _record_selector).try(:first)
@@ -45,8 +45,8 @@ module SupplejackCommon
           records
         end
 
-        def fetch_records(url)
-          records_json(url).map { |attributes| new(attributes) }
+        def fetch_records(url, channel_options = {})
+          records_json(url, channel_options).map { |attributes| new(attributes) }
         end
 
         def records(options = {})

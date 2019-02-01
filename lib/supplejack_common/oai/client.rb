@@ -6,10 +6,13 @@
 module OAI
   # lib/supplejack_common/client.rb
   class Client
-    def initialize(base_url, options = {}, proxy = nil)
+    attr_reader :channel_options
+
+    def initialize(base_url, options = {}, proxy = nil, channel_options)
       @base = URI.parse base_url
       @debug = options.fetch(:debug, false)
       @parser = options.fetch(:parser, 'rexml')
+      @channel_options = channel_options
 
       @http_client = options.fetch(:http) do
         Faraday.new(url: @base.clone, proxy: proxy) do |builder|
@@ -46,7 +49,22 @@ module OAI
     end
 
     def get(uri)
+      if defined?(ActionCable)
+        ActionCable.server.broadcast(
+          "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+          status_log: "Requesting URL: #{uri}"
+        )
+      end
+
       response = @http_client.get("?#{uri.query}")
+
+      if defined?(ActionCable)
+        ActionCable.server.broadcast(
+          "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+          status_log: ::CodeRay.scan(response.body, :xml).html(line_numbers: :table).html_safe
+        )
+      end
+
       response.body
     end
   end

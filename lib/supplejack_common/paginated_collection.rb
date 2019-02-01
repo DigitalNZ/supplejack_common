@@ -7,7 +7,7 @@ module SupplejackCommon
 
     attr_reader :klass, :options
 
-    attr_reader :page_parameter, :per_page_parameter, :per_page, :page, :counter
+    attr_reader :page_parameter, :per_page_parameter, :per_page, :page, :counter, :channel_options
 
     def initialize(klass, pagination_options = {}, options = {})
       @klass = klass
@@ -22,13 +22,19 @@ module SupplejackCommon
       @total_selector             = pagination_options[:total_selector]
       @initial_param              = pagination_options[:initial_param]
 
+      @channel_options = {
+        user_id: options[:user_id],
+        parser_id: options[:parser_id],
+        environment: options[:environment]
+      }
+
       @options = options
       @counter = 0
     end
 
     def each(&block)
       klass.base_urls.each do |base_url|
-        @records = klass.fetch_records(next_url(base_url))
+        @records = klass.fetch_records(next_url(base_url), channel_options)
 
         return nil unless yield_from_records(&block)
 
@@ -36,7 +42,7 @@ module SupplejackCommon
 
         while more_results?
           @records.clear
-          @records = klass.fetch_records(next_url(base_url))
+          @records = klass.fetch_records(next_url(base_url), channel_options)
 
           return nil unless yield_from_records(&block)
         end
@@ -137,6 +143,11 @@ module SupplejackCommon
         record.set_attribute_values
 
         if record.rejected?
+          ActionCable.server.broadcast(
+            "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
+            status_log: "Record with title #{record.title.first} has been rejected due to failing reject_if conditions in the parser."
+          )
+
           next
         else
           @counter += 1

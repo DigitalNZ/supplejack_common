@@ -5,7 +5,7 @@ module SupplejackCommon
     class PaginatedCollection < SupplejackCommon::PaginatedCollection
       include Enumerable
 
-      attr_reader :client, :options, :klass, :limit
+      attr_reader :client, :options, :klass, :limit, :channel_options
 
       def initialize(client, options, klass)
         @client = client
@@ -13,6 +13,12 @@ module SupplejackCommon
         @options = options
         @klass = klass
         @counter = 0
+
+        @channel_options = {
+          user_id: options[:user_id],
+          parser_id: options[:parser_id],
+          environment: options[:environment]
+        }
       end
 
       def each
