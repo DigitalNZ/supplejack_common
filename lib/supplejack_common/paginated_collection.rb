@@ -42,7 +42,7 @@ module SupplejackCommon
 
         while more_results?
           @records.clear
-          @records = klass.fetch_records(next_url(base_url))
+          @records = klass.fetch_records(next_url(base_url), channel_options)
 
           return nil unless yield_from_records(&block)
         end

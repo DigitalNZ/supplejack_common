@@ -101,6 +101,8 @@ module SupplejackCommon
           )
         end
 
+        ::Sidekiq.logger.info "Requesting URL: #{url}, #{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}" if defined?(Sidekiq)
+
         if headers.present? && defined?(ActionCable)
           ActionCable.server.broadcast(
             "#{channel_options[:environment]}_channel_#{channel_options[:parser_id]}_#{channel_options[:user_id]}",
