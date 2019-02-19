@@ -9,6 +9,7 @@ gem 'loofah'
 gem 'oai', '~> 0.3.1'
 gem 'pry'
 gem 'rubocop', require: false
+gem 'aws-sdk'
 
 group :test do
   gem 'mock_redis'
