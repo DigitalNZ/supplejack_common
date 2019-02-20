@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in supplejack_common.gemspec
 gemspec
 
-gem 'aws-sdk'
+gem 'aws-sdk-s3'
 gem 'loofah'
 gem 'oai', '~> 0.3.1'
 gem 'pry'

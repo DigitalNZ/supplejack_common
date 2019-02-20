@@ -9,7 +9,7 @@ require 'rest_client'
 require 'jsonpath'
 require 'chronic'
 require 'loofah'
-require 'aws-sdk'
+require 'aws-sdk-s3'
 
 require 'supplejack_common/version'
 require 'supplejack_common/exceptions'
