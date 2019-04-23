@@ -17,12 +17,13 @@ module SupplejackCommon
         end
 
         def document(url)
-          if url =~ /^https?/
-            self._document = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers)
-            _document
+          self._document = if url =~ /^https?/
+            SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers)
           elsif url =~ /^file/
             File.read(url.gsub(/file:\/\//, ''))
           end
+          self._document = _pre_process_block.call(_document) if _pre_process_block
+          _document
         end
 
         def next_page_token(next_page_token_location)

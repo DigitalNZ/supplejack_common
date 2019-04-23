@@ -13,6 +13,7 @@ describe SupplejackCommon::Json::Base do
     klass._rejection_rules[klass.identifier] = nil
     klass._throttle = {}
     klass._request_timeout = 60_000
+    klass._pre_process_block = nil
   end
 
   describe '.record_selector' do
@@ -50,21 +51,28 @@ describe SupplejackCommon::Json::Base do
     let(:json) { '"description": "Some json!"' }
 
     context 'json web document' do
-      it 'stores the raw json' do
+      before do
         klass._throttle = {}
         klass.http_headers('Authorization': 'Token token="token"', 'x-api-key': 'gus')
         klass._request_timeout = 60_000
         SupplejackCommon::Request.should_receive(:get).with('http://google.com', 60_000, {}, 'Authorization': 'Token token="token"', 'x-api-key': 'gus') { json }
-        klass.document('http://google.com').should eq json
+      end
+
+      it 'stores the raw json' do
+        expect(klass.document('http://google.com')).to equal json
       end
 
       it 'stores json document at _document class attribute' do
-        klass._throttle = {}
-        klass.http_headers('Authorization': 'Token token="token"', 'x-api-key': 'gus')
-        klass._request_timeout = 60_000
-        SupplejackCommon::Request.should_receive(:get).with('http://google.com', 60_000, {}, 'Authorization': 'Token token="token"', 'x-api-key': 'gus') { json }
         klass.document('http://google.com')
         expect(klass._document).to equal json
+      end
+
+      it 'pre process json data if pre_process_block DSL is defined' do
+        new_json = { a_new_json: 'Some value' }
+        klass.pre_process_block { new_json }
+
+        klass.document('http://google.com')
+        expect(klass._document).to equal new_json
       end
     end
 
