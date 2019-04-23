@@ -19,6 +19,7 @@ module SupplejackCommon
       class_attribute :_priority
       class_attribute :_match_concepts
       class_attribute :_http_headers
+      class_attribute :_pre_process_block
 
       self._base_urls = {}
       self._attribute_definitions = {}
@@ -109,6 +110,10 @@ module SupplejackCommon
 
       def match_concepts(match_concepts)
         _match_concepts[identifier] = match_concepts
+      end
+
+      def pre_process_block(&block)
+        self._pre_process_block = block
       end
     end
   end
