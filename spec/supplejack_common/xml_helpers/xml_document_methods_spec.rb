@@ -17,12 +17,20 @@ describe SupplejackCommon::XmlDocumentMethods do
     before do
       klass.record_selector '/g:items/g:item'
       klass.stub(:with_each_file).and_yield(xml)
-      klass.stub(:parse_document) { doc }
       klass.namespaces g: 'http://digitalnz.org/schemas/test'
       klass._request_timeout = 60_000
     end
 
+    it 'pre process xml data if pre_process_block DSL is defined' do
+      new_xml = '<a-new-xml>Some value</a-new-xml>'
+      klass.pre_process_block { new_xml }
+
+      klass.xml_records('url')
+      expect(klass._document.to_s).to eq Nokogiri::XML.parse(new_xml).to_s
+    end
+
     it 'initializes a record with every section of the XML' do
+      klass.stub(:parse_document) { doc }
       klass.should_receive(:new).once.with(xml_snippets.first, anything)
       klass.xml_records('url')
     end
