@@ -52,6 +52,7 @@ module SupplejackCommon
           super
           self._record_selector = nil
           self._document = nil
+          self._pre_process_block = nil
         end
       end
 
