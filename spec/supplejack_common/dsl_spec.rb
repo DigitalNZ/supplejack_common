@@ -163,4 +163,14 @@ describe SupplejackCommon::DSL do
       klass._match_concepts[klass.identifier].should eq :create_or_match
     end
   end
+
+  describe '.pre_process_block' do
+    it 'store given block to _pre_process_block class variable so it can be used to process raw data from source' do
+      klass.pre_process_block do |data|
+        data
+      end
+
+       klass._pre_process_block.call(123).should eq 123
+    end
+  end
 end

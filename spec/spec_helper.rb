@@ -4,7 +4,6 @@ require 'supplejack_common'
 require 'webmock/rspec'
 require 'simplecov'
 require 'loofah'
-require 'pry-byebug'
 
 SimpleCov.start
 

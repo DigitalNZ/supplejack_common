@@ -20,6 +20,7 @@ module SupplejackCommon
       class_attribute :_match_concepts
       class_attribute :_http_headers
       class_attribute :_proxy
+      class_attribute :_pre_process_block
 
       self._base_urls = {}
       self._attribute_definitions = {}
@@ -34,6 +35,7 @@ module SupplejackCommon
       self._match_concepts = {}
       self._http_headers = {}
       self._proxy = nil
+      self._pre_process_block = nil
     end
 
     module ClassMethods
@@ -115,6 +117,10 @@ module SupplejackCommon
 
       def proxy(url)
         self._proxy = url
+      end
+
+      def pre_process_block(&block)
+        self._pre_process_block = block
       end
     end
   end
