@@ -170,7 +170,7 @@ describe SupplejackCommon::DSL do
         data
       end
 
-       klass._pre_process_block.call(123).should eq 123
+      klass._pre_process_block.call(123).should eq 123
     end
   end
 end
