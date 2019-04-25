@@ -44,6 +44,7 @@ module SupplejackCommon
           self._total_results = nil
           self._record_format = nil
           self._document = nil
+          self._pre_process_block = nil
         end
 
         def total_results(_total_selector)
