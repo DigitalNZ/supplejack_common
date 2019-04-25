@@ -17,15 +17,15 @@ module SupplejackCommon
         end
 
         def document(url)
-          if url.include?('scroll')
-            self._document = SupplejackCommon::Request.scroll(url, _request_timeout, _throttle, _http_headers)
-            _document
+          self._document = if url.include?('scroll')
+            SupplejackCommon::Request.scroll(url, _request_timeout, _throttle, _http_headers)
           elsif url =~ /^https?/
-            self._document = SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
-            _document
+            SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
           elsif url =~ /^file/
             File.read(url.gsub(/file:\/\//, ''))
           end
+          self._document = _pre_process_block.call(_document) if _pre_process_block
+          _document
         end
 
         def next_page_token(next_page_token_location)
@@ -57,6 +57,7 @@ module SupplejackCommon
           super
           self._record_selector = nil
           self._document = nil
+          self._pre_process_block = nil
         end
       end
 
