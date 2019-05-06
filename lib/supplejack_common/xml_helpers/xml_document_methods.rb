@@ -14,6 +14,7 @@ module SupplejackCommon
       def xml_records(url)
         xml_nodes = []
         with_each_file(url) do |file|
+          file = _pre_process_block.call(file) if _pre_process_block
           document = parse_document(file)
           self._document = document
           xml_nodes += document.xpath(_record_selector, _namespaces).map { |node| new(node, url) }
