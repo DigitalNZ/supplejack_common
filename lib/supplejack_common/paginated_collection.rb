@@ -100,7 +100,7 @@ module SupplejackCommon
     end
 
     def total_pages
-      (klass.total_results(@total_selector) / per_page).ceil
+      (klass.total_results(@total_selector).to_f / per_page.to_f).ceil
     end
 
     def increment_page_counter!
