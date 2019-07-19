@@ -203,6 +203,12 @@ describe SupplejackCommon::PaginatedCollection do
       collection.stub(:per_page) { 10 }
       collection.send(:total_pages).should eq 4
     end
+
+    it 'returns the total number of pages even when the last page is not full of records' do
+      SupplejackCommon::Base.stub(:total_results) { 41 }
+      collection.stub(:per_page) { 10 }
+      collection.send(:total_pages).should eq 5
+    end
   end
 
   describe 'increment_page_counter!' do

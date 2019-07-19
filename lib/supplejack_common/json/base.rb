@@ -46,7 +46,8 @@ module SupplejackCommon
         end
 
         def fetch_records(url)
-          records_json(url).map { |attributes| new(attributes) }
+          records = records_json(url) || []
+          records.map { |attributes| new(attributes) }
         end
 
         def records(options = {})
