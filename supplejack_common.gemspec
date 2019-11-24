@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'mimemagic'
   gem.add_runtime_dependency 'mongoid'
   gem.add_runtime_dependency 'nokogiri'
-  gem.add_runtime_dependency 'oai', '~> 0.3.1'
+  gem.add_runtime_dependency 'oai'
   gem.add_runtime_dependency 'redis'
   gem.add_runtime_dependency 'rest-client'
   gem.add_runtime_dependency 'retriable'

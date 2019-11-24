@@ -14,7 +14,7 @@ PATH
       mimemagic
       mongoid
       nokogiri
-      oai (~> 0.3.1)
+      oai
       redis
       rest-client
       retriable
@@ -48,8 +48,8 @@ GEM
       public_suffix (>= 2.0.2, < 4.0)
     ast (2.4.0)
     aws-eventstream (1.0.3)
-    aws-partitions (1.243.0)
-    aws-sdk-core (3.80.0)
+    aws-partitions (1.244.0)
+    aws-sdk-core (3.81.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
@@ -116,8 +116,8 @@ GEM
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.2)
       nokogiri (~> 1.8, >= 1.8.4)
-    oai (0.3.1)
-      builder (>= 2.0.0)
+    oai (1.0.0)
+      builder (>= 3.1.0)
       faraday
       faraday_middleware
     parallel (1.12.1)
