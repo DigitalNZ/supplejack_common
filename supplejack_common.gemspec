@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
+
   gem.add_runtime_dependency 'actionpack'
   gem.add_runtime_dependency 'activesupport'
   gem.add_runtime_dependency 'aws-sdk-s3'
@@ -28,12 +29,10 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'mimemagic'
   gem.add_runtime_dependency 'mongoid'
   gem.add_runtime_dependency 'nokogiri'
+  gem.add_runtime_dependency 'oai'
   gem.add_runtime_dependency 'redis'
   gem.add_runtime_dependency 'rest-client'
   gem.add_runtime_dependency 'retriable'
-  gem.add_development_dependency 'rake', '< 11.0'
-  gem.add_development_dependency 'rspec', '~> 2.11.0'
   gem.add_runtime_dependency 'sanitize'
   gem.add_runtime_dependency 'tzinfo'
-  gem.add_development_dependency 'webmock', '~> 1.8'
 end
