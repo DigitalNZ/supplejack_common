@@ -7,7 +7,7 @@ gemspec
 
 group :development do
   gem 'pry-byebug'
-  gem 'rake', '< 11.0'
+  gem 'rake', '< 14.0'
   gem 'rubocop', require: false
 end
 
