@@ -10,10 +10,6 @@ describe SupplejackCommon::Loader do
     SupplejackCommon.parser_base_path = File.dirname(__FILE__) + '/tmp'
   end
 
-  after do
-    FileUtils.rmdir(SupplejackCommon.parser_base_path)
-  end
-
   describe '#path' do
     it 'builds a absolute path to the temp file' do
       loader.path.should eq "#{File.dirname(__FILE__)}/tmp/json/europeana.rb"
