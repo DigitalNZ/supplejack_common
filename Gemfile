@@ -7,13 +7,12 @@ gemspec
 
 group :development do
   gem 'pry-byebug'
-  gem 'rake', '< 11.0'
+  gem 'rake', '> 12.3.3'
   gem 'rubocop', require: false
 end
 
 group :test do
   gem 'mock_redis'
   gem 'rspec', '~> 2.11.0'
-  gem 'simplecov'
-  gem 'webmock', '~> 1.8'
+  gem 'webmock'
 end

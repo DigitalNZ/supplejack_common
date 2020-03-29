@@ -1,7 +1,6 @@
 language: ruby
-
 rvm:
-  - 2.3.8
+  - 2.6.5
 
 services:
   - redis-server
@@ -27,15 +26,6 @@ jobs:
       name: 'Rspec'
       script:
         - bundle exec rspec
-
-    - stage: test
-      name: 'bundle audit'
-      script:
-        - gem install bundler-audit
-        - bundle audit update
-        - bundle audit check
-
-  allow_failures:
 
     - stage: test
       name: 'bundle audit'
