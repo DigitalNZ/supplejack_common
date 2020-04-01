@@ -42,8 +42,8 @@ describe SupplejackCommon::Request do
     end
 
     it 'URI escapes the url' do
-      request = klass.new('google.com/ben ten+', nil)
-      request.url.should eq 'google.com/ben%20ten%2B'
+      request = klass.new('google.com/ben ten', nil)
+      request.url.should eq 'google.com/ben%20ten'
     end
 
     it 'can be initialized with headers' do
