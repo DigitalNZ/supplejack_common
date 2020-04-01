@@ -19,9 +19,7 @@ module SupplejackCommon
     attr_accessor :url, :throttling_options, :request_timeout, :headers, :proxy
 
     def initialize(url, request_timeout, options = [], headers = {}, proxy = nil)
-      # [#171483511] ENCODE SJ PAGINATION TOKEN
-      # Ensure that '+' characters in tokenised pagination are encoded
-      @url = URI.escape(URI.unescape(url)).gsub('+', '%2B')
+      @url = URI.escape(URI.unescape(url))
 
       options ||= []
       @throttling_options = Hash[options.map do |option|
