@@ -56,7 +56,6 @@ module SupplejackCommon
       url
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/PerceivedComplexity
     def next_url(url)
       if paginated?
@@ -82,7 +81,7 @@ module SupplejackCommon
         url
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
+
     # rubocop:enable Metrics/PerceivedComplexity
 
     def url_options
