@@ -21,10 +21,10 @@ module SupplejackCommon
       @next_page_token_location   = pagination_options[:next_page_token_location]
       @total_selector             = pagination_options[:total_selector]
       @initial_param              = pagination_options[:initial_param]
+      @counter                    = pagination_options[:counter] || 0
+      @job                        = pagination_options[:job]
 
       @options = options
-      @counter = options[:counter] || 0
-      @job   = options[:job]
 
       @job.states.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter) unless @job.nil?
     end
