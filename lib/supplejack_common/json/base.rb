@@ -51,6 +51,10 @@ module SupplejackCommon
         end
 
         def records(options = {})
+
+          # at this point we should be able to pass the pagination option..
+          pagination_options[:page] = options[:page] if options[:page].present?
+
           SupplejackCommon::PaginatedCollection.new(self, pagination_options || {}, options)
         end
 

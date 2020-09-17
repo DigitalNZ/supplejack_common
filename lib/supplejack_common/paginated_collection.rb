@@ -23,7 +23,10 @@ module SupplejackCommon
       @initial_param              = pagination_options[:initial_param]
 
       @options = options
-      @counter = 0
+      @counter = options[:counter] || 0
+      @job   = options[:job]
+
+      @job.states.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter) unless @job.nil?
     end
 
     def each(&block)
@@ -35,6 +38,8 @@ module SupplejackCommon
         next unless paginated? || scroll?
 
         while more_results?
+          @job.states.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter) unless @job.nil?
+
           @records.clear
           @records = klass.fetch_records(next_url(base_url))
 
@@ -109,6 +114,7 @@ module SupplejackCommon
                else
                  @per_page
                end
+
     end
 
     def more_results?
