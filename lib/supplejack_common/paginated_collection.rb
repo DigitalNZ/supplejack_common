@@ -21,9 +21,12 @@ module SupplejackCommon
       @next_page_token_location   = pagination_options[:next_page_token_location]
       @total_selector             = pagination_options[:total_selector]
       @initial_param              = pagination_options[:initial_param]
+      @counter                    = pagination_options[:counter] || 0
+      @job                        = pagination_options[:job]
 
       @options = options
-      @counter = 0
+
+      @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter)
     end
 
     def each(&block)
@@ -35,6 +38,8 @@ module SupplejackCommon
         next unless paginated? || scroll?
 
         while more_results?
+          @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter)
+
           @records.clear
           @records = klass.fetch_records(next_url(base_url))
 
@@ -51,7 +56,6 @@ module SupplejackCommon
       url
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/PerceivedComplexity
     def next_url(url)
       if paginated?
@@ -77,7 +81,7 @@ module SupplejackCommon
         url
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
+
     # rubocop:enable Metrics/PerceivedComplexity
 
     def url_options
