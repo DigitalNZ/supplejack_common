@@ -23,19 +23,29 @@ module SupplejackCommon
       @initial_param              = pagination_options[:initial_param]
       @counter                    = pagination_options[:counter] || 0
       @job                        = pagination_options[:job]
+      @base_urls                  = pagination_options[:base_urls] || []
+      puts "Starting from #{@base_urls[0]}"
 
       @options = options
 
-      @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter)
+      if paginated?
+        @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter)
+      else
+        @job&.states&.create!(base_urls: @base_urls, limit: options[:limit], counter: @counter)
+      end
     end
 
     def each(&block)
-      klass.base_urls.each do |base_url|
+      completed_base_urls = @job&.states&.last.base_urls || []
+      (klass.base_urls - completed_base_urls).each do |base_url|
         @records = klass.fetch_records(next_url(base_url))
 
         return nil unless yield_from_records(&block)
-
-        next unless paginated? || scroll?
+        unless paginated? || scroll?
+          completed_base_urls = @job&.states&.last.base_urls
+          @job&.states&.create!(base_urls: completed_base_urls.push(base_url), limit: options[:limit], counter: @counter)
+          next
+        end
 
         while more_results?
           @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter)
