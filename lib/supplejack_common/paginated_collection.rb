@@ -36,13 +36,13 @@ module SupplejackCommon
     end
 
     def each(&block)
-      completed_base_urls = @job&.states&.last.base_urls || []
+      completed_base_urls = @job&.states&.last&.base_urls || []
       (klass.base_urls - completed_base_urls).each do |base_url|
         @records = klass.fetch_records(next_url(base_url))
 
         return nil unless yield_from_records(&block)
         unless paginated? || scroll?
-          completed_base_urls = @job&.states&.last.base_urls
+          completed_base_urls = @job&.states&.last&.base_urls
           @job&.states&.create!(base_urls: completed_base_urls.push(base_url), limit: options[:limit], counter: @counter)
           next
         end
@@ -66,7 +66,6 @@ module SupplejackCommon
       url
     end
 
-    # rubocop:disable Metrics/PerceivedComplexity
     def next_url(url)
       if paginated?
         joiner = url =~ /\?/ ? '&' : '?'
@@ -91,8 +90,6 @@ module SupplejackCommon
         url
       end
     end
-
-    # rubocop:enable Metrics/PerceivedComplexity
 
     def url_options
       options = {}
