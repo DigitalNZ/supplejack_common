@@ -24,7 +24,11 @@ describe SupplejackCommon::Sitemap::PaginatedCollection do
 
   it 'adds the namespaces to the site' do
     TestXml.namespaces page: 'http://www.w3.org/1999/xhtml'
-    collection.sitemap_klass.should_receive(:_namespaces=).with(page: 'http://www.w3.org/1999/xhtml')
+    collection.sitemap_klass.should_receive(:_namespaces=).with(
+      g: 'http://digitalnz.org/schemas/test',
+      dc: 'http://purl.org/dc/elements/1.1/',
+      page: 'http://www.w3.org/1999/xhtml'
+    )
     collection = SupplejackCommon::Sitemap::PaginatedCollection.new(TestXml)
   end
 
