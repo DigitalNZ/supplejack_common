@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-  - 2.6.5
+  - 2.7.1
 
 services:
   - redis-server
@@ -33,4 +33,3 @@ jobs:
         - gem install bundler-audit
         - bundle audit update
         - bundle audit check
-
