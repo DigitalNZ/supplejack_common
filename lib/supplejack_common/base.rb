@@ -93,7 +93,7 @@ module SupplejackCommon
 
       def include_snippet(name)
         if defined?(Snippet)
-          environment = parent.name.split('::').last.downcase.to_sym
+          environment = module_parent.name.split('::').last.downcase.to_sym
           if snippet = Snippet.find_by_name(name, environment)
             class_eval <<-METHOD, __FILE__, __LINE__ + 1
               #{snippet.content}
