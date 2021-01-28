@@ -41,11 +41,6 @@ describe SupplejackCommon::Request do
       request.throttling_options.should eq({})
     end
 
-    it 'URI escapes the url' do
-      request = klass.new('google.com/ben ten', nil)
-      request.url.should eq 'google.com/ben%20ten'
-    end
-
     it 'can be initialized with headers' do
       headers = { 'x-api-key' => 'API_KEY', 'Authorization' => 'tokentokentoken' }
 

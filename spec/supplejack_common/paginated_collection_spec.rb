@@ -78,6 +78,13 @@ describe SupplejackCommon::PaginatedCollection do
       it 'appends to existing url parameters' do
         collection.send(:next_url, 'http://go.gle/?sort=asc').should eq 'http://go.gle/?sort=asc&page=1&per_page=10'
       end
+
+      it 'should call a block if given' do
+        collec = klass.new(SupplejackCommon::Base, { page_parameter: 'page', type: 'item', block:
+          Proc.new { "http://google.com" }
+        })
+        collec.send(:next_url, 'http://go.gle/?sort=asc').should eq 'http://google.com'
+      end
     end
 
     context 'not paginated' do

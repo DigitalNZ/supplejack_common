@@ -7,7 +7,15 @@ module SupplejackCommon
 
     attr_reader :klass, :options
 
-    attr_reader :page_parameter, :per_page_parameter, :per_page, :page, :counter
+    attr_reader :page_parameter,
+                :per_page_parameter,
+                :per_page,
+                :page,
+                :counter,
+                :type,
+                :next_page_token_location,
+                :total_selector,
+                :initial_param
 
     def initialize(klass, pagination_options = {}, options = {})
       @klass = klass
@@ -21,6 +29,7 @@ module SupplejackCommon
       @next_page_token_location   = pagination_options[:next_page_token_location]
       @total_selector             = pagination_options[:total_selector]
       @initial_param              = pagination_options[:initial_param]
+      @block                      = pagination_options[:block]
 
       @options = options
       @counter = 0
@@ -45,40 +54,51 @@ module SupplejackCommon
 
     private
 
-    def initial_url(url, joiner)
-      url = "#{url}#{joiner}#{@initial_param}"
+    def initial_url(url)
+      url = "#{url}#{joiner(url)}#{@initial_param}"
       @initial_param = nil
       url
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
     def next_url(url)
-      if paginated?
-        joiner = url =~ /\?/ ? '&' : '?'
-        if tokenised?
-          @page = klass._document.present? ? klass.next_page_token(@next_page_token_location) : nil
-          result = "#{url}#{joiner}#{url_options.to_query}"
-          result = initial_url(url, joiner) if @initial_param.present?
-          result
-        else
-          result = "#{url}#{joiner}#{url_options.to_query}"
-          increment_page_counter!
-          result
-        end
-      elsif scroll?
-        if klass._document.present?
-          base_url = url.match('(?<base_url>.+\/collection)')[:base_url]
-          base_url + klass._document.headers[:location]
-        else
-          url
-        end
-      else
-        url
-      end
+      return next_tokenised_url(url) if tokenised?
+      return next_paginated_url(url) if paginated?
+      return next_scroll_url(url) if scroll?
+      return @block.call(self, url) if @block
+
+      url
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
+
+    def next_tokenised_url(url)
+      @page = klass._document.present? ? klass.next_page_token(@next_page_token_location) : nil
+      result = "#{url}#{joiner(url)}#{url_options.to_query}"
+
+      if @block
+        init_param = @initial_param ? [@initial_param.split('=')].to_h : {}
+        @initial_param = nil
+        return @block.call(url, joiner(url), url_options.merge(init_param))
+      end
+
+      result = initial_url(url) if @initial_param.present?
+      return result
+    end
+
+    def next_paginated_url(url)
+      if @block
+        result = @block.call(url, joiner(url), url_options)
+      else
+        result = "#{url}#{joiner(url)}#{url_options.to_query}"
+      end
+      increment_page_counter!
+      result
+    end
+
+    def next_scroll_url(url)
+      return url unless klass._document.present?
+
+      base_url = url.match('(?<base_url>.+\/collection)')[:base_url]
+      base_url + klass._document.headers[:location]
+    end
 
     def url_options
       options = {}
@@ -130,6 +150,10 @@ module SupplejackCommon
 
     def scroll?
       @type == 'scroll'
+    end
+
+    def joiner(url)
+      url =~ /\?/ ? '&' : '?'
     end
 
     def yield_from_records

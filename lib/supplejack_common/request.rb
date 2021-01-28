@@ -19,7 +19,7 @@ module SupplejackCommon
     attr_accessor :url, :throttling_options, :request_timeout, :headers, :proxy
 
     def initialize(url, request_timeout, options = [], headers = {}, proxy = nil)
-      @url = URI.escape(URI.unescape(url))
+      @url = url
 
       options ||= []
       @throttling_options = Hash[options.map do |option|

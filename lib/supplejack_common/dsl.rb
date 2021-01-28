@@ -59,8 +59,9 @@ module SupplejackCommon
         _basic_auth[identifier] = { username: username, password: password }
       end
 
-      def paginate(options = {})
-        _pagination_options[identifier] = options
+      def paginate(options = {}, &block)
+        _pagination_options[identifier] = options || {}
+        _pagination_options[identifier][:block] = block if block_given?
       end
 
       def attribute(name, options = {}, &block)
