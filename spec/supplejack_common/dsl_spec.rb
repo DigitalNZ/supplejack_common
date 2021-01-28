@@ -46,6 +46,14 @@ describe SupplejackCommon::DSL do
       klass.paginate options
       klass._pagination_options[klass.identifier].should eq options
     end
+
+    it 'stores the block' do
+      klass.paginate options do
+        "http://google.com"
+      end
+
+      klass._pagination_options[klass.identifier][:block].should be_a Proc
+    end
   end
 
   describe '.attribute' do

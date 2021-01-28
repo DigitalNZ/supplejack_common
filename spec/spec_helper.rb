@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'pry'
 require 'supplejack_common'
 require 'webmock/rspec'
 require 'loofah'
