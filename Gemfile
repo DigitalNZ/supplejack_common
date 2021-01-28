@@ -6,7 +6,6 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'pry-byebug'
   gem 'rake', '> 12.3.3'
   gem 'rubocop', require: false
 end
@@ -15,4 +14,8 @@ group :test do
   gem 'mock_redis'
   gem 'rspec', '~> 2.11.0'
   gem 'webmock'
+end
+
+group :test, :development do
+  gem 'pry-byebug'
 end
