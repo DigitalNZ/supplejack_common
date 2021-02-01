@@ -80,7 +80,7 @@ module SupplejackCommon
       end
 
       result = initial_url(url) if @initial_param.present?
-      return result
+      result
     end
 
     def next_paginated_url(url)
