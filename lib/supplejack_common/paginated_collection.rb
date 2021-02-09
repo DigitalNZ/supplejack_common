@@ -84,11 +84,11 @@ module SupplejackCommon
     end
 
     def next_paginated_url(url)
-      if @block
-        result = @block.call(url, joiner(url), url_options)
-      else
-        result = "#{url}#{joiner(url)}#{url_options.to_query}"
-      end
+      result = if @block
+                 @block.call(url, joiner(url), url_options)
+               else
+                 "#{url}#{joiner(url)}#{url_options.to_query}"
+               end
       increment_page_counter!
       result
     end
