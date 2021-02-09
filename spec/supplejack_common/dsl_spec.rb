@@ -49,7 +49,7 @@ describe SupplejackCommon::DSL do
 
     it 'stores the block' do
       klass.paginate options do
-        "http://google.com"
+        'http://google.com'
       end
 
       klass._pagination_options[klass.identifier][:block].should be_a Proc

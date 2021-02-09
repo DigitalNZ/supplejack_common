@@ -81,8 +81,7 @@ describe SupplejackCommon::PaginatedCollection do
 
       it 'should call a block if given' do
         collec = klass.new(SupplejackCommon::Base, { page_parameter: 'page', type: 'item', block:
-          Proc.new { "http://google.com" }
-        })
+          proc { 'http://google.com' } })
         collec.send(:next_url, 'http://go.gle/?sort=asc').should eq 'http://google.com'
       end
     end
