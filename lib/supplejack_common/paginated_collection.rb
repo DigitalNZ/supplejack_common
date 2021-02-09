@@ -29,7 +29,7 @@ module SupplejackCommon
       @options = options
 
       if paginated?
-        @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter)
+        @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter, total_selector: @total_selector)
       else
         @job&.states&.create!(base_urls: @base_urls, limit: options[:limit], counter: @counter)
       end
@@ -51,7 +51,7 @@ module SupplejackCommon
           @records.clear
           @records = klass.fetch_records(next_url(base_url))
 
-          @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter)
+          @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter, total_selector: @total_selector)
 
           return nil unless yield_from_records(&block)
         end

@@ -54,6 +54,7 @@ module SupplejackCommon
           pagination_options[:page] = options[:page] if options[:page].present?
           pagination_options[:counter] = options[:counter] if options[:counter].present?
           pagination_options[:job] = options[:job] if options[:job].present?
+          pagination_options[:total_selector] = options[:total_selector] if options[:total_selector].present?
 
           SupplejackCommon::PaginatedCollection.new(self, pagination_options || {}, options)
         end
