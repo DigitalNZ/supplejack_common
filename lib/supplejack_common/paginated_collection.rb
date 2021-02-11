@@ -48,10 +48,10 @@ module SupplejackCommon
         end
 
         while more_results?
+          @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter, total_selector: @total_selector)
+
           @records.clear
           @records = klass.fetch_records(next_url(base_url))
-
-          @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter, total_selector: @total_selector)
 
           return nil unless yield_from_records(&block)
         end
