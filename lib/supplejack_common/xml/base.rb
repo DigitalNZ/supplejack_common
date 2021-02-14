@@ -25,6 +25,7 @@ module SupplejackCommon
         end
 
         def records(options = {})
+          pagination_options = {}
           pagination_options[:job] = options[:job] if options[:job].present?
           pagination_options[:base_urls] = options[:base_urls] if options[:base_urls].present?
           pagination_options[:limit] = options[:limit] if options[:limit].present?
