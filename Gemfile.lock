@@ -12,7 +12,7 @@ PATH
       jsonpath (~> 0.5.0)
       loofah
       mimemagic
-      mongoid
+      mongoid (~> 7.1.0)
       nokogiri
       oai
       redis
@@ -108,9 +108,9 @@ GEM
     mock_redis (0.26.0)
     mongo (2.14.0)
       bson (>= 4.8.2, < 5.0.0)
-    mongoid (7.2.0)
+    mongoid (7.1.6)
       activemodel (>= 5.1, < 6.1)
-      mongo (>= 2.10.5, < 3.0.0)
+      mongo (>= 2.7.0, < 3.0.0)
     multi_json (1.15.0)
     multipart-post (2.1.1)
     netrc (0.11.0)
