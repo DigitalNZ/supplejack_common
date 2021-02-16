@@ -138,14 +138,6 @@ Lint/ShadowingOuterLocalVariable:
   Exclude:
     - 'lib/supplejack_common/enrichments/abstract_enrichment.rb'
 
-# Offense count: 6
-# Cop supports --auto-correct.
-Lint/SymbolConversion:
-  Exclude:
-    - 'spec/supplejack_common/dsl_spec.rb'
-    - 'spec/supplejack_common/enrichments/enrichment_spec.rb'
-    - 'spec/supplejack_common/json/base_spec.rb'
-
 # Offense count: 2
 Lint/UriEscapeUnescape:
   Exclude:

@@ -67,6 +67,7 @@ module SupplejackCommon
     end
 
     # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity
     def resource
       resource_class = "SupplejackCommon::#{_format.to_s.capitalize}Resource".constantize
       options = {}
@@ -80,6 +81,7 @@ module SupplejackCommon
       @resource ||= resource_class.new(_url, options)
     end
     # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     def set_attribute_values
       _attribute_definitions.each do |name, options|

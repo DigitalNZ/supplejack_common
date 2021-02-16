@@ -161,9 +161,11 @@ module SupplejackCommon
       attributes[attribute.to_sym]
     end
 
+    # rubocop:disable Lint/MissingSuper
     def method_missing(symbol, *_args)
       raise NoMethodError, "undefined method '#{symbol}' for #{self.class}" unless attribute_names.include?(symbol)
       attributes[symbol]
     end
+    # rubocop:enable Lint/MissingSuper
   end
 end

@@ -2,6 +2,7 @@
 
 module SupplejackCommon
   # Paginated Collection class
+  # rubocop:disable Metrics/ClassLength
   class PaginatedCollection
     include Enumerable
 
@@ -17,6 +18,8 @@ module SupplejackCommon
                 :total_selector,
                 :initial_param
 
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def initialize(klass, pagination_options = {}, options = {})
       @klass = klass
 
@@ -44,7 +47,12 @@ module SupplejackCommon
         @job&.states&.create!(base_urls: @base_urls, limit: options[:limit], counter: @counter)
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize
     def each(&block)
       completed_base_urls = @job&.states&.last&.base_urls || []
       (klass.base_urls - completed_base_urls).each do |base_url|
@@ -67,6 +75,9 @@ module SupplejackCommon
         end
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize
 
     private
 
@@ -189,4 +200,5 @@ module SupplejackCommon
       true
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
