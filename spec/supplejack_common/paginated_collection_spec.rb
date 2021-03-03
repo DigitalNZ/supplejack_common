@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe SupplejackCommon::PaginatedCollection do
   let(:klass) { SupplejackCommon::PaginatedCollection }
-  let(:collection) { klass.new(SupplejackCommon::Base, { page_parameter: 'page', type: 'item', per_page_parameter: 'per_page', per_page: 5, page: 1 }, limit: 1) }
+  let(:collection) { klass.new(SupplejackCommon::Base, { page_parameter: 'page', type: 'item', per_page_parameter: 'per_page', per_page: 5, page: 1, counter: 1 }, limit: 1) }
 
   describe '#initialize' do
     it 'assigns the klass' do
@@ -19,7 +19,7 @@ describe SupplejackCommon::PaginatedCollection do
     end
 
     it 'initializes a counter and extra options' do
-      collection.counter.should eq 0
+      collection.counter.should eq 1
       collection.options.should eq(limit: 1)
     end
   end

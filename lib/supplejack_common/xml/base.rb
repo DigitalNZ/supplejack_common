@@ -25,9 +25,14 @@ module SupplejackCommon
         end
 
         def records(options = {})
+          altered_options = pagination_options || {}
+          altered_options[:page] = options[:page] if options[:page].present?
+          altered_options[:counter] = options[:counter] if options[:counter].present?
+          altered_options[:job] = options[:job] if options[:job].present?
+
           options.reverse_merge!(limit: nil)
           klass = !!_sitemap_entry_selector ? SupplejackCommon::Sitemap::PaginatedCollection : SupplejackCommon::PaginatedCollection
-          klass.new(self, pagination_options, options)
+          klass.new(self, altered_options, options)
         end
 
         def fetch_records(url = nil)

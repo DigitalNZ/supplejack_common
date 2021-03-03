@@ -92,13 +92,11 @@ module SupplejackCommon
       end
 
       def include_snippet(name)
-        if defined?(Snippet)
-          environment = parent.name.split('::').last.downcase.to_sym
-          if snippet = Snippet.find_by_name(name, environment)
-            class_eval <<-METHOD, __FILE__, __LINE__ + 1
-              #{snippet.content}
-            METHOD
-          end
+        environment = parent.name.split('::').last.downcase.to_sym
+        if snippet = Snippet.find_by_name(name, environment)
+          class_eval <<-METHOD, __FILE__, __LINE__ + 1
+            #{snippet.content}
+          METHOD
         end
       end
     end
@@ -163,9 +161,11 @@ module SupplejackCommon
       attributes[attribute.to_sym]
     end
 
+    # rubocop:disable Lint/MissingSuper
     def method_missing(symbol, *_args)
       raise NoMethodError, "undefined method '#{symbol}' for #{self.class}" unless attribute_names.include?(symbol)
       attributes[symbol]
     end
+    # rubocop:enable Lint/MissingSuper
   end
 end

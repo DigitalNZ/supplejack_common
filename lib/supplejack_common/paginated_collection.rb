@@ -2,6 +2,7 @@
 
 module SupplejackCommon
   # Paginated Collection class
+  # rubocop:disable Metrics/ClassLength
   class PaginatedCollection
     include Enumerable
 
@@ -17,6 +18,8 @@ module SupplejackCommon
                 :total_selector,
                 :initial_param
 
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def initialize(klass, pagination_options = {}, options = {})
       @klass = klass
 
@@ -29,21 +32,42 @@ module SupplejackCommon
       @next_page_token_location   = pagination_options[:next_page_token_location]
       @total_selector             = pagination_options[:total_selector]
       @initial_param              = pagination_options[:initial_param]
+      @counter                    = pagination_options[:counter] || 0
+      @job                        = pagination_options[:job]
+      @base_urls                  = pagination_options[:base_urls] || []
       @block                      = pagination_options[:block]
 
-      @options = options
-      @counter = 0
-    end
+      puts "Starting from #{@base_urls[0]}"
 
+      @options = options
+
+      if paginated?
+        @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter)
+      else
+        @job&.states&.create!(base_urls: @base_urls, limit: options[:limit], counter: @counter)
+      end
+    end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
+
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize
     def each(&block)
-      klass.base_urls.each do |base_url|
+      completed_base_urls = @job&.states&.last&.base_urls || []
+      (klass.base_urls - completed_base_urls).each do |base_url|
         @records = klass.fetch_records(next_url(base_url))
 
         return nil unless yield_from_records(&block)
-
-        next unless paginated? || scroll?
+        unless paginated? || scroll?
+          completed_base_urls = @job&.states&.last&.base_urls
+          @job&.states&.create!(base_urls: completed_base_urls.push(base_url), limit: options[:limit], counter: @counter)
+          next
+        end
 
         while more_results?
+          @job&.states&.create!(page: @page, per_page: @per_page, limit: options[:limit], counter: @counter)
+
           @records.clear
           @records = klass.fetch_records(next_url(base_url))
 
@@ -51,6 +75,9 @@ module SupplejackCommon
         end
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize
 
     private
 
@@ -173,4 +200,5 @@ module SupplejackCommon
       true
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

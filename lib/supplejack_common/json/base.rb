@@ -51,7 +51,12 @@ module SupplejackCommon
         end
 
         def records(options = {})
-          SupplejackCommon::PaginatedCollection.new(self, pagination_options || {}, options)
+          altered_options = pagination_options || {}
+          altered_options[:page] = options[:page] if options[:page].present?
+          altered_options[:counter] = options[:counter] if options[:counter].present?
+          altered_options[:job] = options[:job] if options[:job].present?
+
+          SupplejackCommon::PaginatedCollection.new(self, altered_options, options)
         end
 
         def clear_definitions
