@@ -105,6 +105,7 @@ GEM
     mimemagic (0.4.3)
       nokogiri (~> 1)
       rake
+    mini_portile2 (2.5.1)
     mini_portile2 (2.5.0)
     minitest (5.14.3)
     mock_redis (0.26.0)
@@ -116,7 +117,7 @@ GEM
     multi_json (1.15.0)
     multipart-post (2.1.1)
     netrc (0.11.0)
-    nokogiri (1.11.1)
+    nokogiri (1.11.4)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     nokogumbo (2.0.4)
