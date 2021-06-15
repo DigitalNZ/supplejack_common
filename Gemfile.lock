@@ -106,6 +106,7 @@ GEM
       nokogiri (~> 1)
       rake
     mini_portile2 (2.5.1)
+    mini_portile2 (2.5.0)
     minitest (5.14.3)
     mock_redis (0.26.0)
     mongo (2.14.0)
@@ -154,7 +155,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retriable (3.1.2)
-    rexml (3.2.4)
+    rexml (3.2.5)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)
       rspec-expectations (~> 2.11.0)
