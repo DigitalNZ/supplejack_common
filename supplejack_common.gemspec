@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
 
-  gem.add_runtime_dependency 'actionpack', '~> 6.0.3.5'
+  gem.add_runtime_dependency 'actionpack', '>= 6.0.3.5', '< 6.1.4.0'
   gem.add_runtime_dependency 'activesupport'
   gem.add_runtime_dependency 'aws-sdk-s3'
   gem.add_runtime_dependency 'chronic', '<= 0.10.2'
