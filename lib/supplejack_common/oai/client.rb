@@ -11,7 +11,7 @@ module OAI
       @debug = options.fetch(:debug, false)
       @parser = options.fetch(:parser, 'rexml')
 
-      p "OAI fetching from URL #{@base}"
+      p "OAI: fetching from URL #{@base}"
 
       @http_client = options.fetch(:http) do
         Faraday.new(url: @base.clone, proxy: proxy) do |builder|
@@ -48,6 +48,8 @@ module OAI
     end
 
     def get(uri)
+      p "OAI: fetching from URL #{uri}"
+
       response = @http_client.get("?#{uri.query}")
       response.body
     end
