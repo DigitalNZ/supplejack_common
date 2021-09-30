@@ -30,8 +30,6 @@ describe SupplejackCommon::Sitemap::PaginatedCollection do
 
     collection.sitemap_klass.should_receive(:_namespaces=).with(
       {
-        g: 'http://digitalnz.org/schemas/test',
-        dc: 'http://purl.org/dc/elements/1.1/',
         page: 'http://www.w3.org/1999/xhtml'
       }
     )
