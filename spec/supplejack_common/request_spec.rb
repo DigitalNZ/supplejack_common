@@ -3,8 +3,8 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Request do
-  let!(:klass) { SupplejackCommon::Request }
-  let!(:request) { klass.new('http://google.com/titles/1', 10_000) }
+  # let!(:described_class) { SupplejackCommon::Request }
+  let!(:request) { described_class.new('http://google.com/titles/1', 10_000) }
 
   before(:each) do
     RestClient::Request.stub(:execute) { 'body' }
@@ -12,17 +12,17 @@ describe SupplejackCommon::Request do
 
   describe '.get' do
     before(:each) do
-      klass.stub(:new) { request }
+      described_class.stub(:new) { request }
     end
 
     it 'initializes a request object' do
-      klass.should_receive(:new).with('google.com', nil, [{ delay: 1 }], {}, nil) { request }
-      klass.get('google.com', nil, [{ delay: 1 }])
+      described_class.should_receive(:new).with('google.com', nil, [{ delay: 1 }], {}, nil) { request }
+      described_class.get('google.com', nil, [{ delay: 1 }])
     end
 
     it 'should fetch the resource and returns it' do
       request.should_receive(:get) { 'body' }
-      klass.get('google.com', nil).should eq 'body'
+      described_class.get('google.com', nil).should eq 'body'
     end
 
     it 'should set the request_timeout' do
@@ -32,19 +32,19 @@ describe SupplejackCommon::Request do
 
   describe '#initialize' do
     it 'converts the array of throttling options to a hash' do
-      request = klass.new('google.com', 60_000, [{ host: 'google.com', delay: 5 }, { host: 'yahoo.com', delay: 10 }])
+      request = described_class.new('google.com', 60_000, [{ host: 'google.com', delay: 5 }, { host: 'yahoo.com', delay: 10 }])
       request.throttling_options.should eq('google.com' => 5, 'yahoo.com' => 10)
     end
 
     it 'handles nil options' do
-      request = klass.new('google.com', nil)
+      request = described_class.new('google.com', nil)
       request.throttling_options.should eq({})
     end
 
     it 'can be initialized with headers' do
       headers = { 'x-api-key' => 'API_KEY', 'Authorization' => 'tokentokentoken' }
 
-      request = klass.new('', '', [], headers)
+      request = described_class.new('', '', [], headers)
       request.headers.should eq headers
     end
   end
@@ -57,7 +57,7 @@ describe SupplejackCommon::Request do
 
   describe '#host' do
     it 'returns the request url host' do
-      klass.new('http://gdata.youtube.com/feeds/api/videos?author=archivesnz&orderby=published', 60_000).host.should eq 'gdata.youtube.com'
+      described_class.new('http://gdata.youtube.com/feeds/api/videos?author=archivesnz&orderby=published', 60_000).host.should eq 'gdata.youtube.com'
     end
   end
 
@@ -80,8 +80,8 @@ describe SupplejackCommon::Request do
   end
 
   describe '#scroll' do
-    let(:initial_request)    { klass.new('http://google.com/collection/_scroll', 10_000, {}, 'x-api-key' => 'key') }
-    let(:subsequent_request) { klass.new('http://google.com/collection/scroll', 10_000, {}, 'x-api-key' => 'key') }
+    let(:initial_request)    { described_class.new('http://google.com/collection/_scroll', 10_000, {}, 'x-api-key' => 'key') }
+    let(:subsequent_request) { described_class.new('http://google.com/collection/scroll', 10_000, {}, 'x-api-key' => 'key') }
 
     it 'should aquire the lock' do
       request.should_receive(:acquire_lock)
@@ -145,12 +145,12 @@ describe SupplejackCommon::Request do
 
   describe '#delay' do
     it 'returns the delay in ms when it matches the host' do
-      request = klass.new('http://google.com', 60_000, [{ host: 'google.com', delay: 5 }])
+      request = described_class.new('http://google.com', 60_000, [{ host: 'google.com', delay: 5 }])
       request.delay.should eq 5000
     end
 
     it "returns 0 when the URL doesn't match the host" do
-      request = klass.new('http://google.com', 60_000, [{ host: 'yahoo.com', delay: 5 }])
+      request = described_class.new('http://google.com', 60_000, [{ host: 'yahoo.com', delay: 5 }])
       request.delay.should eq 0
     end
   end
@@ -162,7 +162,7 @@ describe SupplejackCommon::Request do
                                                         timeout: 60_000,
                                                         headers: { 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken' },
                                                         proxy: nil)
-      request_obj = klass.new('http://google.com', 60_000, [{ host: 'google.com', delay: 5 }], 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken')
+      request_obj = described_class.new('http://google.com', 60_000, [{ host: 'google.com', delay: 5 }], 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken')
       request_obj.request_url
     end
   end

@@ -3,9 +3,8 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Modifiers::AbstractModifier do
-  let(:klass) { SupplejackCommon::Modifiers::AbstractModifier }
   let(:original_value) { ['Old Value'] }
-  let(:modifier) { klass.new(original_value) }
+  let(:modifier) { described_class.new(original_value) }
 
   it 'initializes the original value' do
     modifier.original_value.should eq original_value

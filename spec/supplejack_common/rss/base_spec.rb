@@ -3,12 +3,10 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Rss::Base do
-  let(:klass) { SupplejackCommon::Rss::Base }
-
   describe '.records' do
     it 'returns a paginated collection' do
-      SupplejackCommon::PaginatedCollection.should_receive(:new).with(klass, {}, {})
-      klass.records
+      SupplejackCommon::PaginatedCollection.should_receive(:new).with(described_class, {}, {})
+      described_class.records
     end
   end
 
@@ -18,19 +16,19 @@ describe SupplejackCommon::Rss::Base do
     let(:url) { 'http://goo.gle' }
 
     before(:each) do
-      klass.stub(:index_document) { doc }
-      klass._namespaces = { dc: 'http://dc.com' }
+      described_class.stub(:index_document) { doc }
+      described_class._namespaces = { dc: 'http://dc.com' }
       doc.stub(:xpath).with('//item', anything) { [node] }
     end
 
     it 'splits the xml into nodes for each RSS entry' do
       doc.should_receive(:xpath).with('//item', anything) { [node] }
-      klass.fetch_records(url)
+      described_class.fetch_records(url)
     end
 
     it 'initializes a record with the RSS entry node' do
-      klass.should_receive(:new).with(node)
-      klass.fetch_records(url)
+      described_class.should_receive(:new).with(node)
+      described_class.fetch_records(url)
     end
   end
 
@@ -39,19 +37,19 @@ describe SupplejackCommon::Rss::Base do
     let(:node) { double(:node, to_xml: xml).as_null_object }
 
     it 'initializes the record from xml' do
-      record = klass.new(xml)
+      record = described_class.new(xml)
       record.original_xml.should eq xml
     end
 
     it 'intializes the record from a node' do
-      record = klass.new(node)
+      record = described_class.new(node)
       record.original_xml.should eq xml
     end
   end
 
   describe '#document' do
     let(:xml) { '<record><title>Hi</title></record>' }
-    let(:record) { klass.new(xml) }
+    let(:record) { described_class.new(xml) }
     let(:document) { double(:document).as_null_object }
 
     it 'should parse the xml with Nokogiri' do

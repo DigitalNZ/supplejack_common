@@ -3,9 +3,8 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Modifiers::Adder do
-  let(:klass) { SupplejackCommon::Modifiers::Adder }
   let(:original_value) { ['Images'] }
-  let(:replacer) { klass.new(original_value, 'Videos') }
+  let(:replacer) { described_class.new(original_value, 'Videos') }
 
   describe 'modify' do
     it 'adds a value to the original value' do

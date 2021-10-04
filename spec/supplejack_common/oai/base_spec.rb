@@ -3,38 +3,36 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Oai::Base do
-  let(:klass) { SupplejackCommon::Oai::Base }
-
   let(:header) { mock(:header, identifier: '123') }
   let(:root) { mock(:root).as_null_object }
   let(:oai_record) { mock(:oai_record, header: header, metadata: [root]).as_null_object }
-  let(:record) { klass.new(oai_record) }
+  let(:record) { described_class.new(oai_record) }
 
   before do
-    klass._base_urls[klass.identifier] = []
-    klass._attribute_definitions[klass.identifier] = {}
-    klass.clear_definitions
+    described_class._base_urls[described_class.identifier] = []
+    described_class._attribute_definitions[described_class.identifier] = {}
+    described_class.clear_definitions
   end
 
   describe '.client' do
     it 'initializes a new OAI client' do
-      klass.base_url 'http://google.com'
+      described_class.base_url 'http://google.com'
       OAI::Client.should_receive(:new).with('http://google.com', {}, nil)
-      klass.client
+      described_class.client
     end
   end
 
   describe '#metadata_prefix' do
     it 'gets the metadata prefix' do
-      klass.metadata_prefix 'prefix'
-      klass.get_metadata_prefix.should eq 'prefix'
+      described_class.metadata_prefix 'prefix'
+      described_class.get_metadata_prefix.should eq 'prefix'
     end
   end
 
   describe '#set' do
     it 'gets the set name' do
-      klass.set 'name'
-      klass.get_set.should eq 'name'
+      described_class.set 'name'
+      described_class.get_set.should eq 'name'
     end
   end
 
@@ -43,54 +41,54 @@ describe SupplejackCommon::Oai::Base do
     let!(:paginator) { mock(:paginator) }
 
     before(:each) do
-      klass.stub(:client) { client }
+      described_class.stub(:client) { client }
     end
 
     it 'initializes a PaginatedCollection with the results' do
-      SupplejackCommon::Oai::PaginatedCollection.should_receive(:new).with(client, {}, klass) { paginator }
-      klass.records
+      SupplejackCommon::Oai::PaginatedCollection.should_receive(:new).with(client, {}, described_class) { paginator }
+      described_class.records
     end
 
     it 'accepts a :from option and pass it on to list_records' do
       date = Date.today
-      SupplejackCommon::Oai::PaginatedCollection.should_receive(:new).with(client, { from: date }, klass) { paginator }
-      klass.records(from: date)
+      SupplejackCommon::Oai::PaginatedCollection.should_receive(:new).with(client, { from: date }, described_class) { paginator }
+      described_class.records(from: date)
     end
 
     it 'accepts a :limit option' do
-      SupplejackCommon::Oai::PaginatedCollection.should_receive(:new).with(client, { limit: 10 }, klass) { paginator }
-      klass.records(limit: 10)
+      SupplejackCommon::Oai::PaginatedCollection.should_receive(:new).with(client, { limit: 10 }, described_class) { paginator }
+      described_class.records(limit: 10)
     end
 
     it 'add the :metadata_prefix option from the DSL' do
-      SupplejackCommon::Oai::PaginatedCollection.should_receive(:new).with(client, { metadata_prefix: 'prefix' }, klass) { paginator }
+      SupplejackCommon::Oai::PaginatedCollection.should_receive(:new).with(client, { metadata_prefix: 'prefix' }, described_class) { paginator }
 
-      klass.metadata_prefix 'prefix'
-      klass.records
+      described_class.metadata_prefix 'prefix'
+      described_class.records
     end
 
     it 'add the :set option from the DSL' do
-      SupplejackCommon::Oai::PaginatedCollection.should_receive(:new).with(client, { set: 'name' }, klass) { paginator }
+      SupplejackCommon::Oai::PaginatedCollection.should_receive(:new).with(client, { set: 'name' }, described_class) { paginator }
 
-      klass.set 'name'
-      klass.records
+      described_class.set 'name'
+      described_class.records
     end
 
     it 'does not pass on unknown options' do
-      SupplejackCommon::Oai::PaginatedCollection.should_not_receive(:new).with(client, { golf_scores: :all }, klass) { paginator }
-      klass.records(golf_scores: :all)
+      SupplejackCommon::Oai::PaginatedCollection.should_not_receive(:new).with(client, { golf_scores: :all }, described_class) { paginator }
+      described_class.records(golf_scores: :all)
     end
   end
 
   describe '#resumption_token' do
     it 'returns the current resumption_token' do
-      klass.stub(:response) { mock(:response, resumption_token: '123456') }
-      klass.resumption_token.should eq '123456'
+      described_class.stub(:response) { mock(:response, resumption_token: '123456') }
+      described_class.resumption_token.should eq '123456'
     end
 
     it 'returns nil when response is nil' do
-      klass.stub(:response) { nil }
-      klass.resumption_token.should be_nil
+      described_class.stub(:response) { nil }
+      described_class.resumption_token.should be_nil
     end
   end
 
@@ -98,21 +96,21 @@ describe SupplejackCommon::Oai::Base do
     let(:xml) { '<record><title>Hi</title></record>' }
 
     it 'initializes a record from XML' do
-      record = klass.new(xml)
+      record = described_class.new(xml)
       record.original_xml.should eq xml
     end
 
     it 'gets the XML from the OAI record' do
       element = mock(:element, to_s: xml)
       oai_record.stub(:element) { element }
-      record = klass.new(oai_record)
+      record = described_class.new(oai_record)
       record.original_xml.should eq xml
     end
   end
 
   describe '#document' do
     let(:xml) { '<record><title>Hi</title></record>' }
-    let(:record) { klass.new(xml) }
+    let(:record) { described_class.new(xml) }
     let(:document) { mock(:document).as_null_object }
 
     it 'should parse the xml with Nokogiri' do
@@ -125,7 +123,7 @@ describe SupplejackCommon::Oai::Base do
     let(:oai_record) { mock(:oai_record, element: '<record><id>1</id></record>') }
 
     it 'returns the raw xml' do
-      record = klass.new(oai_record)
+      record = described_class.new(oai_record)
       record.raw_data.should eq "<?xml version=\"1.0\"?>\n<record>\n  <id>1</id>\n</record>\n"
     end
   end
