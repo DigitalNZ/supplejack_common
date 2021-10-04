@@ -96,6 +96,7 @@ module SupplejackCommon
         Rails.logger.info "PARENT ISSUE parent class: #{parent.class}"
         Rails.logger.info "PARENT ISSUE parent name: #{parent.name}"
         environment = parent.name.split('::').last.downcase.to_sym
+        Rails.logger.info "PARENT ISSUE parent environment: #{environment}"
         if snippet = Snippet.find_by_name(name, environment)
           class_eval <<-METHOD, __FILE__, __LINE__ + 1
             #{snippet.content}
