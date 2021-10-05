@@ -3,12 +3,11 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Modifiers::WhitespaceCompactor do
-  let(:klass) { SupplejackCommon::Modifiers::WhitespaceCompactor }
-  let(:whitespace) { klass.new(' cats ') }
+  subject { described_class.new(' cats ') }
 
   describe '#initialize' do
     it 'assigns the original_value' do
-      whitespace.original_value.should eq [' cats ']
+      subject.original_value.should eq [' cats ']
     end
   end
 
@@ -16,13 +15,13 @@ describe SupplejackCommon::Modifiers::WhitespaceCompactor do
     let(:node) { mock(:node) }
 
     it 'returns a compacted array of values' do
-      whitespace.stub(:original_value) { ['Dogs   Hotels  - foo', 'Job   blah'] }
-      whitespace.modify.should eq ['Dogs Hotels - foo', 'Job blah']
+      subject.stub(:original_value) { ['Dogs   Hotels  - foo', 'Job   blah'] }
+      subject.modify.should eq ['Dogs Hotels - foo', 'Job blah']
     end
 
     it 'returns the same array when the elements are not string' do
-      whitespace.stub(:original_value) { [node, node] }
-      whitespace.modify.should eq [node, node]
+      subject.stub(:original_value) { [node, node] }
+      subject.modify.should eq [node, node]
     end
   end
 end

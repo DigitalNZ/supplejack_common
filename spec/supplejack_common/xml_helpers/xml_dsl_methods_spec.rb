@@ -9,9 +9,7 @@ describe SupplejackCommon::XmlDslMethods do
   describe '#fetch' do
     let(:document) { Nokogiri.parse('<doc><item>1</item><item>2</item></doc>') }
 
-    before do
-      record.stub(:document) { document }
-    end
+    before { record.stub(:document) { document } }
 
     it 'should fetch a xpath result from the document' do
       record.fetch('//item').to_a.should eq %w[1 2]

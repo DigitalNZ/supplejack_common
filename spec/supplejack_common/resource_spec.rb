@@ -3,11 +3,10 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Resource do
-  let(:klass) { SupplejackCommon::Resource }
-  let(:resource) { klass.new('http://google.com/1') }
+  let(:resource) { described_class.new('http://google.com/1') }
 
   describe '#fetch_document' do
-    let(:resource) { klass.new('http://google.com/1', throttling_options: { host: 'google.com', delay: 1 }, http_headers: { 'x-api-key' => 'key' }) }
+    let(:resource) { described_class.new('http://google.com/1', throttling_options: { host: 'google.com', delay: 1 }, http_headers: { 'x-api-key' => 'key' }) }
 
     it 'request the resource with the throttling options, request timeout, and http_headers' do
       SupplejackCommon::Request.should_receive(:get).with('http://google.com/1', 60_000, { host: 'google.com', delay: 1 }, { 'x-api-key' => 'key' }, nil)
