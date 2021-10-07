@@ -3,11 +3,9 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Modifiers::Truncator do
-  let(:klass) { SupplejackCommon::Modifiers::Truncator }
-
   describe '#initialize' do
     it 'assigns the original value and the length' do
-      truncator = klass.new(['Value'], 300)
+      truncator = described_class.new(['Value'], 300)
       truncator.original_value.should eq ['Value']
       truncator.length.should eq 300
     end
@@ -15,12 +13,12 @@ describe SupplejackCommon::Modifiers::Truncator do
 
   describe 'modify' do
     it 'truncates the text to 30 charachters' do
-      truncator = klass.new(['A string longer than 30 charachters'], 30, '')
+      truncator = described_class.new(['A string longer than 30 charachters'], 30, '')
       truncator.modify.should eq ['A string longer than 30 charac']
     end
 
     it 'adds a ommission at the end' do
-      truncator = klass.new(['A string longer than 30 charachters'], 30, '...')
+      truncator = described_class.new(['A string longer than 30 charachters'], 30, '...')
       truncator.modify.should eq ['A string longer than 30 cha...']
     end
   end

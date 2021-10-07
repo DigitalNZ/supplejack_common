@@ -3,8 +3,7 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Modifiers::DateParser do
-  let(:klass) { SupplejackCommon::Modifiers::DateParser }
-  let(:parse_date) { klass.new('2012-10-10', true) }
+  let(:parse_date) { described_class.new('2012-10-10', true) }
 
   describe '#initialize' do
     it 'assigns the original value and optional format' do

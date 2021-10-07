@@ -3,10 +3,9 @@
 require 'spec_helper'
 
 describe SupplejackCommon::AbstractEnrichment do
-  let(:klass) { SupplejackCommon::AbstractEnrichment }
   let(:fragment) { mock(:fragment, priority: 0, source_id: :ndha) }
   let(:record) { mock(:record, id: 1234, attributes: {}, fragments: [fragment]) }
-  let(:enrichment) { klass.new(:ndha_rights, {}, record, nil) }
+  let(:enrichment) { described_class.new(:ndha_rights, {}, record, nil) }
 
   describe '#primary' do
     it 'returns a wrapped fragment' do
@@ -35,7 +34,7 @@ describe SupplejackCommon::AbstractEnrichment do
   end
 
   context 'priority is specified as -1' do
-    let(:enrichment) { klass.new(:ndha_rights, { priority: -1 }, record, nil) }
+    let(:enrichment) { described_class.new(:ndha_rights, { priority: -1 }, record, nil) }
 
     it 'has a priority of -1' do
       enrichment.attributes[:priority].should eq -1
@@ -47,10 +46,10 @@ describe SupplejackCommon::AbstractEnrichment do
   end
 
   it 'implements a before method that does nothing' do
-    -> { klass.before(:method) }.should_not raise_error
+    -> { described_class.before(:method) }.should_not raise_error
   end
 
   it 'implements a after method that does nothing' do
-    -> { klass.after(:method) }.should_not raise_error
+    -> { described_class.after(:method) }.should_not raise_error
   end
 end

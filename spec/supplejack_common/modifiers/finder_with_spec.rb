@@ -3,9 +3,8 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Modifiers::FinderWith do
-  let(:klass) { SupplejackCommon::Modifiers::FinderWith }
   let(:original_value) { %w[Images Videos Audio Data Dataset] }
-  let(:replacer) { klass.new(original_value, /data/i) }
+  let(:replacer) { described_class.new(original_value, /data/i) }
 
   describe 'modify' do
     context 'fetch only 1' do

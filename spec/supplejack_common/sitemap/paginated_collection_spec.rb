@@ -5,12 +5,12 @@ require 'spec_helper'
 describe SupplejackCommon::Sitemap::PaginatedCollection do
   class TestXml < SupplejackCommon::Xml::Base; end
 
-  let(:collection) { SupplejackCommon::Sitemap::PaginatedCollection.new(TestXml) }
+  let(:collection) { described_class.new(TestXml) }
   let(:document) { mock(:document) }
   let(:sitemap_klass) { SupplejackCommon::Sitemap::Base }
 
   it 'initializes the klass, sitemap_klass with a sitemap_entry_selector and options' do
-    collection = SupplejackCommon::Sitemap::PaginatedCollection.new(TestXml)
+    collection = described_class.new(TestXml)
 
     collection.klass.should eq TestXml
     collection.sitemap_klass.should eq sitemap_klass
@@ -22,7 +22,7 @@ describe SupplejackCommon::Sitemap::PaginatedCollection do
 
     collection.sitemap_klass.should_receive(:sitemap_entry_selector).with('//loc')
 
-    SupplejackCommon::Sitemap::PaginatedCollection.new(TestXml)
+    described_class.new(TestXml)
   end
 
   it 'adds the namespaces to the site' do
@@ -30,13 +30,11 @@ describe SupplejackCommon::Sitemap::PaginatedCollection do
 
     collection.sitemap_klass.should_receive(:_namespaces=).with(
       {
-        g: 'http://digitalnz.org/schemas/test',
-        dc: 'http://purl.org/dc/elements/1.1/',
         page: 'http://www.w3.org/1999/xhtml'
       }
     )
 
-    SupplejackCommon::Sitemap::PaginatedCollection.new(TestXml)
+    described_class.new(TestXml)
   end
 
   describe '#each' do

@@ -5,9 +5,7 @@ require 'spec_helper'
 describe SupplejackCommon::XmlDocumentMethods do
   let(:klass) { SupplejackCommon::Xml::Base }
 
-  after do
-    klass.clear_definitions
-  end
+  after { klass.clear_definitions }
 
   describe '.xml_records' do
     let(:xml) { File.read('spec/supplejack_common/integrations/source_data/xml_parser_records.xml') }
