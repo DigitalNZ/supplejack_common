@@ -3,44 +3,42 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Sitemap::PaginatedCollection do
-  class TestXml < SupplejackCommon::Xml::Base; end
+  class PaginatedTestXml < SupplejackCommon::Xml::Base; end
 
-  let(:collection) { described_class.new(TestXml) }
+  let(:collection) { described_class.new(PaginatedTestXml) }
   let(:document) { mock(:document) }
   let(:sitemap_klass) { SupplejackCommon::Sitemap::Base }
 
   it 'initializes the klass, sitemap_klass with a sitemap_entry_selector and options' do
-    collection = described_class.new(TestXml)
+    collection = described_class.new(PaginatedTestXml)
 
-    collection.klass.should eq TestXml
+    collection.klass.should eq PaginatedTestXml
     collection.sitemap_klass.should eq sitemap_klass
     collection.options.should eq({})
   end
 
   it 'calls sitemap_entry_selector on sitemap_klass with the selector passed through' do
-    TestXml.sitemap_entry_selector '//loc'
+    PaginatedTestXml.sitemap_entry_selector '//loc'
 
     collection.sitemap_klass.should_receive(:sitemap_entry_selector).with('//loc')
 
-    described_class.new(TestXml)
+    described_class.new(PaginatedTestXml)
   end
 
   it 'adds the namespaces to the site' do
-    TestXml.namespaces page: 'http://www.w3.org/1999/xhtml'
+    PaginatedTestXml.namespaces page: 'http://www.w3.org/1999/xhtml'
 
-    collection.sitemap_klass.should_receive(:_namespaces=).with(
-      {
-        page: 'http://www.w3.org/1999/xhtml'
-      }
-    )
+    collection.sitemap_klass.should_receive(:_namespaces=).with(hash_including(
+      { page: 'http://www.w3.org/1999/xhtml' }
+    ))
 
-    described_class.new(TestXml)
+    described_class.new(PaginatedTestXml)
   end
 
   describe '#each' do
     before do
-      TestXml.stub(:base_urls) { ['http://goog.le'] }
-      TestXml.stub(:fetch_records) { '<xml>1<xml>' }
+      PaginatedTestXml.stub(:base_urls) { ['http://goog.le'] }
+      PaginatedTestXml.stub(:fetch_records) { '<xml>1<xml>' }
       collection.stub(:yield_from_records) { true }
     end
 
@@ -56,7 +54,7 @@ describe SupplejackCommon::Sitemap::PaginatedCollection do
       xml_2 = mock(:text_xml)
       sitemap_klass.stub(:fetch_entries) { ['http://goo.gl/1.xml'] }
 
-      TestXml.should_receive(:fetch_records).with('http://goo.gl/1.xml') { [xml_1, xml_2] }
+      PaginatedTestXml.should_receive(:fetch_records).with('http://goo.gl/1.xml') { [xml_1, xml_2] }
 
       collection.each { |record| }
 
@@ -72,7 +70,7 @@ describe SupplejackCommon::Sitemap::PaginatedCollection do
 
     context 'multiple base urls' do
       before do
-        TestXml.stub(:base_urls) { ['http://goog.le', 'http://dnz.com/1'] }
+        PaginatedTestXml.stub(:base_urls) { ['http://goog.le', 'http://dnz.com/1'] }
         collection.stub(:entries) { [] }
       end
 
