@@ -46,9 +46,8 @@ module OAI
     end
 
     def get(uri)
-
       p "OAI: fetching from URL #{uri}"
-      
+
       response = @http_client.get("?#{uri.query}")
       response.body
     end
