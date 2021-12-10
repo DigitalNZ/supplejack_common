@@ -37,6 +37,8 @@ module SupplejackCommon
       @base_urls                  = pagination_options[:base_urls] || []
       @block                      = pagination_options[:block]
 
+      puts "Starting from #{@base_urls[0]}"
+
       @options = options
 
       if paginated?
