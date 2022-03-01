@@ -12,7 +12,7 @@ PATH
       jsonpath (~> 0.5.0)
       loofah
       mimemagic
-      mongoid (~> 7.1.0)
+      mongoid
       nokogiri
       oai
       redis
@@ -124,9 +124,9 @@ GEM
     mock_redis (0.26.0)
     mongo (2.17.0)
       bson (>= 4.8.2, < 5.0.0)
-    mongoid (7.1.11)
-      activemodel (>= 5.1, < 6.2)
-      mongo (>= 2.7.0, < 3.0.0)
+    mongoid (7.3.4)
+      activemodel (>= 5.1, < 7.1, != 7.0.0)
+      mongo (>= 2.10.5, < 3.0.0)
       ruby2_keywords (~> 0.0.5)
     multi_json (1.15.0)
     multipart-post (2.1.1)
@@ -217,4 +217,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.2.30
+   2.3.8

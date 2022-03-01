@@ -27,7 +27,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'jsonpath', '~> 0.5.0'
   gem.add_runtime_dependency 'loofah'
   gem.add_runtime_dependency 'mimemagic'
-  gem.add_runtime_dependency 'mongoid', '~> 7.1.0'
+  gem.add_runtime_dependency 'mongoid'
   gem.add_runtime_dependency 'nokogiri'
   gem.add_runtime_dependency 'oai'
   gem.add_runtime_dependency 'redis'
