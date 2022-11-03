@@ -116,7 +116,7 @@ describe SupplejackCommon::PaginatedCollection do
     end
 
     context 'scroll API' do
-      let(:params) { { type: 'scroll' } }
+      let(:params) { { type: 'scroll', duration_parameter: 'scrolling_duration', duration_value: '10m' } }
       let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
       context 'when the _document is present' do
@@ -125,7 +125,7 @@ describe SupplejackCommon::PaginatedCollection do
         end
 
         it 'generates the next url based on the header :location in the response' do
-          expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/scroll/scroll_token/pages'
+          expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/scroll/scroll_token/pages?scrolling_duration=10m'
         end
       end
 
@@ -135,7 +135,31 @@ describe SupplejackCommon::PaginatedCollection do
         end
 
         it 'uses the url that it was instantiated with' do
-          expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll'
+          expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?scrolling_duration=10m'
+        end
+
+        context 'when duration_value is not present' do
+          let(:params) { { type: 'scroll', duration_parameter: 'scrolling_duration' } }
+
+          it 'does not add any query params' do
+            expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?'
+          end
+        end
+
+        context 'when duration_parameter is not present' do
+          let(:params) { { type: 'scroll', duration_value: '1m' } }
+
+          it 'does not add any query params' do
+            expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?'
+          end
+        end
+
+        context 'when duration_parameter and duration_value are not present' do
+          let(:params) { { type: 'scroll' } }
+
+          it 'does not add any query params' do
+            expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?'
+          end
         end
       end
     end

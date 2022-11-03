@@ -16,6 +16,8 @@ module SupplejackCommon
                 :type,
                 :next_page_token_location,
                 :total_selector,
+                :duration_parameter,
+                :duration_value,
                 :initial_param
 
     # rubocop:disable Metrics/CyclomaticComplexity
@@ -36,6 +38,8 @@ module SupplejackCommon
       @job                        = pagination_options[:job]
       @base_urls                  = pagination_options[:base_urls] || []
       @block                      = pagination_options[:block]
+      @duration_parameter         = pagination_options[:duration_parameter]
+      @duration_value             = pagination_options[:duration_value]
 
       puts "Starting from #{@base_urls[0]}"
 
@@ -121,10 +125,16 @@ module SupplejackCommon
     end
 
     def next_scroll_url(url)
-      return url unless klass._document.present?
+      return url + joiner(url) + scroll_url_query_params unless klass._document.present?
 
       base_url = url.match('(?<base_url>.+\/collection)')[:base_url]
-      base_url + klass._document.headers[:location]
+
+      base_url + klass._document.headers[:location] + joiner(url) + scroll_url_query_params
+    end
+
+    def scroll_url_query_params
+      return '' unless duration_parameter.present? && duration_value.present?
+      { duration_parameter => duration_value }.to_query
     end
 
     def url_options
