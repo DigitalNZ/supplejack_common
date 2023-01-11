@@ -182,10 +182,13 @@ module SupplejackCommon
 
     def more_results?
       if scroll?
-        if @scroll_type == 'elasticsearch'
+        case @scroll_type
+        when 'elasticsearch'
           return JSON.parse(klass._document.body)['hits']['hits'].present?
-        elsif @scroll_type == 'tepapa'
+        when 'tepapa'
           return klass._document.code == 303
+        else
+          raise StandardError, 'You have requested a scroll type that the worker does not understand'
         end
       end
 

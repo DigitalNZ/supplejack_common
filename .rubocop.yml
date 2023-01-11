@@ -6,3 +6,8 @@ AllCops:
   Exclude:
     - 'spec/supplejack_common/tmp/**/*'
     - 'vendor/**/*'
+
+Metrics/BlockLength:
+  Enabled: true
+  Exclude: 
+    - 'spec/supplejack_common/**'
