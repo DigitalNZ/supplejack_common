@@ -287,4 +287,42 @@ describe SupplejackCommon::PaginatedCollection do
       end
     end
   end
+
+  describe '#more_results?' do
+    context 'when the harvest pagination type is scroll' do
+      context 'when the harvests scroll_type is elasticsearch' do
+        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m', scroll_type: 'elasticsearch' } }
+        let(:collection) { klass.new(SupplejackCommon::Base, params) }
+
+        it 'returns true when the document returns that there are hits on the current page' do
+          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":["a"]}}') }
+
+          expect(collection.send(:more_results?)).to eq true
+        end
+
+        it 'returns false when the document returns that there are no hits on the current page' do
+          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":[]}}') }
+
+          expect(collection.send(:more_results?)).to eq false
+        end
+      end
+
+      context 'when the harvests scroll_type is tepapa' do
+        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m', scroll_type: 'tepapa' } }
+        let(:collection) { klass.new(SupplejackCommon::Base, params) }
+
+        it 'returns true when the response code is 303' do
+          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(code: 303) }
+
+          expect(collection.send(:more_results?)).to eq true
+        end
+
+        it 'returns false when the response code is not 303' do
+          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(code: 200) }
+
+          expect(collection.send(:more_results?)).to eq false
+        end
+      end
+    end
+  end
 end

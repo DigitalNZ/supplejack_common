@@ -128,25 +128,20 @@ module SupplejackCommon
     def next_scroll_url(url)
       return url + joiner(url) + scroll_url_query_params unless klass._document.present?
 
-      if @scroll_type == 'elasticsearch' 
-        scroll_id = JSON.parse(klass._document.body)['_scroll_id']        
+      case @scroll_type
+      when 'elasticsearch'
+        scroll_id = JSON.parse(klass._document.body)['_scroll_id']
         base_url = url.match('(?<base_url>.+\/search)')[:base_url]
-        next_url = base_url + "/_search/scroll/#{scroll_id}?" + scroll_url_query_params
-      end
-      
-      if @scroll_type == 'elasticsearch' 
-       scroll_id = JSON.parse(klass._document.body)['_scroll_id']        
-       base_url = url.match('(?<base_url>.+\/search)')[:base_url]
-       next_scroll_url = base_url + "/_search/scroll/#{scroll_id}?" + scroll_url_query_params
-      elsif @scroll_type == 'tepapa'
+        next_scroll_url = base_url + "/_search/scroll/#{scroll_id}?" + scroll_url_query_params
+      when 'tepapa'
         base_url = url.match('(?<base_url>.+\/collection)')[:base_url]
         next_scroll_url = base_url + klass._document.headers[:location] + joiner(url) + scroll_url_query_params
       else
         raise StandardError, 'You have requested a scroll type that the worker does not understand'
       end
 
-       puts "The next scroll URL is #{next_scroll_url}"
-       next_scroll_url 
+      puts "The next scroll URL is #{next_scroll_url}"
+      next_scroll_url
     end
 
     def scroll_url_query_params
@@ -188,7 +183,7 @@ module SupplejackCommon
     def more_results?
       if scroll?
         if @scroll_type == 'elasticsearch'
-          return JSON.parse(klass._document)['hits']['hits'].present?
+          return JSON.parse(klass._document.body)['hits']['hits'].present?
         else
           # Te Papa returns a 303 when there are more scroll results in their end point
           return klass._document.code == 303
