@@ -137,7 +137,7 @@ module SupplejackCommon
         base_url = url.match('(?<base_url>.+\/collection)')[:base_url]
         next_scroll_url = base_url + klass._document.headers[:location] + joiner(url) + scroll_url_query_params
       else
-        raise StandardError, 'You have requested a scroll type that the worker does not understand'
+        raise ArgumentError, 'You have requested a scroll type that the worker does not understand'
       end
 
       puts "The next scroll URL is #{next_scroll_url}"
@@ -188,7 +188,7 @@ module SupplejackCommon
         when 'tepapa'
           return klass._document.code == 303
         else
-          raise StandardError, 'You have requested a scroll type that the worker does not understand'
+          raise ArgumentError, 'You have requested a scroll type that the worker does not understand'
         end
       end
 
