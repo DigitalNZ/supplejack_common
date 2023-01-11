@@ -184,8 +184,7 @@ module SupplejackCommon
       if scroll?
         if @scroll_type == 'elasticsearch'
           return JSON.parse(klass._document.body)['hits']['hits'].present?
-        else
-          # Te Papa returns a 303 when there are more scroll results in their end point
+        elsif @scroll_type == 'tepapa'
           return klass._document.code == 303
         end
       end
