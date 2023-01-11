@@ -127,6 +127,12 @@ module SupplejackCommon
 
     def next_scroll_url(url)
       return url + joiner(url) + scroll_url_query_params unless klass._document.present?
+
+      if @scroll_type == 'elasticsearch' 
+        scroll_id = JSON.parse(klass._document.body)['_scroll_id']        
+        base_url = url.match('(?<base_url>.+\/search)')[:base_url]
+        next_url = base_url + "/_search/scroll/#{scroll_id}?" + scroll_url_query_params
+      end
       
       if @scroll_type == 'elasticsearch' 
        scroll_id = JSON.parse(klass._document.body)['_scroll_id']        
@@ -138,7 +144,7 @@ module SupplejackCommon
       else
         raise StandardError, 'You have requested a scroll type that the worker does not understand'
       end
-      
+
        puts "The next scroll URL is #{next_scroll_url}"
        next_scroll_url 
     end
