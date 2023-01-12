@@ -40,7 +40,6 @@ module SupplejackCommon
       @block                      = pagination_options[:block]
       @duration_parameter         = pagination_options[:duration_parameter]
       @duration_value             = pagination_options[:duration_value]
-      @scroll_type                = pagination_options[:scroll_type] || 'elasticsearch'
       @next_scroll_url_block      = pagination_options[:next_scroll_url_block]
       @scroll_more_results_block  = pagination_options[:scroll_more_results_block]
 
@@ -181,13 +180,10 @@ module SupplejackCommon
 
     def more_results?
       if scroll?
-        case @scroll_type
-        when 'elasticsearch'
-          return JSON.parse(klass._document.body)['hits']['hits'].present?
-        when 'tepapa'
-          return klass._document.code == 303
+        if @scroll_more_results_block
+          return @scroll_more_results_block.call(klass)
         else
-          raise ArgumentError, 'You have requested a scroll type that the worker does not understand'
+          return JSON.parse(klass._document.body)['hits']['hits'].present?
         end
       end
 

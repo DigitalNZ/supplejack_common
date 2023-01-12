@@ -117,7 +117,7 @@ describe SupplejackCommon::PaginatedCollection do
 
     context 'scroll API' do
       context 'when the content partner has a standard ElasticSearch set up' do
-        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m', scroll_type: 'elasticsearch' } }
+        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m' } }
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         context 'when the _document is present' do
@@ -141,7 +141,7 @@ describe SupplejackCommon::PaginatedCollection do
         end
       end
 
-      context 'when the content partner is Te Papa' do
+      context 'when the next_scroll_url_block is provided' do
         let(:params) { { type: 'scroll', duration_parameter: 'scrolling_duration', duration_value: '10m', next_scroll_url_block: proc do |url, klass|
           url.match('(?<base_url>.+\/collection)')[:base_url] + klass._document.headers[:location]
         end
@@ -293,8 +293,8 @@ describe SupplejackCommon::PaginatedCollection do
 
   describe '#more_results?' do
     context 'when the harvest pagination type is scroll' do
-      context 'when the harvests scroll_type is elasticsearch' do
-        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m', scroll_type: 'elasticsearch' } }
+      context 'when the scroll more results block is not provided' do
+        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m' } }
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         it 'returns true when the document returns that there are hits on the current page' do
@@ -310,8 +310,8 @@ describe SupplejackCommon::PaginatedCollection do
         end
       end
 
-      context 'when the harvests scroll_type is tepapa' do
-        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m', scroll_type: 'tepapa' } }
+      context 'when the harvests scroll_more_results_block is provided' do
+        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m', scroll_more_results_block: proc { |klass| klass._document.code == 303 } } }
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         it 'returns true when the response code is 303' do
