@@ -41,6 +41,8 @@ module SupplejackCommon
       @duration_parameter         = pagination_options[:duration_parameter]
       @duration_value             = pagination_options[:duration_value]
       @scroll_type                = pagination_options[:scroll_type] || 'elasticsearch'
+      @next_scroll_url_block      = pagination_options[:next_scroll_url_block]
+      @scroll_more_results_block  = pagination_options[:scroll_more_results_block]
 
       puts "Starting from #{@base_urls[0]}"
 
@@ -128,16 +130,13 @@ module SupplejackCommon
     def next_scroll_url(url)
       return url + joiner(url) + scroll_url_query_params unless klass._document.present?
 
-      case @scroll_type
-      when 'elasticsearch'
+      if @next_scroll_url_block
+        next_scroll_url = @next_scroll_url_block.call(url, klass)
+        next_scroll_url = next_scroll_url + joiner(url) + scroll_url_query_params
+      else
         scroll_id = JSON.parse(klass._document.body)['_scroll_id']
         base_url = url.match('(?<base_url>.+\/search)')[:base_url]
         next_scroll_url = base_url + "/_search/scroll/#{scroll_id}?" + scroll_url_query_params
-      when 'tepapa'
-        base_url = url.match('(?<base_url>.+\/collection)')[:base_url]
-        next_scroll_url = base_url + klass._document.headers[:location] + joiner(url) + scroll_url_query_params
-      else
-        raise ArgumentError, 'You have requested a scroll type that the worker does not understand'
       end
 
       puts "The next scroll URL is #{next_scroll_url}"
