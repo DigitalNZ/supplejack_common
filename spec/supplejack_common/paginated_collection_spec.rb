@@ -142,10 +142,11 @@ describe SupplejackCommon::PaginatedCollection do
       end
 
       context 'when the next_scroll_url_block is provided' do
-        let(:params) { { type: 'scroll', duration_parameter: 'scrolling_duration', duration_value: '10m', next_scroll_url_block: proc do |url, klass|
-          url.match('(?<base_url>.+\/collection)')[:base_url] + klass._document.headers[:location]
+        let(:params) do
+          { type: 'scroll', duration_parameter: 'scrolling_duration', duration_value: '10m', next_scroll_url_block: proc do |url, klass|
+                                                                                                                      url.match('(?<base_url>.+\/collection)')[:base_url] + klass._document.headers[:location]
+                                                                                                                    end }
         end
-        } }
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         context 'when the _document is present' do
