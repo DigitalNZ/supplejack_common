@@ -116,49 +116,80 @@ describe SupplejackCommon::PaginatedCollection do
     end
 
     context 'scroll API' do
-      let(:params) { { type: 'scroll', duration_parameter: 'scrolling_duration', duration_value: '10m' } }
-      let(:collection) { klass.new(SupplejackCommon::Base, params) }
+      context 'when the content partner has a standard ElasticSearch set up' do
+        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m' } }
+        let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
-      context 'when the _document is present' do
-        before do
-          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(headers: OpenStruct.new(location: '/scroll/scroll_token/pages')) }
+        context 'when the _document is present' do
+          before do
+            SupplejackCommon::Base.stub(:_document) { OpenStruct.new(body: '{ "_scroll_id": "scroll_id" }') }
+          end
+
+          it 'generates the next url based on the response payload' do
+            expect(collection.send(:next_url, 'http://google/search/collectionsonline/_search?scroll=10m&q=334')).to eq 'http://google/search/_search/scroll/scroll_id?scroll=1m'
+          end
         end
 
-        it 'generates the next url based on the header :location in the response' do
-          expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/scroll/scroll_token/pages?scrolling_duration=10m'
+        context 'when the _document is not present' do
+          before do
+            SupplejackCommon::Base.stub(:_document) { nil }
+          end
+
+          it 'uses the URL it was instantiated with' do
+            expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?scroll=1m'
+          end
         end
       end
 
-      context 'when the _document is not present' do
-        before do
-          SupplejackCommon::Base.stub(:_document) { nil }
+      context 'when the next_scroll_url_block is provided' do
+        let(:params) do
+          { type: 'scroll', duration_parameter: 'scrolling_duration', duration_value: '10m', next_scroll_url_block: proc do |url, klass|
+                                                                                                                      url.match('(?<base_url>.+\/collection)')[:base_url] + klass._document.headers[:location]
+                                                                                                                    end }
         end
+        let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
-        it 'uses the url that it was instantiated with' do
-          expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?scrolling_duration=10m'
-        end
+        context 'when the _document is present' do
+          before do
+            SupplejackCommon::Base.stub(:_document) { OpenStruct.new(headers: OpenStruct.new(location: '/scroll/scroll_token/pages')) }
+          end
 
-        context 'when duration_value is not present' do
-          let(:params) { { type: 'scroll', duration_parameter: 'scrolling_duration' } }
-
-          it 'does not add any query params' do
-            expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?'
+          it 'generates the next url based on the header :location in the response' do
+            expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/scroll/scroll_token/pages?scrolling_duration=10m'
           end
         end
 
-        context 'when duration_parameter is not present' do
-          let(:params) { { type: 'scroll', duration_value: '1m' } }
-
-          it 'does not add any query params' do
-            expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?'
+        context 'when the _document is not present' do
+          before do
+            SupplejackCommon::Base.stub(:_document) { nil }
           end
-        end
 
-        context 'when duration_parameter and duration_value are not present' do
-          let(:params) { { type: 'scroll' } }
+          it 'uses the url that it was instantiated with' do
+            expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?scrolling_duration=10m'
+          end
 
-          it 'does not add any query params' do
-            expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?'
+          context 'when duration_value is not present' do
+            let(:params) { { type: 'scroll', duration_parameter: 'scrolling_duration' } }
+
+            it 'does not add any query params' do
+              expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?'
+            end
+          end
+
+          context 'when duration_parameter is not present' do
+            let(:params) { { type: 'scroll', duration_value: '1m' } }
+
+            it 'does not add any query params' do
+              expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?'
+            end
+          end
+
+          context 'when duration_parameter and duration_value are not present' do
+            let(:params) { { type: 'scroll' } }
+
+            it 'does not add any query params' do
+              expect(collection.send(:next_url, 'http://google/collection/_scroll')).to eq 'http://google/collection/_scroll?'
+            end
           end
         end
       end
@@ -257,6 +288,44 @@ describe SupplejackCommon::PaginatedCollection do
       it 'increments the page by the number per_page' do
         collection.send(:increment_page_counter!)
         collection.page.should eq 6
+      end
+    end
+  end
+
+  describe '#more_results?' do
+    context 'when the harvest pagination type is scroll' do
+      context 'when the scroll more results block is not provided' do
+        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m' } }
+        let(:collection) { klass.new(SupplejackCommon::Base, params) }
+
+        it 'returns true when the document returns that there are hits on the current page' do
+          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":["a"]}}') }
+
+          expect(collection.send(:more_results?)).to eq true
+        end
+
+        it 'returns false when the document returns that there are no hits on the current page' do
+          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":[]}}') }
+
+          expect(collection.send(:more_results?)).to eq false
+        end
+      end
+
+      context 'when the harvests scroll_more_results_block is provided' do
+        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m', scroll_more_results_block: proc { |klass| klass._document.code == 303 } } }
+        let(:collection) { klass.new(SupplejackCommon::Base, params) }
+
+        it 'returns true when the response code is 303' do
+          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(code: 303) }
+
+          expect(collection.send(:more_results?)).to eq true
+        end
+
+        it 'returns false when the response code is not 303' do
+          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(code: 200) }
+
+          expect(collection.send(:more_results?)).to eq false
+        end
       end
     end
   end

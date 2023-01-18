@@ -56,7 +56,6 @@ module SupplejackCommon
     def scroll
       acquire_lock do
         http_verb = if url.include? '_scroll'
-                      # The Te Papa scroll API requires you to do a post for the first request
                       :post
                     else
                       :get

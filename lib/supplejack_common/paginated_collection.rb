@@ -40,6 +40,8 @@ module SupplejackCommon
       @block                      = pagination_options[:block]
       @duration_parameter         = pagination_options[:duration_parameter]
       @duration_value             = pagination_options[:duration_value]
+      @next_scroll_url_block      = pagination_options[:next_scroll_url_block]
+      @scroll_more_results_block  = pagination_options[:scroll_more_results_block]
 
       puts "Starting from #{@base_urls[0]}"
 
@@ -127,9 +129,17 @@ module SupplejackCommon
     def next_scroll_url(url)
       return url + joiner(url) + scroll_url_query_params unless klass._document.present?
 
-      base_url = url.match('(?<base_url>.+\/collection)')[:base_url]
+      if @next_scroll_url_block
+        next_scroll_url = @next_scroll_url_block.call(url, klass)
+        next_scroll_url = next_scroll_url + joiner(url) + scroll_url_query_params
+      else
+        scroll_id = JSON.parse(klass._document.body)['_scroll_id']
+        base_url = url.match('(?<base_url>.+\/search)')[:base_url]
+        next_scroll_url = base_url + "/_search/scroll/#{scroll_id}?" + scroll_url_query_params
+      end
 
-      base_url + klass._document.headers[:location] + joiner(url) + scroll_url_query_params
+      puts "The next scroll URL is #{next_scroll_url}"
+      next_scroll_url
     end
 
     def scroll_url_query_params
@@ -169,7 +179,13 @@ module SupplejackCommon
     end
 
     def more_results?
-      return klass._document.code == 303 if scroll?
+      if scroll?
+        if @scroll_more_results_block
+          return @scroll_more_results_block.call(klass)
+        else
+          return JSON.parse(klass._document.body)['hits']['hits'].present?
+        end
+      end
 
       if tokenised?
         return klass.next_page_token(@next_page_token_location).present?
