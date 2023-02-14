@@ -133,8 +133,24 @@ describe SupplejackCommon::Oai::Base do
       record.stub(:document) { Nokogiri.parse('<?xml version="1.0"?><record><header status="deleted"></header></record>') }
       record.deletable?.should be_true
     end
+
     it 'returns false when header does not have deleted attribute' do
       record.stub(:document) { Nokogiri.parse('<?xml version="1.0"?><record><header></header></record>') }
+      record.deletable?.should be_false
+    end
+
+    it 'is not deleteable if there are no deletion rules' do
+      described_class.stub(:deletion_rules) { nil }
+      record.deletable?.should be_false
+    end
+    
+    it 'is deletable if the block evals to true' do
+      described_class.delete_if { true }
+      record.deletable?.should be_true
+    end
+
+    it 'is not deletable if the block evals to true' do
+      described_class.delete_if { false }
       record.deletable?.should be_false
     end
   end
