@@ -143,7 +143,7 @@ describe SupplejackCommon::Oai::Base do
       described_class.stub(:deletion_rules) { nil }
       record.deletable?.should be_false
     end
-    
+
     it 'is deletable if the block evals to true' do
       described_class.delete_if { true }
       record.deletable?.should be_true

@@ -74,10 +74,11 @@ module SupplejackCommon
 
       def deletable?
         return true if document.xpath("record/header[@status='deleted']").any?
-        
+
         deletion_rules = self.class.deletion_rules
 
         return false if deletion_rules.nil?
+
         instance_eval(&deletion_rules)
       end
     end
