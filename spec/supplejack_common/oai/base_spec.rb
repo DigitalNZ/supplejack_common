@@ -145,7 +145,7 @@ describe SupplejackCommon::Oai::Base do
     end
 
     it 'is deletable if the block evals to true' do
-      described_class.delete_if { true }
+      described_class.stub(:deletion_rules) {  proc { true } }
       record.deletable?.should be_true
     end
 
