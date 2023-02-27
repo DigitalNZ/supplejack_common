@@ -131,6 +131,7 @@ module SupplejackCommon
     def deletable?
       deletion_rules = self.class.deletion_rules
       return false if deletion_rules.nil?
+
       instance_eval(&deletion_rules)
     end
 

@@ -73,6 +73,8 @@ module SupplejackCommon
       end
 
       def deletable?
+        return super unless self.class.deletion_rules.nil?
+
         document.xpath("record/header[@status='deleted']").any?
       end
     end
