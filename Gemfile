@@ -6,6 +6,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
+  gem 'codeclimate_diff', github: 'boost/codeclimate_diff'
   gem 'rake', '> 12.3.3'
   gem 'rubocop', require: false
 end

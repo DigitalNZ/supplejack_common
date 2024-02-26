@@ -3,7 +3,6 @@
 .bundle
 .config
 .yardoc
-.rbenv-version
 Gemfile.lock
 InstalledFiles
 _yardoc
@@ -20,4 +19,3 @@ tmp
 .DS_Store
 /supplejack_common.sublime-workspace
 /supplejack_common.sublime-project
-.ruby-version
