@@ -13,7 +13,7 @@ end
 
 group :test do
   gem 'mock_redis'
-  gem 'rspec', '~> 2.11.0'
+  gem 'rspec', '~> 2.14'
   gem 'webmock'
 end
 
