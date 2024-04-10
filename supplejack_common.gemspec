@@ -18,11 +18,13 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   gem.require_paths = ['lib']
 
-  gem.add_runtime_dependency 'actionpack'
-  gem.add_runtime_dependency 'activesupport'
+  gem.add_runtime_dependency 'actionpack', '>= 7.0.0'
+  gem.add_runtime_dependency 'activesupport', '>= 7.0.0'
   gem.add_runtime_dependency 'aws-sdk-s3'
   gem.add_runtime_dependency 'chronic', '<= 0.10.2'
   gem.add_runtime_dependency 'dimensions'
+  gem.add_runtime_dependency 'faraday', '~> 2.0'
+  gem.add_runtime_dependency 'faraday-retry'
   gem.add_runtime_dependency 'htmlentities'
   gem.add_runtime_dependency 'json', '>= 2.3.0'
   gem.add_runtime_dependency 'jsonpath', '~> 0.5.0'
