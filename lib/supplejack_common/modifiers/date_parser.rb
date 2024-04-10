@@ -29,15 +29,14 @@ module SupplejackCommon
           else
             time = Chronic.parse(normalized_time, context: :past).try(:time)
 
-            if time
-              return time
-            else
-              begin
-                Time.parse(normalized_time)
-              rescue ArgumentError => e
-                nil
-              end
+            return time if time
+
+            begin
+              Time.parse(normalized_time)
+            rescue ArgumentError => e
+              nil
             end
+
           end
         rescue StandardError => e
           @errors << "Cannot parse date: '#{normalized_time}', #{e.message}"

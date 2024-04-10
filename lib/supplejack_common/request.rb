@@ -44,12 +44,10 @@ module SupplejackCommon
 
     def get
       acquire_lock do
-        begin
-          request_resource
-        rescue RestClient::NotFound
-          Sidekiq.logger.info 'Record not found, moving on..'
-          next
-        end
+        request_resource
+      rescue RestClient::NotFound
+        Sidekiq.logger.info 'Record not found, moving on..'
+        next
       end
     end
 
@@ -61,7 +59,8 @@ module SupplejackCommon
                       :get
                     end
 
-        RestClient::Request.execute(method: http_verb, url:, timeout: request_timeout, headers:, max_redirects: 0) do |response, _request, _result|
+        RestClient::Request.execute(method: http_verb, url:, timeout: request_timeout, headers:,
+                                    max_redirects: 0) do |response, _request, _result|
           response
         end
       end

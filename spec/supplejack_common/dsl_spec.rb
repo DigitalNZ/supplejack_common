@@ -40,7 +40,9 @@ describe SupplejackCommon::DSL do
 
   describe '.paginate' do
     let(:pagination) { double(:pagination) }
-    let(:options) { { page_parameter: 'start-index', type: 'item', per_page_parameter: 'max-results', per_page: 50, page: 1 } }
+    let(:options) do
+      { page_parameter: 'start-index', type: 'item', per_page_parameter: 'max-results', per_page: 50, page: 1 }
+    end
 
     it 'initializes a pagination object' do
       subject.paginate options
@@ -112,7 +114,8 @@ describe SupplejackCommon::DSL do
         end
       end
 
-      expect(WithOptionsTest.attribute_definitions).to include(title: { xpath: 'name', if: { 'span' => 'Name' }, value: 'div' })
+      expect(WithOptionsTest.attribute_definitions).to include(title: { xpath: 'name', if: { 'span' => 'Name' },
+                                                                        value: 'div' })
     end
   end
 
@@ -143,7 +146,8 @@ describe SupplejackCommon::DSL do
     it 'should store multiple throttle options' do
       subject.throttle host: 'www.google.com', max_per_minute: 100
       subject.throttle host: 'www.yahoo.com', max_per_minute: 100
-      expect(subject._throttle).to eq [{ host: 'www.google.com', max_per_minute: 100 }, { host: 'www.yahoo.com', max_per_minute: 100 }]
+      expect(subject._throttle).to eq [{ host: 'www.google.com', max_per_minute: 100 },
+                                       { host: 'www.yahoo.com', max_per_minute: 100 }]
     end
   end
 

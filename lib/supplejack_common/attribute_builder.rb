@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 module SupplejackCommon
@@ -28,22 +27,23 @@ module SupplejackCommon
 
     def attribute_value
       return options[:default] if options.key? :default
+
       record.strategy_value(options)
     end
 
     def value
       if block = begin
-                   options[:block]
-                 rescue StandardError
-                   nil
-                 end
+        options[:block]
+      rescue StandardError
+        nil
+      end
         begin
           record.attributes[attribute_name] = transform
-          return evaluate_attribute_block(&block)
+          evaluate_attribute_block(&block)
         rescue StandardError => e
           self.errors ||= []
           self.errors << "Error in the block: #{e.message}"
-          return nil
+          nil
         end
       else
         transform

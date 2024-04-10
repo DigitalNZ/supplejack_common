@@ -23,7 +23,10 @@ module SupplejackCommon
 
       def basic_auth_url(url)
         if basic_auth_credentials
-          url.gsub('http://', "http://#{basic_auth_credentials[:username]}:#{basic_auth_credentials[:password]}@") if url.present?
+          if url.present?
+            url.gsub('http://',
+                     "http://#{basic_auth_credentials[:username]}:#{basic_auth_credentials[:password]}@")
+          end
         else
           url
         end
@@ -93,11 +96,11 @@ module SupplejackCommon
 
       def include_snippet(name)
         environment = module_parent.name.split('::').last.downcase.to_sym
-        if snippet = Snippet.find_by_name(name, environment)
-          class_eval <<-METHOD, __FILE__, __LINE__ + 1
+        return unless snippet = Snippet.find_by_name(name, environment)
+
+        class_eval <<-METHOD, __FILE__, __LINE__ + 1
             #{snippet.content}
-          METHOD
-        end
+        METHOD
       end
     end
 
@@ -137,6 +140,7 @@ module SupplejackCommon
 
     def rejected?
       return false if self.class.rejection_rules.nil?
+
       self.class.rejection_rules.any? do |r|
         instance_eval(&r)
       end
@@ -164,6 +168,7 @@ module SupplejackCommon
 
     def method_missing(symbol, *_args)
       raise NoMethodError, "undefined method '#{symbol}' for #{self.class}" unless attribute_names.include?(symbol)
+
       attributes[symbol]
     end
   end

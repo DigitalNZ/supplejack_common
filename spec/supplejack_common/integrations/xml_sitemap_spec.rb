@@ -10,7 +10,8 @@ describe SupplejackCommon::Xml::Base do
     stub_request(:get, 'http://www.nzonscreen.com/api/title/').to_return(status: 200, body: urls_xml)
 
     record_xml = File.read('spec/supplejack_common/integrations/source_data/xml_sitemap_parser_record.xml')
-    stub_request(:get, 'http://www.nzonscreen.com/api/title/weekly-review-no-395-1949').to_return(status: 200, body: record_xml)
+    stub_request(:get, 'http://www.nzonscreen.com/api/title/weekly-review-no-395-1949').to_return(status: 200,
+                                                                                                  body: record_xml)
   end
 
   let!(:record) { XmlSitemapParser.records.first }

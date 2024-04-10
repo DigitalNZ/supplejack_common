@@ -41,8 +41,7 @@ require 'supplejack_common/parser/supplejack_common'
 # SupplejackCommon module
 module SupplejackCommon
   class << self
-    attr_accessor :caching_enabled
-    attr_accessor :parser_base_path
+    attr_accessor :caching_enabled, :parser_base_path
 
     def redis
       @redis ||= Redis.new

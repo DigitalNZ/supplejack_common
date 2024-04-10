@@ -30,7 +30,9 @@ describe SupplejackCommon::XmlDslMethods do
     end
 
     it 'should fetch just the attribute value' do
-      allow(record).to receive(:document) { Nokogiri.parse('<head><meta name="DC.language" content="en" scheme="RFC1766"/> </head>') }
+      allow(record).to receive(:document) {
+                         Nokogiri.parse('<head><meta name="DC.language" content="en" scheme="RFC1766"/> </head>')
+                       }
 
       expect(record.fetch("//head/meta[@name='DC.language']/@content").to_a).to eq(['en'])
     end

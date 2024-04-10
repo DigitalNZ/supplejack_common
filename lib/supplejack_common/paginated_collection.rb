@@ -6,19 +6,8 @@ module SupplejackCommon
   class PaginatedCollection
     include Enumerable
 
-    attr_reader :klass, :options
-
-    attr_reader :page_parameter,
-                :per_page_parameter,
-                :per_page,
-                :page,
-                :counter,
-                :type,
-                :next_page_token_location,
-                :total_selector,
-                :duration_parameter,
-                :duration_value,
-                :initial_param
+    attr_reader :klass, :options, :page_parameter, :per_page_parameter, :per_page, :page, :counter, :type,
+                :next_page_token_location, :total_selector, :duration_parameter, :duration_value, :initial_param
 
     # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/PerceivedComplexity
@@ -65,6 +54,7 @@ module SupplejackCommon
         @records = klass.fetch_records(next_url(base_url))
 
         return nil unless yield_from_records(&block)
+
         unless paginated? || scroll?
           completed_base_urls = @job&.states&.last&.base_urls
           @job&.states&.create!(base_urls: completed_base_urls.push(base_url), limit: options[:limit], counter: @counter)
@@ -144,6 +134,7 @@ module SupplejackCommon
 
     def scroll_url_query_params
       return '' unless duration_parameter.present? && duration_value.present?
+
       { duration_parameter => duration_value }.to_query
     end
 
@@ -180,16 +171,14 @@ module SupplejackCommon
 
     def more_results?
       if scroll?
-        if @scroll_more_results_block
-          return @scroll_more_results_block.call(klass)
-        else
-          return JSON.parse(klass._document.body)['hits']['hits'].present?
-        end
+        return @scroll_more_results_block.call(klass) if @scroll_more_results_block
+
+        return JSON.parse(klass._document.body)['hits']['hits'].present?
+
       end
 
-      if tokenised?
-        return klass.next_page_token(@next_page_token_location).present?
-      end
+      return klass.next_page_token(@next_page_token_location).present? if tokenised?
+
       current_page <= total_pages
     end
 
@@ -213,12 +202,10 @@ module SupplejackCommon
       while record = @records.shift
         record.set_attribute_values
 
-        if record.rejected?
-          next
-        else
-          @counter += 1
-          yield(record)
-        end
+        next if record.rejected?
+
+        @counter += 1
+        yield(record)
 
         return nil if options[:limit] && @counter >= options[:limit]
       end

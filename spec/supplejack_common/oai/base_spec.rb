@@ -45,37 +45,53 @@ describe SupplejackCommon::Oai::Base do
     end
 
     it 'initializes a PaginatedCollection with the results' do
-      expect(SupplejackCommon::Oai::PaginatedCollection).to receive(:new).with(client, {}, described_class) { paginator }
+      expect(SupplejackCommon::Oai::PaginatedCollection).to receive(:new).with(client, {}, described_class) {
+                                                              paginator
+                                                            }
       described_class.records
     end
 
     it 'accepts a :from option and pass it on to list_records' do
       date = Date.today
-      expect(SupplejackCommon::Oai::PaginatedCollection).to receive(:new).with(client, { from: date }, described_class) { paginator }
+      expect(SupplejackCommon::Oai::PaginatedCollection).to receive(:new).with(client, { from: date },
+                                                                               described_class) {
+                                                              paginator
+                                                            }
       described_class.records(from: date)
     end
 
     it 'accepts a :limit option' do
-      expect(SupplejackCommon::Oai::PaginatedCollection).to receive(:new).with(client, { limit: 10 }, described_class) { paginator }
+      expect(SupplejackCommon::Oai::PaginatedCollection).to receive(:new).with(client, { limit: 10 }, described_class) {
+                                                              paginator
+                                                            }
       described_class.records(limit: 10)
     end
 
     it 'add the :metadata_prefix option from the DSL' do
-      expect(SupplejackCommon::Oai::PaginatedCollection).to receive(:new).with(client, { metadata_prefix: 'prefix' }, described_class) { paginator }
+      expect(SupplejackCommon::Oai::PaginatedCollection).to receive(:new).with(client, { metadata_prefix: 'prefix' },
+                                                                               described_class) {
+                                                              paginator
+                                                            }
 
       described_class.metadata_prefix 'prefix'
       described_class.records
     end
 
     it 'add the :set option from the DSL' do
-      expect(SupplejackCommon::Oai::PaginatedCollection).to receive(:new).with(client, { set: 'name' }, described_class) { paginator }
+      expect(SupplejackCommon::Oai::PaginatedCollection).to receive(:new).with(client, { set: 'name' },
+                                                                               described_class) {
+                                                              paginator
+                                                            }
 
       described_class.set 'name'
       described_class.records
     end
 
     it 'does not pass on unknown options' do
-      expect(SupplejackCommon::Oai::PaginatedCollection).not_to receive(:new).with(client, { golf_scores: :all }, described_class) { paginator }
+      expect(SupplejackCommon::Oai::PaginatedCollection).not_to receive(:new).with(client, { golf_scores: :all },
+                                                                                   described_class) {
+                                                                  paginator
+                                                                }
       described_class.records(golf_scores: :all)
     end
   end
@@ -130,7 +146,9 @@ describe SupplejackCommon::Oai::Base do
 
   describe '#deletable?' do
     it 'returns true when header has deleted attribute' do
-      allow(record).to receive(:document) { Nokogiri.parse('<?xml version="1.0"?><record><header status="deleted"></header></record>') }
+      allow(record).to receive(:document) {
+                         Nokogiri.parse('<?xml version="1.0"?><record><header status="deleted"></header></record>')
+                       }
       expect(record.deletable?).to be_truthy
     end
 

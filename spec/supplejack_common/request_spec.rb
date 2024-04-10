@@ -32,7 +32,8 @@ describe SupplejackCommon::Request do
 
   describe '#initialize' do
     it 'converts the array of throttling options to a hash' do
-      request = described_class.new('google.com', 60_000, [{ host: 'google.com', delay: 5 }, { host: 'yahoo.com', delay: 10 }])
+      request = described_class.new('google.com', 60_000,
+                                    [{ host: 'google.com', delay: 5 }, { host: 'yahoo.com', delay: 10 }])
       expect(request.throttling_options).to eq('google.com' => 5, 'yahoo.com' => 10)
     end
 
@@ -57,7 +58,8 @@ describe SupplejackCommon::Request do
 
   describe '#host' do
     it 'returns the request url host' do
-      expect(described_class.new('http://gdata.youtube.com/feeds/api/videos?author=archivesnz&orderby=published', 60_000).host).to eq 'gdata.youtube.com'
+      expect(described_class.new('http://gdata.youtube.com/feeds/api/videos?author=archivesnz&orderby=published',
+                                 60_000).host).to eq 'gdata.youtube.com'
     end
   end
 
@@ -160,9 +162,11 @@ describe SupplejackCommon::Request do
       expect(RestClient::Request).to receive(:execute).with(method: :get,
                                                             url: 'http://google.com',
                                                             timeout: 60_000,
-                                                            headers: { 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken' },
+                                                            headers: { 'x-api-key' => 'key',
+                                                                       'Authorization' => 'tokentokentoken' },
                                                             proxy: nil)
-      request_obj = described_class.new('http://google.com', 60_000, [{ host: 'google.com', delay: 5 }], 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken')
+      request_obj = described_class.new('http://google.com', 60_000, [{ host: 'google.com', delay: 5 }],
+                                        'x-api-key' => 'key', 'Authorization' => 'tokentokentoken')
       request_obj.request_url
     end
   end

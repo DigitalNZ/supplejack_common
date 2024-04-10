@@ -11,14 +11,12 @@ module SupplejackCommon
       end
 
       def modify
-        values = original_value.map do |value|
+        original_value.map do |value|
           replacement_rules.each do |regexp, substitute_value|
             value = value.gsub(regexp, substitute_value)
           end
           value
         end.compact
-
-        values
       end
     end
   end
