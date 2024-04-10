@@ -7,14 +7,14 @@ describe SupplejackCommon::Modifiers::Joiner do
 
   describe '#initialize' do
     it 'assigns the original_value and a separator' do
-      subject.original_value.should eq %w[cats dogs]
-      subject.joiner.should eq ','
+      expect(subject.original_value).to eq %w[cats dogs]
+      expect(subject.joiner).to eq ','
     end
   end
 
   describe 'value' do
     it 'joins the multiple elements into one' do
-      subject.modify.should eq ['cats,dogs']
+      expect(subject.modify).to eq ['cats,dogs']
     end
   end
 end

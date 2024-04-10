@@ -7,21 +7,21 @@ describe SupplejackCommon::Modifiers::WhitespaceCompactor do
 
   describe '#initialize' do
     it 'assigns the original_value' do
-      subject.original_value.should eq %w[cats bats]
+      expect(subject.original_value).to eq %w[cats bats]
     end
   end
 
   describe '#modify' do
-    let(:node) { mock(:node) }
+    let(:node) { double(:node) }
 
     it 'returns a compacted array of values' do
-      subject.stub(:original_value) { ['Dogs   Hotels  - foo', 'Job   blah'] }
-      subject.modify.should eq ['Dogs Hotels - foo', 'Job blah']
+      allow(subject).to receive(:original_value) { ['Dogs   Hotels  - foo', 'Job   blah'] }
+      expect(subject.modify).to eq ['Dogs Hotels - foo', 'Job blah']
     end
 
     it 'returns the same array when the elements are not string' do
-      subject.stub(:original_value) { [node, node] }
-      subject.modify.should eq [node, node]
+      allow(subject).to receive(:original_value) { [node, node] }
+      expect(subject.modify).to eq [node, node]
     end
   end
 end

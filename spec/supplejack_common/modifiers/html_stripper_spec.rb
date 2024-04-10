@@ -7,7 +7,7 @@ describe SupplejackCommon::Modifiers::HtmlStripper do
 
   describe '#initialize' do
     it 'assigns the original_value' do
-      subject.original_value.should eq [' cats ']
+      expect(subject.original_value).to eq [' cats ']
     end
   end
 
@@ -15,20 +15,20 @@ describe SupplejackCommon::Modifiers::HtmlStripper do
     let(:html_string) { "<div id='top'>Stripped</div>" }
 
     it 'strips html characters from a string' do
-      subject.stub(:original_value) { [html_string] }
-      subject.modify.should eq ['Stripped']
+      allow(subject).to receive(:original_value) { [html_string] }
+      expect(subject.modify).to eq ['Stripped']
     end
 
     it "doesn't try to strip_html from non strings" do
-      node = mock(:node)
-      subject.stub(:original_value) { [node] }
-      subject.modify.should eq [node]
+      node = double(:node)
+      allow(subject).to receive(:original_value) { [node] }
+      expect(subject.modify).to eq [node]
     end
 
     it 'removes invalid encoded characters' do
       invalid_html = 'Something with invalid characters \x80 and tags.'
-      subject.stub(:original_value) { [invalid_html] }
-      subject.modify.should eq ['Something with invalid characters \\x80 and tags.']
+      allow(subject).to receive(:original_value) { [invalid_html] }
+      expect(subject.modify).to eq ['Something with invalid characters \\x80 and tags.']
     end
   end
 end

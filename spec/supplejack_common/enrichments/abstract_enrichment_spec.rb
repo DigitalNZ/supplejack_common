@@ -3,33 +3,33 @@
 require 'spec_helper'
 
 describe SupplejackCommon::AbstractEnrichment do
-  let(:fragment) { mock(:fragment, priority: 0, source_id: :ndha) }
-  let(:record) { mock(:record, id: 1234, attributes: {}, fragments: [fragment]) }
+  let(:fragment) { double(:fragment, priority: 0, source_id: :ndha) }
+  let(:record) { double(:record, id: 1234, attributes: {}, fragments: [fragment]) }
   let(:enrichment) { described_class.new(:ndha_rights, {}, record, nil) }
 
   describe '#primary' do
     it 'returns a wrapped fragment' do
-      enrichment.primary.fragment.should eq fragment
+      expect(enrichment.primary.fragment).to eq fragment
     end
 
     it 'should initialize a FragmentWrap object' do
-      enrichment.primary.should be_a SupplejackCommon::FragmentWrap
+      expect(enrichment.primary).to be_a SupplejackCommon::FragmentWrap
     end
   end
 
   describe '#record_fragment' do
     it 'returns a wrapped fragment' do
-      enrichment.record_fragment(:ndha).fragment.should eq fragment
+      expect(enrichment.record_fragment(:ndha).fragment).to eq fragment
     end
 
     it 'should initialize a FragmentWrap object' do
-      enrichment.record_fragment(:ndha).should be_a SupplejackCommon::FragmentWrap
+      expect(enrichment.record_fragment(:ndha)).to be_a SupplejackCommon::FragmentWrap
     end
   end
 
   context 'priority is not specified' do
     it 'has a priority of 1' do
-      enrichment.attributes[:priority].should eq 1
+      expect(enrichment.attributes[:priority]).to eq 1
     end
   end
 
@@ -37,19 +37,19 @@ describe SupplejackCommon::AbstractEnrichment do
     let(:enrichment) { described_class.new(:ndha_rights, { priority: -1 }, record, nil) }
 
     it 'has a priority of -1' do
-      enrichment.attributes[:priority].should eq -1
+      expect(enrichment.attributes[:priority]).to eq -1
     end
   end
 
   it 'sets the source_id to the specified name' do
-    enrichment.attributes.should include(source_id: 'ndha_rights')
+    expect(enrichment.attributes).to include(source_id: 'ndha_rights')
   end
 
   it 'implements a before method that does nothing' do
-    -> { described_class.before(:method) }.should_not raise_error
+    expect { described_class.before(:method) }.not_to raise_error
   end
 
   it 'implements a after method that does nothing' do
-    -> { described_class.after(:method) }.should_not raise_error
+    expect { described_class.after(:method) }.not_to raise_error
   end
 end

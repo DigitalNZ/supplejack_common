@@ -14,13 +14,13 @@ describe SupplejackCommon::Modifiers do
   let(:record) { ModifiersTestParser.new }
 
   before(:each) do
-    record.stub(:attributes) { { category: 'Images' } }
+    allow(record).to receive(:attributes) { { category: 'Images' } }
   end
 
   describe '#get' do
     it 'initializes a new AttributeValue with the value from the attribute' do
-      record.get(:category).should be_a SupplejackCommon::AttributeValue
-      record.get(:category).original_value.should eq ['Images']
+      expect(record.get(:category)).to be_a SupplejackCommon::AttributeValue
+      expect(record.get(:category).original_value).to eq ['Images']
     end
   end
 
@@ -30,12 +30,12 @@ describe SupplejackCommon::Modifiers do
 
     it 'joins multiple attribute values and a string' do
       value = record.compose(thumb, '/', extension)
-      value.to_a.should eq ['http://google.com/1/thumb.jpg']
+      expect(value.to_a).to eq ['http://google.com/1/thumb.jpg']
     end
 
     it 'joins the values with a comma' do
       value = record.compose('dogs', 'cats', extension, separator: ', ')
-      value.to_a.should eq ['dogs, cats, thumb.jpg']
+      expect(value.to_a).to eq ['dogs, cats, thumb.jpg']
     end
   end
 
@@ -45,7 +45,7 @@ describe SupplejackCommon::Modifiers do
     end
     it 'return concepts that has fragments with sameAs field contains lookup url' do
       values = record.concept_lookup('http://localhost.com')
-      values.to_a.should eq [1, 2, 3]
+      expect(values.to_a).to eq [1, 2, 3]
     end
   end
 end

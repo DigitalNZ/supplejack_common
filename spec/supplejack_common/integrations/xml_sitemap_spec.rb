@@ -17,37 +17,37 @@ describe SupplejackCommon::Xml::Base do
 
   context 'default values' do
     it 'defaults the collection to NZ On Screen' do
-      record.content_partner.should eq ['NZ On Screen']
+      expect(record.content_partner).to eq ['NZ On Screen']
     end
 
     it 'defaults the category to Videos' do
-      record.category.should eq ['Videos']
+      expect(record.category).to eq ['Videos']
     end
   end
 
   it 'gets the title' do
-    record.title.should eq ['Weekly Review No. 395']
+    expect(record.title).to eq ['Weekly Review No. 395']
   end
 
   it 'gets the record description' do
-    record.description.should eq ['This Weekly Review features: An interview with Sir Peter Buck in which Te Rangi Hīroa (then Medical Officer of Health for Maori) explains the sabbatical he took to research Polynesian anthropology']
+    expect(record.description).to eq ['This Weekly Review features: An interview with Sir Peter Buck in which Te Rangi Hīroa (then Medical Officer of Health for Maori) explains the sabbatical he took to research Polynesian anthropology']
   end
 
   it 'gets the date' do
-    record.date.should eq ['13:00:00, 29/01/2009']
+    expect(record.date).to eq ['13:00:00, 29/01/2009']
   end
 
   it 'gets the tag' do
-    record.tag.should eq ['te rangi hīroa', 'public health', 'māori health', 'scenery']
+    expect(record.tag).to eq ['te rangi hīroa', 'public health', 'māori health', 'scenery']
   end
 
   it 'gets the thumbnail_url' do
-    record.thumbnail_url.should eq ['http://www.nzonscreen.com/content/images/0000/3114/weekly-review-395.jpg']
+    expect(record.thumbnail_url).to eq ['http://www.nzonscreen.com/content/images/0000/3114/weekly-review-395.jpg']
   end
 
   context 'overriden methods' do
     it 'gets the contributor' do
-      record.contributor.should eq ['Stanhope Andrews']
+      expect(record.contributor).to eq ['Stanhope Andrews']
     end
   end
 end

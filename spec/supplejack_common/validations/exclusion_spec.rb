@@ -12,13 +12,13 @@ describe ActiveModel::Validations::ExclusionValidator do
     it 'should be valid when none of the values are part of the list' do
       record = TestJsonExclusion.new('dc_type' => %w[Photos Manuscripts])
       record.set_attribute_values
-      record.valid?.should be_true
+      expect(record.valid?).to be_truthy
     end
 
     it 'should not be valid when at least one value is part of the list' do
       record = TestJsonExclusion.new('dc_type' => %w[Videos Photos])
       record.set_attribute_values
-      record.valid?.should be_false
+      expect(record.valid?).to be_falsey
     end
   end
 end

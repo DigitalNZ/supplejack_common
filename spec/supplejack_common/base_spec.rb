@@ -18,12 +18,12 @@ describe SupplejackCommon::Base do
     before { class LibraryParser < SupplejackCommon::Xml::Base; end }
 
     it 'returns a unique identifier of the class' do
-      LibraryParser.identifier.should eq 'xml_library_parser'
+      expect(LibraryParser.identifier).to eq 'xml_library_parser'
     end
 
     it 'memoizes the identifier' do
       LibraryParser.instance_variable_set('@identifier', nil)
-      LibraryParser.should_receive(:ancestors).once { [nil, SupplejackCommon::Xml::Base] }
+      expect(LibraryParser).to receive(:ancestors).once { [nil, SupplejackCommon::Xml::Base] }
       LibraryParser.identifier
       LibraryParser.identifier
     end
@@ -32,50 +32,50 @@ describe SupplejackCommon::Base do
   describe '.base_urls' do
     it 'returns the list of base_urls' do
       described_class.base_url 'http://google.com'
-      described_class.base_urls.should include 'http://google.com'
+      expect(described_class.base_urls).to include 'http://google.com'
     end
 
     it 'returns a list of urls with basic_auth' do
       described_class.base_url 'http://google.com'
       described_class.basic_auth 'username', 'password'
-      described_class.base_urls.should include 'http://username:password@google.com'
+      expect(described_class.base_urls).to include 'http://username:password@google.com'
     end
 
     it 'returns a list of urls within a specific environment' do
       described_class.environment = 'staging'
       described_class.base_url staging: 'http://google.com'
-      described_class.base_urls.should include 'http://google.com'
+      expect(described_class.base_urls).to include 'http://google.com'
     end
 
     it "returns nil when it doesn't match the environment" do
       described_class.environment = 'staging'
       described_class.base_url production: 'http://google.com'
-      described_class.base_urls.should_not include 'http://google.com'
+      expect(described_class.base_urls).not_to include 'http://google.com'
     end
   end
 
   describe '.environment_url' do
     it 'returns the url for the appropiate environment' do
       described_class.environment = 'staging'
-      described_class.environment_url(staging: 'http://google.com').should eq 'http://google.com'
+      expect(described_class.environment_url(staging: 'http://google.com')).to eq 'http://google.com'
     end
 
     it 'returns the url no environment is specified' do
-      described_class.environment_url('http://google.com').should eq 'http://google.com'
+      expect(described_class.environment_url('http://google.com')).to eq 'http://google.com'
     end
   end
 
   describe '.basic_auth_credentials' do
     it 'returns the basic auth credentials' do
       described_class.basic_auth 'username', 'password'
-      described_class.basic_auth_credentials.should eq(username: 'username', password: 'password')
+      expect(described_class.basic_auth_credentials).to eq(username: 'username', password: 'password')
     end
   end
 
   describe '.pagination' do
     it 'returns the pagination object' do
       described_class._pagination_options[described_class.identifier] = 'Hi'
-      described_class.pagination_options.should eq 'Hi'
+      expect(described_class.pagination_options).to eq 'Hi'
     end
   end
 
@@ -83,37 +83,37 @@ describe SupplejackCommon::Base do
     it 'clears the base_urls' do
       described_class.base_url 'http://google.com'
       described_class.clear_definitions
-      described_class.base_urls.should be_empty
+      expect(described_class.base_urls).to be_empty
     end
 
     it 'clears the attribute definitions' do
       described_class.attribute :subject, default: 'Base'
       described_class.clear_definitions
-      described_class.attribute_definitions.should be_empty
+      expect(described_class.attribute_definitions).to be_empty
     end
 
     it 'clears basic auth credentials' do
       described_class.basic_auth 'fede', 'secret'
       described_class.clear_definitions
-      described_class.basic_auth_credentials.should be_nil
+      expect(described_class.basic_auth_credentials).to be_nil
     end
 
     it 'clears pagination options' do
       described_class.paginate page_parameter: 'start', type: 'item', per_page_parameter: 'size'
       described_class.clear_definitions
-      described_class.pagination_options.should be_nil
+      expect(described_class.pagination_options).to be_nil
     end
 
     it 'clears the rejection rules' do
       described_class.reject_if { 'Hi' }
       described_class.clear_definitions
-      described_class.rejection_rules.should be_nil
+      expect(described_class.rejection_rules).to be_nil
     end
 
     it 'clears the deletion rules' do
       described_class.delete_if { 'Hi' }
       described_class.clear_definitions
-      described_class.deletion_rules.should be_nil
+      expect(described_class.deletion_rules).to be_nil
     end
 
     it 'clears the enrichment definitions' do
@@ -122,15 +122,15 @@ describe SupplejackCommon::Base do
       end
 
       described_class.clear_definitions
-      described_class.enrichment_definitions.should be_empty
+      expect(described_class.enrichment_definitions).to be_empty
     end
 
     describe '.include_snippet' do
-      before { Snippet.stub(:find_by_name) }
+      before { allow(Snippet).to receive(:find_by_name) }
 
       it 'finds the snippet by name and environment' do
         described_class.stub_chain(:module_parent, :name) { 'OAI::Staging' }
-        Snippet.should_receive(:find_by_name).with('snip', :staging)
+        expect(Snippet).to receive(:find_by_name).with('snip', :staging)
         described_class.include_snippet('snip')
       end
     end
@@ -138,8 +138,8 @@ describe SupplejackCommon::Base do
 
   describe '#attribute_definitions' do
     it 'returns the attributes defined' do
-      described_class.stub(:_attribute_definitions) { { described_class.identifier => { category: { option: true } } } }
-      described_class.attribute_definitions.should eq(category: { option: true })
+      allow(described_class).to receive(:_attribute_definitions) { { described_class.identifier => { category: { option: true } } } }
+      expect(described_class.attribute_definitions).to eq(category: { option: true })
     end
   end
 
@@ -147,33 +147,33 @@ describe SupplejackCommon::Base do
     it 'returns the rejection_rules for the described_class' do
       rules = [proc { 'Hi' }]
       described_class._rejection_rules[described_class.identifier] = rules
-      described_class.rejection_rules.should eq rules
+      expect(described_class.rejection_rules).to eq rules
     end
   end
 
   describe '.deletion_rules' do
     it 'returns the deletion_rules for the described_class' do
       described_class._deletion_rules[described_class.identifier] = proc { 'Hi' }
-      described_class.deletion_rules.should be_a Proc
+      expect(described_class.deletion_rules).to be_a Proc
     end
   end
 
   describe '.get_priority' do
     it 'returns the priority for the described_class' do
       described_class._priority[described_class.identifier] = 2
-      described_class.get_priority.should eq 2
+      expect(described_class.get_priority).to eq 2
     end
 
     it 'returns 0 if no priority is set' do
       described_class._priority.delete(described_class.identifier)
-      described_class.get_priority.should eq 0
+      expect(described_class.get_priority).to eq 0
     end
   end
 
   describe '.match_concepts_rule' do
     it 'returns the match_concepts_rule for the described_class' do
       described_class._match_concepts[described_class.identifier] = :create
-      described_class.match_concepts_rule.should eq :create
+      expect(described_class.match_concepts_rule).to eq :create
     end
   end
 
@@ -183,47 +183,47 @@ describe SupplejackCommon::Base do
     it 'should set the priority' do
       described_class.priority 2
       record.set_attribute_values
-      record.attributes.should include(priority: 2)
+      expect(record.attributes).to include(priority: 2)
     end
 
     it 'should set the match_concepts' do
       described_class.match_concepts :create_or_match
       record.set_attribute_values
-      record.attributes.should include(match_concepts: :create_or_match)
+      expect(record.attributes).to include(match_concepts: :create_or_match)
     end
 
     it 'should run values through the attribute value object so we do not get empty strings and nils' do
       described_class.attribute :category, default: ['value', nil]
       record.set_attribute_values
-      record.attributes[:category].should eq ['value']
+      expect(record.attributes[:category]).to eq ['value']
     end
 
     it 'assigns the attribute values in a hash' do
       described_class.attribute :category, default: 'Value'
-      record.stub(:attribute_value) { 'Value' }
+      allow(record).to receive(:attribute_value) { 'Value' }
       record.set_attribute_values
-      record.attributes.should include(category: ['Value'])
+      expect(record.attributes).to include(category: ['Value'])
     end
 
     it 'splits the values by the separator character' do
       described_class.attribute :category, default: 'Value1, Value2', separator: ','
       record.set_attribute_values
-      record.attributes.should include(category: %w[Value1 Value2])
+      expect(record.attributes).to include(category: %w[Value1 Value2])
     end
 
     it 'adds errors to field_errors' do
       described_class.attribute :date, default: '1999/1/1', date: true
-      SupplejackCommon::AttributeBuilder.stub(:new).with(record, :date, default: '1999/1/1', date: true) { double(:builder, errors: ['Error']).as_null_object }
+      allow(SupplejackCommon::AttributeBuilder).to receive(:new).with(record, :date, default: '1999/1/1', date: true) { double(:builder, errors: ['Error']).as_null_object }
       record.set_attribute_values
-      record.attributes.should include(date: nil)
-      record.field_errors.should include(date: ['Error'])
+      expect(record.attributes).to include(date: nil)
+      expect(record.field_errors).to include(date: ['Error'])
     end
 
     it 'should rescue from exceptions and store it' do
       described_class.attribute :date
-      SupplejackCommon::AttributeBuilder.stub(:new).and_raise(StandardError.new('Hi'))
+      allow(SupplejackCommon::AttributeBuilder).to receive(:new).and_raise(StandardError.new('Hi'))
       record.set_attribute_values
-      record.request_error.should include(message: 'Hi')
+      expect(record.request_error).to include(message: 'Hi')
     end
   end
 
@@ -231,18 +231,18 @@ describe SupplejackCommon::Base do
     let(:record) { described_class.new }
 
     it 'is not deleteable if there are no deletion rules' do
-      described_class.stub(:deletion_rules) { nil }
-      record.deletable?.should be_false
+      allow(described_class).to receive(:deletion_rules) { nil }
+      expect(record.deletable?).to be_falsey
     end
 
     it 'is deletable if the block evals to true' do
       described_class.delete_if { true }
-      record.deletable?.should be_true
+      expect(record.deletable?).to be_truthy
     end
 
     it 'is not deletable if the block evals to true' do
       described_class.delete_if { false }
-      record.deletable?.should be_false
+      expect(record.deletable?).to be_falsey
     end
   end
 
@@ -250,25 +250,25 @@ describe SupplejackCommon::Base do
     let(:record) { described_class.new }
 
     it 'returns true if any rejection_rule is true' do
-      described_class.stub(:rejection_rules) { [proc { false }, proc { true }] }
-      record.rejected?.should be_true
+      allow(described_class).to receive(:rejection_rules) { [proc { false }, proc { true }] }
+      expect(record.rejected?).to be_truthy
     end
 
     it 'returns false if all rejection_rules are false' do
-      described_class.stub(:rejection_rules) { [proc { false }, proc { false }] }
-      record.rejected?.should be_false
+      allow(described_class).to receive(:rejection_rules) { [proc { false }, proc { false }] }
+      expect(record.rejected?).to be_falsey
     end
 
     it 'returns false if rejection_rules is undefined' do
-      described_class.stub(:rejection_rules) { nil }
-      record.rejected?.should be_false
+      allow(described_class).to receive(:rejection_rules) { nil }
+      expect(record.rejected?).to be_falsey
     end
   end
 
   describe '#attribute_names' do
     it 'returns a list all attributes defined' do
       described_class.attribute :content_partner, default: 'Google'
-      described_class.new.attribute_names.should include(:content_partner)
+      expect(described_class.new.attribute_names).to include(:content_partner)
     end
   end
 end

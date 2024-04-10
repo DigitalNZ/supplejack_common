@@ -7,8 +7,8 @@ describe SupplejackCommon::HtmlResource do
 
   describe '#document' do
     it 'should parse the resource as HTML' do
-      subject.stub(:fetch_document) { '</html>' }
-      subject.document.should be_a Nokogiri::HTML::Document
+      allow(subject).to receive(:fetch_document) { '</html>' }
+      expect(subject.document).to be_a Nokogiri::HTML::Document
     end
   end
 end

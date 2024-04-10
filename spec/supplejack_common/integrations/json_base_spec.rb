@@ -14,45 +14,45 @@ describe SupplejackCommon::Json::Base do
 
   context 'default values' do
     it 'defaults the collection to Europeana' do
-      record.collection.should eq ['Europeana']
+      expect(record.collection).to eq ['Europeana']
     end
   end
 
   it 'gets the title' do
-    record.title.should eq ['Transactions and proceedings of the New Zealand Institute. Volume v.30 (1897)']
+    expect(record.title).to eq ['Transactions and proceedings of the New Zealand Institute. Volume v.30 (1897)']
   end
 
   it 'gets the record description' do
-    record.description.should eq ['New Zealand Instit...']
+    expect(record.description).to eq ['New Zealand Instit...']
   end
 
   it 'gets the creator' do
-    record.creator.should eq ['New Zealand Institute (Wellington, N.Z']
+    expect(record.creator).to eq ['New Zealand Institute (Wellington, N.Z']
   end
 
   it 'gets the language' do
-    record.language.should eq ['mul']
+    expect(record.language).to eq ['mul']
   end
 
   it 'gets the dnz_type' do
-    record.dnz_type.should eq ['TEXT']
+    expect(record.dnz_type).to eq ['TEXT']
   end
 
   it 'gets the contributing_partner' do
-    record.contributing_partner.should eq ['NCSU Libraries (archive.org)']
+    expect(record.contributing_partner).to eq ['NCSU Libraries (archive.org)']
   end
 
   it 'gets the thumbnail_url' do
-    record.thumbnail_url.should eq ['http://bhl.ait.co.at/templates/bhle/sampledata/cachedImage.php?maxSize=200&filename=http://www.biodiversitylibrary.org/pagethumb/25449335']
+    expect(record.thumbnail_url).to eq ['http://bhl.ait.co.at/templates/bhle/sampledata/cachedImage.php?maxSize=200&filename=http://www.biodiversitylibrary.org/pagethumb/25449335']
   end
 
   it 'gets nested keys' do
-    record.tags.should eq ['foo']
+    expect(record.tags).to eq ['foo']
   end
 
   context 'overriden methods' do
     it 'gets the landing_url' do
-      record.landing_url.should eq ['http://www.europeana.eu/portal/record/08701/533BD2421E162B12D599BBCC3BF0BA3C516A8CFB']
+      expect(record.landing_url).to eq ['http://www.europeana.eu/portal/record/08701/533BD2421E162B12D599BBCC3BF0BA3C516A8CFB']
     end
   end
 end

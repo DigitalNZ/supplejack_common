@@ -7,13 +7,13 @@ describe SupplejackCommon::XmlDataMethods do
   let(:record) { klass.new('http://google.com') }
 
   describe 'full_raw_data' do
-    before { record.stub(:raw_data) { '<record/>' } }
+    before { allow(record).to receive(:raw_data) { '<record/>' } }
 
     context 'with namespaces' do
       before { klass._namespaces = { 'xmlns:foo' => 'bar' } }
 
       it 'should add the root node with namespaces' do
-        record.full_raw_data.should eq "<root xmlns:foo='bar'><record/></root>"
+        expect(record.full_raw_data).to eq "<root xmlns:foo='bar'><record/></root>"
       end
     end
 
@@ -21,7 +21,7 @@ describe SupplejackCommon::XmlDataMethods do
       before { klass._namespaces = nil }
 
       it 'should return the raw_data' do
-        record.full_raw_data.should eq '<record/>'
+        expect(record.full_raw_data).to eq '<record/>'
       end
     end
   end

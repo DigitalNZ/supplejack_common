@@ -7,17 +7,17 @@ describe SupplejackCommon::JsonResource do
 
   describe '#document' do
     it 'should parse the resource as JSON' do
-      subject.stub(:fetch_document) { { title: 'Value' }.to_json }
-      subject.document.should eq('title' => 'Value')
+      allow(subject).to receive(:fetch_document) { { title: 'Value' }.to_json }
+      expect(subject.document).to eq('title' => 'Value')
     end
   end
 
   describe '#fetch' do
     it 'returns the value object' do
-      subject.stub(:fetch_document) { { title: 'Lorem' }.to_json }
+      allow(subject).to receive(:fetch_document) { { title: 'Lorem' }.to_json }
       value = subject.fetch('title')
-      value.should be_a SupplejackCommon::AttributeValue
-      value.to_a.should eq ['Lorem']
+      expect(value).to be_a SupplejackCommon::AttributeValue
+      expect(value.to_a).to eq ['Lorem']
     end
   end
 

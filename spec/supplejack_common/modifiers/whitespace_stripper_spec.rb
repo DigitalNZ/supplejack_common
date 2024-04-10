@@ -7,21 +7,21 @@ describe SupplejackCommon::Modifiers::WhitespaceStripper do
 
   describe '#initialize' do
     it 'assigns the original_value' do
-      subject.original_value.should eq [' cats ']
+      expect(subject.original_value).to eq [' cats ']
     end
   end
 
   describe '#modify' do
-    let(:node) { mock(:node) }
+    let(:node) { double(:node) }
 
     it 'returns a stripped array of values' do
-      subject.stub(:original_value) { [' Dogs ', ' cats '] }
-      subject.modify.should eq %w[Dogs cats]
+      allow(subject).to receive(:original_value) { [' Dogs ', ' cats '] }
+      expect(subject.modify).to eq %w[Dogs cats]
     end
 
     it 'returns the same array when the elements are not string' do
-      subject.stub(:original_value) { [node, node] }
-      subject.modify.should eq [node, node]
+      allow(subject).to receive(:original_value) { [node, node] }
+      expect(subject.modify).to eq [node, node]
     end
   end
 end

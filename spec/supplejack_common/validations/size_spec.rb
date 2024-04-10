@@ -12,13 +12,13 @@ describe ActiveModel::Validations::SizeValidator do
     it 'should be valid when it has one value' do
       record = TestJsonSize.new('landing_url' => ['http://google.com/1'])
       record.set_attribute_values
-      record.valid?.should be_true
+      expect(record.valid?).to be_truthy
     end
 
     it 'should not be valid when it has more than the maximum' do
       record = TestJsonSize.new('landing_url' => ['http://google.com/1', 'http://google.com/2', 'http://google.com/3'])
       record.set_attribute_values
-      record.valid?.should be_false
+      expect(record.valid?).to be_falsey
     end
   end
 
@@ -31,19 +31,19 @@ describe ActiveModel::Validations::SizeValidator do
     it 'should be valid when it has one value' do
       record = TestJsonSize.new('landing_url' => ['http://google.com/1'])
       record.set_attribute_values
-      record.valid?.should be_true
+      expect(record.valid?).to be_truthy
     end
 
     it 'should not be valid when it has 0 values' do
       record = TestJsonSize.new('landing_url' => [])
       record.set_attribute_values
-      record.valid?.should be_false
+      expect(record.valid?).to be_falsey
     end
 
     it 'should not be valid when it has 2 values' do
       record = TestJsonSize.new('landing_url' => ['http://google.com/1', 'http://google.com/2'])
       record.set_attribute_values
-      record.valid?.should be_false
+      expect(record.valid?).to be_falsey
     end
   end
 end

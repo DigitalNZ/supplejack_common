@@ -6,21 +6,21 @@ describe SupplejackCommon::Sitemap::PaginatedCollection do
   class PaginatedTestXml < SupplejackCommon::Xml::Base; end
 
   let(:collection) { described_class.new(PaginatedTestXml) }
-  let(:document) { mock(:document) }
+  let(:document) { double(:document) }
   let(:sitemap_klass) { SupplejackCommon::Sitemap::Base }
 
   it 'initializes the klass, sitemap_klass with a sitemap_entry_selector and options' do
     collection = described_class.new(PaginatedTestXml)
 
-    collection.klass.should eq PaginatedTestXml
-    collection.sitemap_klass.should eq sitemap_klass
-    collection.options.should eq({})
+    expect(collection.klass).to eq PaginatedTestXml
+    expect(collection.sitemap_klass).to eq sitemap_klass
+    expect(collection.options).to eq({})
   end
 
   it 'calls sitemap_entry_selector on sitemap_klass with the selector passed through' do
     PaginatedTestXml.sitemap_entry_selector '//loc'
 
-    collection.sitemap_klass.should_receive(:sitemap_entry_selector).with('//loc')
+    expect(collection.sitemap_klass).to receive(:sitemap_entry_selector).with('//loc')
 
     described_class.new(PaginatedTestXml)
   end
@@ -28,7 +28,7 @@ describe SupplejackCommon::Sitemap::PaginatedCollection do
   it 'adds the namespaces to the site' do
     PaginatedTestXml.namespaces page: 'http://www.w3.org/1999/xhtml'
 
-    collection.sitemap_klass.should_receive(:_namespaces=).with(hash_including(
+    expect(collection.sitemap_klass).to receive(:_namespaces=).with(hash_including(
                                                                   { page: 'http://www.w3.org/1999/xhtml' }
                                                                 ))
 
@@ -37,46 +37,46 @@ describe SupplejackCommon::Sitemap::PaginatedCollection do
 
   describe '#each' do
     before do
-      PaginatedTestXml.stub(:base_urls) { ['http://goog.le'] }
-      PaginatedTestXml.stub(:fetch_records) { '<xml>1<xml>' }
-      collection.stub(:yield_from_records) { true }
+      allow(PaginatedTestXml).to receive(:base_urls) { ['http://goog.le'] }
+      allow(PaginatedTestXml).to receive(:fetch_records) { '<xml>1<xml>' }
+      allow(collection).to receive(:yield_from_records) { true }
     end
 
     it 'fetches the entries from the site map' do
-      sitemap_klass.should_receive(:fetch_entries).with('http://goog.le') { ['http://goo.gl/1.xml', 'http://goo.gl/2.xml'] }
+      expect(sitemap_klass).to receive(:fetch_entries).with('http://goog.le') { ['http://goo.gl/1.xml', 'http://goo.gl/2.xml'] }
       collection.each { |record| }
 
-      collection.instance_variable_get(:@entries).should eq ['http://goo.gl/1.xml', 'http://goo.gl/2.xml']
+      expect(collection.instance_variable_get(:@entries)).to eq ['http://goo.gl/1.xml', 'http://goo.gl/2.xml']
     end
 
     it 'fetches the records for the provided strategy then stores them in @records' do
-      xml_1 = mock(:text_xml)
-      xml_2 = mock(:text_xml)
-      sitemap_klass.stub(:fetch_entries) { ['http://goo.gl/1.xml'] }
+      xml_1 = double(:text_xml)
+      xml_2 = double(:text_xml)
+      allow(sitemap_klass).to receive(:fetch_entries) { ['http://goo.gl/1.xml'] }
 
-      PaginatedTestXml.should_receive(:fetch_records).with('http://goo.gl/1.xml') { [xml_1, xml_2] }
+      expect(PaginatedTestXml).to receive(:fetch_records).with('http://goo.gl/1.xml') { [xml_1, xml_2] }
 
       collection.each { |record| }
 
-      collection.instance_variable_get(:@records).should include(xml_1, xml_2)
+      expect(collection.instance_variable_get(:@records)).to include(xml_1, xml_2)
     end
 
     it 'calls yield from records for each entry' do
-      collection.should_receive(:yield_from_records).twice
+      expect(collection).to receive(:yield_from_records).twice
 
-      sitemap_klass.stub(:fetch_entries) { ['http://goo.gl/1.xml', 'http://goo.gl/2.xml'] }
+      allow(sitemap_klass).to receive(:fetch_entries) { ['http://goo.gl/1.xml', 'http://goo.gl/2.xml'] }
       collection.each { |record| }
     end
 
     context 'multiple base urls' do
       before do
-        PaginatedTestXml.stub(:base_urls) { ['http://goog.le', 'http://dnz.com/1'] }
-        collection.stub(:entries) { [] }
+        allow(PaginatedTestXml).to receive(:base_urls) { ['http://goog.le', 'http://dnz.com/1'] }
+        allow(collection).to receive(:entries) { [] }
       end
 
       it 'handles multiple sitemap base_urls' do
-        SupplejackCommon::Sitemap::Base.should_receive(:fetch_entries).with('http://goog.le') { [] }
-        SupplejackCommon::Sitemap::Base.should_receive(:fetch_entries).with('http://dnz.com/1') { [] }
+        expect(SupplejackCommon::Sitemap::Base).to receive(:fetch_entries).with('http://goog.le') { [] }
+        expect(SupplejackCommon::Sitemap::Base).to receive(:fetch_entries).with('http://dnz.com/1') { [] }
         collection.each { |record| }
       end
     end
