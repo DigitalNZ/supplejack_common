@@ -12,7 +12,7 @@ describe SupplejackCommon::Modifiers::AbstractModifier do
 
   describe '#value' do
     it 'initializes a new AttributeValue object' do
-      allow(modifier).to receive(:modify) { 'New Value' }
+      allow(modifier).to receive(:modify).and_return('New Value')
       expect(SupplejackCommon::AttributeValue).to receive(:new).with('New Value') { double(:attr_value) }
       modifier.value
     end

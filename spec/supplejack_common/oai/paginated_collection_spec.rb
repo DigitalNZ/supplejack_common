@@ -11,18 +11,18 @@ describe SupplejackCommon::Oai::PaginatedCollection do
   let(:record) { double(:record).as_null_object }
 
   it 'initializes the client, options and klass' do
-    collection = SupplejackCommon::Oai::PaginatedCollection.new(client, options, klass)
+    collection = described_class.new(client, options, klass)
     expect(collection.client).to eq client
     expect(collection.options).to eq options
     expect(collection.klass).to eq klass
   end
 
   it 'initializes the limit' do
-    expect(SupplejackCommon::Oai::PaginatedCollection.new(client, { limit: 10 }, klass).limit).to eq 10
+    expect(described_class.new(client, { limit: 10 }, klass).limit).to eq 10
   end
 
   describe '#each' do
-    let(:collection) { SupplejackCommon::Oai::PaginatedCollection.new(client, {}, TestSource) }
+    let(:collection) { described_class.new(client, {}, TestSource) }
 
     before do
       list = double(:list, full: [record, record])
@@ -30,7 +30,7 @@ describe SupplejackCommon::Oai::PaginatedCollection do
     end
 
     it 'stops iterating when the limit is reached' do
-      allow(collection).to receive(:limit) { 1 }
+      allow(collection).to receive(:limit).and_return(1)
       records = collection.map { |r| r }
       expect(records.size).to eq 1
     end

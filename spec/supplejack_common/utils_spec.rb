@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Utils do
-  let(:mod) { SupplejackCommon::Utils }
+  let(:mod) { described_class }
 
   describe 'add_html_tag' do
     let(:html) { '<div>Hi</div><span>You</span>' }
@@ -40,7 +40,7 @@ describe SupplejackCommon::Utils do
   describe '#add_namespaces' do
     let(:xml) { '<record>Hi</record>' }
 
-    it 'should enclose the XML in a root node with the namespaces' do
+    it 'encloses the XML in a root node with the namespaces' do
       expect(mod.add_namespaces(xml, 'xmlns:media' => 'http://search.yahoo.com/mrss/')).to eq "<root xmlns:media='http://search.yahoo.com/mrss/'><record>Hi</record></root>"
     end
   end

@@ -49,7 +49,7 @@ describe SupplejackCommon::Xml::Base do
 
   describe '.fetch_records' do
     it 'initializes a set of xml records' do
-      expect(described_class).to receive(:xml_records).with(nil) { [] }
+      expect(described_class).to receive(:xml_records).with(nil).and_return([])
       described_class.fetch_records
     end
   end
@@ -113,7 +113,7 @@ describe SupplejackCommon::Xml::Base do
 
   describe '#url' do
     before do
-      allow_any_instance_of(described_class).to receive(:set_attribute_values) { nil }
+      allow_any_instance_of(described_class).to receive(:set_attribute_values).and_return(nil)
     end
 
     let(:record) { described_class.new(nil, 'http://google.com') }
@@ -130,7 +130,7 @@ describe SupplejackCommon::Xml::Base do
 
   describe '#document' do
     before do
-      allow_any_instance_of(described_class).to receive(:set_attribute_values) { nil }
+      allow_any_instance_of(described_class).to receive(:set_attribute_values).and_return(nil)
     end
 
     let(:document) { double(:document) }
@@ -140,7 +140,7 @@ describe SupplejackCommon::Xml::Base do
       let(:xml) { '<record>Some xml data</record>' }
 
       before do
-        allow(record).to receive(:format) { :xml }
+        allow(record).to receive(:format).and_return(:xml)
         allow(SupplejackCommon::Request).to receive(:get) { xml }
         allow(SupplejackCommon::Utils).to receive(:remove_default_namespace).with(xml) { xml }
       end
@@ -151,7 +151,7 @@ describe SupplejackCommon::Xml::Base do
         expect(record.document).to eq document
       end
 
-      it 'should not add a HTML tag' do
+      it 'does not add a HTML tag' do
         expect(SupplejackCommon::Utils).not_to receive(:add_html_tag)
         record.document
       end
@@ -166,7 +166,7 @@ describe SupplejackCommon::Xml::Base do
       let(:html) { '<html>Some data</html>' }
 
       before do
-        allow(record).to receive(:format) { :html }
+        allow(record).to receive(:format).and_return(:html)
         allow(SupplejackCommon::Request).to receive(:get) { html }
       end
 
@@ -175,7 +175,7 @@ describe SupplejackCommon::Xml::Base do
         record.document
       end
 
-      it 'should parse the HTML document' do
+      it 'parses the HTML document' do
         expect(Nokogiri::HTML).to receive(:parse).with('<html>Some data</html>')
         record.document
       end

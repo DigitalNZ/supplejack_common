@@ -9,16 +9,16 @@ describe ActiveModel::Validations::ExclusionValidator do
       validates :dc_type, exclusion: { in: %w[Images Videos] }
     end
 
-    it 'should be valid when none of the values are part of the list' do
+    it 'is valid when none of the values are part of the list' do
       record = TestJsonExclusion.new('dc_type' => %w[Photos Manuscripts])
       record.set_attribute_values
-      expect(record.valid?).to be_truthy
+      expect(record).to be_valid
     end
 
-    it 'should not be valid when at least one value is part of the list' do
+    it 'is not valid when at least one value is part of the list' do
       record = TestJsonExclusion.new('dc_type' => %w[Videos Photos])
       record.set_attribute_values
-      expect(record.valid?).to be_falsey
+      expect(record).not_to be_valid
     end
   end
 end
