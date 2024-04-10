@@ -31,8 +31,7 @@ describe SupplejackCommon::Oai::PaginatedCollection do
 
     it 'stops iterating when the limit is reached' do
       allow(collection).to receive(:limit) { 1 }
-      records = []
-      collection.each { |r| records << r }
+      records = collection.map { |r| r }
       expect(records.size).to eq 1
     end
 
@@ -42,8 +41,7 @@ describe SupplejackCommon::Oai::PaginatedCollection do
     end
 
     it 'returns a array of TestSource records' do
-      records = []
-      collection.each { |r| records << r }
+      records = collection.map { |r| r }
       expect(records.first).to be_a(TestSource)
     end
   end
