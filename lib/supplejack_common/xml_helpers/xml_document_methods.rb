@@ -39,7 +39,7 @@ module SupplejackCommon
         if url =~ /^https?/
           yield SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
         elsif url =~ /^file/
-          url = url.gsub(%r{file:\/\/}, '')
+          url = url.gsub(%r{file://}, '')
 
           if url.match(/.tar.gz$/) || url.match(/.tgz$/)
             tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(url))

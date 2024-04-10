@@ -37,10 +37,10 @@ module SupplejackCommon
 
     def requires(name, &)
       _required_attributes[name] = begin
-                                     instance_eval(&)
-                                   rescue StandardError
-                                     nil
-                                   end
+        instance_eval(&)
+      rescue StandardError
+        nil
+      end
     end
 
     def requirements
@@ -90,8 +90,8 @@ module SupplejackCommon
         attributes[name] ||= nil
         if builder.errors.any?
           errors[name] = builder.errors
-        else
-          attributes[name] = value if value.present?
+        elsif value.present?
+          attributes[name] = value
         end
       end
     end
@@ -104,6 +104,7 @@ module SupplejackCommon
       rejection_block = _rejection_rules[identifier]
 
       return true if rejection_block.nil?
+
       !instance_eval(&rejection_block)
     end
   end

@@ -37,7 +37,7 @@ describe SupplejackCommon::Oai::PaginatedCollection do
 
     it 'initializes a new TestSource record for every oai record' do
       expect(TestSource).to(receive(:new).twice { record })
-      collection.each { |r| r }
+      collection.each { |r| }
     end
 
     it 'returns a array of TestSource records' do

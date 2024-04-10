@@ -37,7 +37,7 @@ describe SupplejackCommon::AbstractEnrichment do
     let(:enrichment) { described_class.new(:ndha_rights, { priority: -1 }, record, nil) }
 
     it 'has a priority of -1' do
-      expect(enrichment.attributes[:priority]).to eq -1
+      expect(enrichment.attributes[:priority]).to eq(-1)
     end
   end
 

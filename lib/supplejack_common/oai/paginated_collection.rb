@@ -20,12 +20,11 @@ module SupplejackCommon
           record = klass.new(oai_record)
           record.set_attribute_values
 
-          if record.rejected?
-            next
-          else
-            yield(record)
-            @counter += 1
-          end
+          next if record.rejected?
+
+          yield(record)
+          @counter += 1
+
           break if limit.present? && limit == @counter
         end
       end
