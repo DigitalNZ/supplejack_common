@@ -23,7 +23,7 @@ describe SupplejackCommon::XmlResource do
 
     it 'should create a new XpathOption with the namespaces class attribute' do
       allow(subject).to receive(:document) { doc }
-      expect(SupplejackCommon::XpathOption).to receive(:new).with(doc, { xpath: '/doc' }, dc: 'http://purl.org/dc/elements/1.1/') { double(:option).as_null_object }
+      expect(SupplejackCommon::XpathOption).to receive(:new).with(doc, { xpath: '/doc' }, { dc: 'http://purl.org/dc/elements/1.1/' }) { double(:option).as_null_object }
       subject.strategy_value(xpath: '/doc')
     end
   end
