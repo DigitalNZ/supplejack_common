@@ -10,10 +10,11 @@ describe SupplejackCommon::Enrichment do
     end
   end
 
+  subject { described_class.new(:ndha_rights, { block: }, record, TestParser) }
+
   let(:fragment) { double(:fragment, priority: 0) }
   let(:block) { proc {} }
   let(:record) { double(:record, id: 1234, attributes: {}, fragments: [fragment]) }
-  subject { described_class.new(:ndha_rights, { block: }, record, TestParser) }
 
   describe '#initialize' do
     it 'sets the name and block' do
@@ -27,14 +28,14 @@ describe SupplejackCommon::Enrichment do
   end
 
   describe '#url' do
-    it 'should store the enrichment URL' do
+    it 'stores the enrichment URL' do
       subject.url 'http://google.com'
       expect(subject._url).to eq 'http://google.com'
     end
   end
 
   describe '#identifier' do
-    it 'should join the parser class name and the name of the enrichment' do
+    it 'joins the parser class name and the name of the enrichment' do
       expect(subject.identifier).to eq 'test_parser_ndha_rights'
     end
   end
@@ -47,14 +48,14 @@ describe SupplejackCommon::Enrichment do
   end
 
   describe '#format' do
-    it 'should store the enrichment format' do
+    it 'stores the enrichment format' do
       subject.format :xml
       expect(subject._format).to eq :xml
     end
   end
 
   describe '#requires' do
-    it 'should store a requirement with a name and block' do
+    it 'stores a requirement with a name and block' do
       subject.requires :thumbnail_url do
         'Hi'
       end
@@ -86,12 +87,12 @@ describe SupplejackCommon::Enrichment do
   end
 
   describe '#evaluate_block' do
-    it 'should evaluate the block' do
+    it 'evaluates the block' do
       enrichment = described_class.new(:rights, { block: proc { url 'http://google.com' } }, record, TestParser)
       expect(enrichment._url).to eq 'http://google.com'
     end
 
-    it 'should evaluate the get and then the URL' do
+    it 'evaluates the get and then the URL' do
       enrichment = described_class.new(:rights, { block: proc {
                                                            url "http://google.com/#{record.dc_identifier}"
                                                          } }, double(:record, id: 1234, dc_identifier: '1.jpg'), TestParser)
@@ -104,22 +105,22 @@ describe SupplejackCommon::Enrichment do
 
     before do
       allow(record).to receive(:class) { double(:class, _throttle: {}) }
-      allow(TestParser).to receive(:_request_timeout) { nil }
+      allow(TestParser).to receive(:_request_timeout).and_return(nil)
     end
 
-    it 'should store the attributes from the enrichment' do
+    it 'stores the attributes from the enrichment' do
       enrichment.attributes[:title] = 'Title'
       expect(enrichment.resource.attributes[:title]).to eq 'Title'
     end
 
-    it 'should initialize a xml resource object' do
+    it 'initializes a xml resource object' do
       expect(SupplejackCommon::XmlResource).to receive(:new).with('http://goo.gle/1',
                                                                   { attributes: { priority: 1,
                                                                                   source_id: 'ndha_rights' } })
       enrichment.resource
     end
 
-    it 'should initialize a json resource object' do
+    it 'initializes a json resource object' do
       enrichment = described_class.new(:ndha_rights, { block: proc {
                                                                 url 'http://goo.gle/1'; format 'json'
                                                               } }, record, TestParser)
@@ -129,7 +130,7 @@ describe SupplejackCommon::Enrichment do
       enrichment.resource
     end
 
-    it 'should initialize a file resource object' do
+    it 'initializes a file resource object' do
       enrichment = described_class.new(:ndha_rights, { block: proc {
                                                                 url 'http://goo.gle/1'; format 'file'
                                                               } }, record, TestParser)
@@ -139,12 +140,12 @@ describe SupplejackCommon::Enrichment do
       enrichment.resource
     end
 
-    it 'should return a resource object' do
+    it 'returns a resource object' do
       expect(enrichment.resource).to be_a SupplejackCommon::Resource
     end
 
     it 'initializes the resource with throttle options' do
-      allow(TestParser).to receive(:_throttle) { { host: 'gdata.youtube.com', delay: 1 } }
+      allow(TestParser).to receive(:_throttle).and_return({ host: 'gdata.youtube.com', delay: 1 })
       expect(SupplejackCommon::Resource).to receive(:new).with('http://goo.gle/1',
                                                                { attributes: { priority: 1, source_id: 'ndha_rights' },
                                                                  throttling_options: { host: 'gdata.youtube.com',
@@ -153,7 +154,7 @@ describe SupplejackCommon::Enrichment do
     end
 
     it 'initalizes the resource with request timeout options' do
-      allow(TestParser).to receive(:_request_timeout) { 100 }
+      allow(TestParser).to receive(:_request_timeout).and_return(100)
       expect(SupplejackCommon::Resource).to receive(:new).with(anything, hash_including(request_timeout: 100))
       enrichment.resource
     end
@@ -164,7 +165,7 @@ describe SupplejackCommon::Enrichment do
       expect(subject.primary.fragment).to eq fragment
     end
 
-    it 'should initialize a FragmentWrap object' do
+    it 'initializes a FragmentWrap object' do
       expect(subject.primary).to be_a SupplejackCommon::FragmentWrap
     end
   end
@@ -173,29 +174,29 @@ describe SupplejackCommon::Enrichment do
     context 'required attributes' do
       it 'returns true when all required fields are present' do
         subject._required_attributes = { thumbnail_url: 'http://google.com/1', title: 'Hi' }
-        expect(subject.enrichable?).to be_truthy
+        expect(subject).to be_enrichable
       end
 
       it 'handles boolean values correctly' do
         subject._required_attributes = { is_catalog_record: false }
-        expect(subject.enrichable?).to be_truthy
+        expect(subject).to be_enrichable
       end
 
       it 'returns false when a required field is not present' do
         subject._required_attributes = { thumbnail_url: nil, title: 'Hi' }
-        expect(subject.enrichable?).to be_falsey
+        expect(subject).not_to be_enrichable
       end
     end
 
     context 'rejection block' do
       it 'returns false if the rejection block evaluates to true' do
         subject.reject_if { true }
-        expect(subject.enrichable?).to be_falsey
+        expect(subject).not_to be_enrichable
       end
 
       it 'returns true if the rejection block evaluates to false' do
         subject.reject_if { false }
-        expect(subject.enrichable?).to be_truthy
+        expect(subject).to be_enrichable
       end
     end
   end

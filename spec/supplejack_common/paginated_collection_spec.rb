@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe SupplejackCommon::PaginatedCollection do
-  let(:klass) { SupplejackCommon::PaginatedCollection }
+  let(:klass) { described_class }
   let(:collection) do
     klass.new(SupplejackCommon::Base,
               { page_parameter: 'page', type: 'item', per_page_parameter: 'per_page', per_page: 5, page: 1, counter: 1 }, limit: 1)
@@ -29,12 +29,11 @@ describe SupplejackCommon::PaginatedCollection do
 
   describe '#each' do
     before do
-      allow(collection.klass).to receive(:base_urls) { ['http://go.gle/', 'http://dnz.harvest/1'] }
-      allow(collection).to receive(:yield_from_records) { true }
-      allow(collection).to receive(:paginated?) { false }
+      allow(collection.klass).to receive(:base_urls).and_return(['http://go.gle/', 'http://dnz.harvest/1'])
+      allow(collection).to receive_messages(yield_from_records: true, paginated?: false)
     end
 
-    it 'should process all base_urls' do
+    it 'processes all base_urls' do
       expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://go.gle/')
       expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://dnz.harvest/1')
       collection.each {}
@@ -42,13 +41,12 @@ describe SupplejackCommon::PaginatedCollection do
 
     context 'paginated' do
       before do
-        allow(collection).to receive(:paginated?) { true }
-        allow(collection).to receive(:url_options) { { page: 1, per_page: 10 } }
-        allow(collection.klass).to receive(:base_urls) { ['http://go.gle/', 'http://dnz.harvest/1'] }
-        allow(SupplejackCommon::Base).to receive(:total_results) { 1 }
+        allow(collection).to receive_messages(paginated?: true, url_options: { page: 1, per_page: 10 })
+        allow(collection.klass).to receive(:base_urls).and_return(['http://go.gle/', 'http://dnz.harvest/1'])
+        allow(SupplejackCommon::Base).to receive(:total_results).and_return(1)
       end
 
-      it 'should call fetch records with a paginated url' do
+      it 'calls fetch records with a paginated url' do
         expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://go.gle/?page=1&per_page=10')
         expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://dnz.harvest/1?page=1&per_page=10')
         collection.each {}
@@ -70,8 +68,7 @@ describe SupplejackCommon::PaginatedCollection do
   describe '#next_url' do
     context 'paginated' do
       before do
-        allow(collection).to receive(:paginated?) { true }
-        allow(collection).to receive(:url_options) { { page: 1, per_page: 10 } }
+        allow(collection).to receive_messages(paginated?: true, url_options: { page: 1, per_page: 10 })
       end
 
       it 'returns the url with paginated options' do
@@ -82,7 +79,7 @@ describe SupplejackCommon::PaginatedCollection do
         expect(collection.send(:next_url, 'http://go.gle/?sort=asc')).to eq 'http://go.gle/?sort=asc&page=1&per_page=10'
       end
 
-      it 'should call a block if given' do
+      it 'calls a block if given' do
         collec = klass.new(SupplejackCommon::Base, { page_parameter: 'page', type: 'item', block:
           proc { 'http://google.com' } })
         expect(collec.send(:next_url, 'http://go.gle/?sort=asc')).to eq 'http://google.com'
@@ -109,8 +106,7 @@ describe SupplejackCommon::PaginatedCollection do
       let(:collection) { klass.new(SupplejackCommon::Base, params, limit: 1) }
 
       before do
-        allow(SupplejackCommon::Base).to receive(:next_page_token) { 'abc_1234' }
-        allow(SupplejackCommon::Base).to receive(:_document) { true }
+        allow(SupplejackCommon::Base).to receive_messages(next_page_token: 'abc_1234', _document: true)
       end
 
       it 'generates the next url' do
@@ -138,7 +134,7 @@ describe SupplejackCommon::PaginatedCollection do
 
         context 'when the _document is not present' do
           before do
-            allow(SupplejackCommon::Base).to receive(:_document) { nil }
+            allow(SupplejackCommon::Base).to receive(:_document).and_return(nil)
           end
 
           it 'uses the URL it was instantiated with' do
@@ -174,7 +170,7 @@ describe SupplejackCommon::PaginatedCollection do
 
         context 'when the _document is not present' do
           before do
-            allow(SupplejackCommon::Base).to receive(:_document) { nil }
+            allow(SupplejackCommon::Base).to receive(:_document).and_return(nil)
           end
 
           it 'uses the url that it was instantiated with' do
@@ -217,8 +213,7 @@ describe SupplejackCommon::PaginatedCollection do
       let(:collection) { klass.new(SupplejackCommon::Base, params, limit: 1) }
 
       before do
-        allow(SupplejackCommon::Base).to receive(:next_page_token) { 'abc_1234' }
-        allow(SupplejackCommon::Base).to receive(:_document) { true }
+        allow(SupplejackCommon::Base).to receive_messages(next_page_token: 'abc_1234', _document: true)
       end
 
       it 'generates a url with an initial parameter' do
@@ -267,12 +262,12 @@ describe SupplejackCommon::PaginatedCollection do
       end
 
       it 'returns the second page' do
-        allow(collection).to receive(:page) { 6 }
+        allow(collection).to receive(:page).and_return(6)
         expect(collection.send(:current_page)).to eq 2
       end
 
       it 'returns the third page' do
-        allow(collection).to receive(:page) { 11 }
+        allow(collection).to receive(:page).and_return(11)
         expect(collection.send(:current_page)).to eq 3
       end
     end
@@ -280,14 +275,14 @@ describe SupplejackCommon::PaginatedCollection do
 
   describe '#total_pages' do
     it 'returns the total number of pages' do
-      allow(SupplejackCommon::Base).to receive(:total_results) { 40 }
-      allow(collection).to receive(:per_page) { 10 }
+      allow(SupplejackCommon::Base).to receive(:total_results).and_return(40)
+      allow(collection).to receive(:per_page).and_return(10)
       expect(collection.send(:total_pages)).to eq 4
     end
 
     it 'returns the total number of pages even when the last page is not full of records' do
-      allow(SupplejackCommon::Base).to receive(:total_results) { 41 }
-      allow(collection).to receive(:per_page) { 10 }
+      allow(SupplejackCommon::Base).to receive(:total_results).and_return(41)
+      allow(collection).to receive(:per_page).and_return(10)
       expect(collection.send(:total_pages)).to eq 5
     end
   end
@@ -330,7 +325,7 @@ describe SupplejackCommon::PaginatedCollection do
                                                     body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":["a"]}}')
                                            }
 
-          expect(collection.send(:more_results?)).to eq true
+          expect(collection.send(:more_results?)).to be true
         end
 
         it 'returns false when the document returns that there are no hits on the current page' do
@@ -339,7 +334,7 @@ describe SupplejackCommon::PaginatedCollection do
                                                     body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":[]}}')
                                            }
 
-          expect(collection.send(:more_results?)).to eq false
+          expect(collection.send(:more_results?)).to be false
         end
       end
 
@@ -354,13 +349,13 @@ describe SupplejackCommon::PaginatedCollection do
         it 'returns true when the response code is 303' do
           allow(SupplejackCommon::Base).to receive(:_document) { double(:document, code: 303) }
 
-          expect(collection.send(:more_results?)).to eq true
+          expect(collection.send(:more_results?)).to be true
         end
 
         it 'returns false when the response code is not 303' do
           allow(SupplejackCommon::Base).to receive(:_document) { double(:document, code: 200) }
 
-          expect(collection.send(:more_results?)).to eq false
+          expect(collection.send(:more_results?)).to be false
         end
       end
     end

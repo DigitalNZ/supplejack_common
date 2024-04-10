@@ -13,8 +13,8 @@ describe SupplejackCommon::Modifiers do
 
   let(:record) { ModifiersTestParser.new }
 
-  before(:each) do
-    allow(record).to receive(:attributes) { { category: 'Images' } }
+  before do
+    allow(record).to receive(:attributes).and_return({ category: 'Images' })
   end
 
   describe '#get' do

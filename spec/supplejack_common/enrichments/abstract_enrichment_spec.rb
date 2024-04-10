@@ -12,7 +12,7 @@ describe SupplejackCommon::AbstractEnrichment do
       expect(enrichment.primary.fragment).to eq fragment
     end
 
-    it 'should initialize a FragmentWrap object' do
+    it 'initializes a FragmentWrap object' do
       expect(enrichment.primary).to be_a SupplejackCommon::FragmentWrap
     end
   end
@@ -22,7 +22,7 @@ describe SupplejackCommon::AbstractEnrichment do
       expect(enrichment.record_fragment(:ndha).fragment).to eq fragment
     end
 
-    it 'should initialize a FragmentWrap object' do
+    it 'initializes a FragmentWrap object' do
       expect(enrichment.record_fragment(:ndha)).to be_a SupplejackCommon::FragmentWrap
     end
   end

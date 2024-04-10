@@ -3,12 +3,14 @@
 require 'spec_helper'
 
 describe SupplejackCommon::XpathOption do
+  subject { described_class.new(document, options) }
+
   let(:document) { Nokogiri.parse('<?xml version="1.0" ?><items><item><title>Hi</title></item></items>') }
   let(:options) { { xpath: 'table/tr' } }
-  subject { described_class.new(document, options) }
 
   describe '#value' do
     let(:nodes) { double(:nodes, text: 'Value') }
+
     before { allow(subject).to receive(:nodes) { nodes } }
 
     it 'returns the sanitized html from the nodes' do
@@ -21,16 +23,16 @@ describe SupplejackCommon::XpathOption do
     end
 
     it 'returns the node object' do
-      allow(subject).to receive(:options) { { xpath: 'table/tr', object: true } }
+      allow(subject).to receive(:options).and_return({ xpath: 'table/tr', object: true })
       expect(subject.value).to eq nodes
     end
 
     context 'custom sanitization settings' do
       let(:nodes) { double(:nodes, to_html: '<br>Value<br>') }
-      before { allow(subject).to receive(:nodes) { nodes } }
 
       before do
-        allow(subject).to receive(:options) { { sanitize_config: { elements: ['br'] } } }
+        allow(subject).to receive(:nodes) { nodes }
+        allow(subject).to receive(:options).and_return({ sanitize_config: { elements: ['br'] } })
       end
 
       it 'lets you specify what elements not to sanitize' do
@@ -79,18 +81,18 @@ describe SupplejackCommon::XpathOption do
     end
 
     it 'returns all matching nodes for the multiple xpath expressions' do
-      allow(subject).to receive(:options) { { xpath: ['//table/tr', '//div/img'] } }
+      allow(subject).to receive(:options).and_return({ xpath: ['//table/tr', '//div/img'] })
       expect(document).to receive(:xpath).with('//table/tr', {}).and_return([node])
       expect(document).to receive(:xpath).with('//div/img', {}).and_return([node])
       expect(subject.send(:nodes)).to eq [node, node]
     end
 
     it 'returns a empty array when xpath is not defined' do
-      allow(subject).to receive(:options) { { xpath: '' } }
+      allow(subject).to receive(:options).and_return({ xpath: '' })
       expect(subject.send(:nodes)).to eq []
     end
 
-    it 'should add all namespaces to the xpath query' do
+    it 'adds all namespaces to the xpath query' do
       xo = described_class.new(document, { xpath: '//dc:id' }, { dc: 'http://goo.gle/', xsi: 'http://yah.oo' })
       expect(document).to receive(:xpath).with('//dc:id',
                                                { dc: 'http://goo.gle/', xsi: 'http://yah.oo' }).and_return([node])

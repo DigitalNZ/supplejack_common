@@ -9,16 +9,16 @@ describe ActiveModel::Validations::SizeValidator do
       validates :landing_url, size: { maximum: 2 }
     end
 
-    it 'should be valid when it has one value' do
+    it 'is valid when it has one value' do
       record = TestJsonSize.new('landing_url' => ['http://google.com/1'])
       record.set_attribute_values
-      expect(record.valid?).to be_truthy
+      expect(record).to be_valid
     end
 
-    it 'should not be valid when it has more than the maximum' do
+    it 'is not valid when it has more than the maximum' do
       record = TestJsonSize.new('landing_url' => ['http://google.com/1', 'http://google.com/2', 'http://google.com/3'])
       record.set_attribute_values
-      expect(record.valid?).to be_falsey
+      expect(record).not_to be_valid
     end
   end
 
@@ -28,22 +28,22 @@ describe ActiveModel::Validations::SizeValidator do
       validates :landing_url, size: { is: 1 }
     end
 
-    it 'should be valid when it has one value' do
+    it 'is valid when it has one value' do
       record = TestJsonSize.new('landing_url' => ['http://google.com/1'])
       record.set_attribute_values
-      expect(record.valid?).to be_truthy
+      expect(record).to be_valid
     end
 
-    it 'should not be valid when it has 0 values' do
+    it 'is not valid when it has 0 values' do
       record = TestJsonSize.new('landing_url' => [])
       record.set_attribute_values
-      expect(record.valid?).to be_falsey
+      expect(record).not_to be_valid
     end
 
-    it 'should not be valid when it has 2 values' do
+    it 'is not valid when it has 2 values' do
       record = TestJsonSize.new('landing_url' => ['http://google.com/1', 'http://google.com/2'])
       record.set_attribute_values
-      expect(record.valid?).to be_falsey
+      expect(record).not_to be_valid
     end
   end
 end

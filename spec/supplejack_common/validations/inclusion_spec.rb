@@ -9,16 +9,16 @@ describe ActiveModel::Validations::InclusionValidator do
       validates :dc_type, inclusion: { in: %w[Images Videos] }
     end
 
-    it 'should be valid when all values are part of the list' do
+    it 'is valid when all values are part of the list' do
       record = TestJsonInclusion.new('dc_type' => %w[Videos Images])
       record.set_attribute_values
-      expect(record.valid?).to be_truthy
+      expect(record).to be_valid
     end
 
-    it 'should not be valid when at least one value is not part of the list' do
+    it 'is not valid when at least one value is not part of the list' do
       record = TestJsonInclusion.new('dc_type' => %w[Videos Photos])
       record.set_attribute_values
-      expect(record.valid?).to be_falsey
+      expect(record).not_to be_valid
     end
   end
 end

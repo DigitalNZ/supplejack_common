@@ -15,7 +15,7 @@ describe SupplejackCommon::AttributeBuilder do
 
     it 'gets the value from another location' do
       builder = described_class.new(record, :category, xpath: '//category')
-      expect(record).to receive(:strategy_value).with({ xpath: '//category' }) { 'Google' }
+      expect(record).to receive(:strategy_value).with({ xpath: '//category' }).and_return('Google')
       expect(builder.attribute_value).to eq 'Google'
     end
   end
@@ -48,14 +48,14 @@ describe SupplejackCommon::AttributeBuilder do
     end
 
     context 'block does not return an attribute value object' do
-      it 'should create an attribute value object from the block result' do
+      it 'creates an attribute value object from the block result' do
         expect(SupplejackCommon::AttributeValue).to receive(:new).with(%w[1 2 3 1])
         attr_builder.evaluate_attribute_block do
           %w[1 2 3 1]
         end
       end
 
-      it 'should return the attribute valueified array' do
+      it 'returns the attribute valueified array' do
         expect(attr_builder.evaluate_attribute_block do
           %w[1 2 3 1]
         end).to eq %w[1 2 3]
@@ -63,7 +63,7 @@ describe SupplejackCommon::AttributeBuilder do
     end
 
     context 'block returns an attribute value object' do
-      it 'should return the array from the attribute value object' do
+      it 'returns the array from the attribute value object' do
         value = SupplejackCommon::AttributeValue.new(%w[1 2 3 2])
         expect(attr_builder.evaluate_attribute_block do
           value
@@ -72,8 +72,8 @@ describe SupplejackCommon::AttributeBuilder do
     end
 
     context 'block returns nil' do
-      it 'should transform the value' do
-        allow(attr_builder).to receive(:attribute_value) { 'Hi' }
+      it 'transforms the value' do
+        allow(attr_builder).to receive(:attribute_value).and_return('Hi')
         expect(attr_builder.evaluate_attribute_block do
           nil
         end).to eq attr_builder.transform
@@ -86,52 +86,52 @@ describe SupplejackCommon::AttributeBuilder do
 
     it 'splits the value' do
       builder = described_class.new(record, :category, separator: ', ')
-      allow(builder).to receive(:attribute_value) { 'Value1, Value2' }
+      allow(builder).to receive(:attribute_value).and_return('Value1, Value2')
       expect(builder.transform).to eq %w[Value1 Value2]
     end
 
     it 'joins the values' do
       builder = described_class.new(record, :category, join: ', ')
-      allow(builder).to receive(:attribute_value) { %w[Value1 Value2] }
+      allow(builder).to receive(:attribute_value).and_return(%w[Value1 Value2])
       expect(builder.transform).to eq ['Value1, Value2']
     end
 
     it 'removes any trailing and leading characters' do
-      allow(builder).to receive(:attribute_value) { ' Hi ' }
+      allow(builder).to receive(:attribute_value).and_return(' Hi ')
       expect(builder.transform).to eq ['Hi']
     end
 
     it 'removes any html' do
-      allow(builder).to receive(:attribute_value) { "<div id='top'>Stripped</div>" }
+      allow(builder).to receive(:attribute_value).and_return("<div id='top'>Stripped</div>")
       expect(builder.transform).to eq ['Stripped']
     end
 
     it 'truncates the value to 10 charachters' do
       builder = described_class.new(record, :category, truncate: 10)
-      allow(builder).to receive(:attribute_value) { 'Some random text longer that 10 charachters' }
+      allow(builder).to receive(:attribute_value).and_return('Some random text longer that 10 charachters')
       expect(builder.transform).to eq ['Some ra...']
     end
 
     it 'parses a date' do
       builder = described_class.new(record, :category, date: true)
-      allow(builder).to receive(:attribute_value) { 'circa 1994' }
+      allow(builder).to receive(:attribute_value).and_return('circa 1994')
       expect(builder.transform).to eq [Time.utc(1994, 1, 1, 12)]
     end
 
     it 'maps the value to another value' do
       builder = described_class.new(record, :category, mappings: { /lucky/ => 'unlucky' })
-      allow(builder).to receive(:attribute_value) { 'Some lucky squirrel' }
+      allow(builder).to receive(:attribute_value).and_return('Some lucky squirrel')
       expect(builder.transform).to eq ['Some unlucky squirrel']
     end
 
     it 'removes any duplicates' do
-      allow(builder).to receive(:attribute_value) { %w[Images Images Videos] }
+      allow(builder).to receive(:attribute_value).and_return(%w[Images Images Videos])
       expect(builder.transform).to eq %w[Images Videos]
     end
 
     it 'compacts whitespace' do
       builder = described_class.new(record, :category, compact_whitespace: true)
-      allow(builder).to receive(:attribute_value) { 'Whats   going on   with this     whitespace' }
+      allow(builder).to receive(:attribute_value).and_return('Whats   going on   with this     whitespace')
       expect(builder.transform).to eq ['Whats going on with this whitespace']
     end
   end

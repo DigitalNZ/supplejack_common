@@ -16,13 +16,13 @@ describe SupplejackCommon::Resource do
   end
 
   describe '#strategy_value' do
-    it 'should throw a not implemented error' do
+    it 'throws a not implemented error' do
       expect { resource.strategy_value({}) }.to raise_error(NotImplementedError)
     end
   end
 
   describe '#fetch' do
-    it 'should throw a not implemented error' do
+    it 'throws a not implemented error' do
       expect { resource.fetch('hi') }.to raise_error(NotImplementedError)
     end
   end
