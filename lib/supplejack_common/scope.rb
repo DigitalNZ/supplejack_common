@@ -13,10 +13,10 @@ module SupplejackCommon
       if_options = new_options[:if]
 
       if if_options.is_a?(Hash)
-        new_options[:if] = Hash[if_options.map do |key, value|
+        new_options[:if] = if_options.to_h do |key, value|
           value = options.values.first if options.keys.first == value
           [key, value]
-        end]
+        end
       end
 
       @klass.send(:attribute, name, new_options)
