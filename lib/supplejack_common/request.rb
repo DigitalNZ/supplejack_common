@@ -61,7 +61,7 @@ module SupplejackCommon
                       :get
                     end
 
-        RestClient::Request.execute(method: http_verb, url: url, timeout: request_timeout, headers: headers, max_redirects: 0) do |response, _request, _result|
+        RestClient::Request.execute(method: http_verb, url:, timeout: request_timeout, headers:, max_redirects: 0) do |response, _request, _result|
           response
         end
       end
@@ -94,10 +94,10 @@ module SupplejackCommon
         ::Sidekiq.logger.info "Retrying RestClient request #{url}" if defined?(Sidekiq)
         RestClient::Request.execute(
           method: :get,
-          url: url,
+          url:,
           timeout: request_timeout,
-          headers: headers,
-          proxy: proxy
+          headers:,
+          proxy:
         )
       end
     end

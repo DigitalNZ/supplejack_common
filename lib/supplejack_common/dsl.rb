@@ -56,7 +56,7 @@ module SupplejackCommon
       end
 
       def basic_auth(username, password)
-        _basic_auth[identifier] = { username: username, password: password }
+        _basic_auth[identifier] = { username:, password: }
       end
 
       def paginate(options = {}, &block)

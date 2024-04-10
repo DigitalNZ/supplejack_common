@@ -25,9 +25,9 @@ describe SupplejackCommon::DSL do
 
   describe '.http_headers' do
     it 'stores the header name and value' do
-      subject.http_headers('Authorization': 'Token token="token"', 'x-api-key': 'gus')
+      subject.http_headers(Authorization: 'Token token="token"', 'x-api-key': 'gus')
 
-      expect(subject._http_headers).to eq('Authorization': 'Token token="token"', 'x-api-key': 'gus')
+      expect(subject._http_headers).to eq(Authorization: 'Token token="token"', 'x-api-key': 'gus')
     end
   end
 
@@ -99,7 +99,7 @@ describe SupplejackCommon::DSL do
 
       it 'adds a enrichment definition' do
         subject.enrichment :ndha_rights, &block
-        expect(subject.enrichment_definitions[:ndha_rights]).to eq(block: block)
+        expect(subject.enrichment_definitions[:ndha_rights]).to eq(block:)
       end
     end
   end

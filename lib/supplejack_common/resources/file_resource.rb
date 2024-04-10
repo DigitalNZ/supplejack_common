@@ -29,14 +29,12 @@ module SupplejackCommon
     end
 
     def dimensions
-      @dimensions ||= begin
-        # Dimensions gem doesn't yet have the ability to read a file from memory, so we have to flush the
-        # contents of the Tempfile to the OS so that it reads the dimensions correctly
-        if document
-          document.flush
-          Dimensions.dimensions(document)
-        end
-      end
+      # Dimensions gem doesn't yet have the ability to read a file from memory, so we have to flush the
+      # contents of the Tempfile to the OS so that it reads the dimensions correctly
+      @dimensions ||= if document
+                        document.flush
+                        Dimensions.dimensions(document)
+                      end
     end
 
     def height

@@ -38,7 +38,7 @@ describe SupplejackCommon::FileResource do
     end
 
     it 'only generates the dimensions once' do
-      expect(Dimensions).to receive(:dimensions).once { [200, 100] }
+      expect(Dimensions).to(receive(:dimensions).once { [200, 100] })
       subject.dimensions
       subject.dimensions
     end
