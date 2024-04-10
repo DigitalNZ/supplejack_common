@@ -5,9 +5,6 @@ require 'spec_helper'
 require_relative 'parsers/xml_tar_parser'
 
 describe SupplejackCommon::Xml::Base do
-  before do
-  end
-
   let!(:record) { XmlTarParser.records.first }
 
   context 'default values' do

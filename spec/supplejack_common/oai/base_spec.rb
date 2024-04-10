@@ -40,7 +40,7 @@ describe SupplejackCommon::Oai::Base do
     let(:client) { double(:client) }
     let!(:paginator) { double(:paginator) }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:client) { client }
     end
 
@@ -103,7 +103,7 @@ describe SupplejackCommon::Oai::Base do
     end
 
     it 'returns nil when response is nil' do
-      allow(described_class).to receive(:response) { nil }
+      allow(described_class).to receive(:response).and_return(nil)
       expect(described_class.resumption_token).to be_nil
     end
   end
@@ -129,7 +129,7 @@ describe SupplejackCommon::Oai::Base do
     let(:record) { described_class.new(xml) }
     let(:document) { double(:document).as_null_object }
 
-    it 'should parse the xml with Nokogiri' do
+    it 'parses the xml with Nokogiri' do
       expect(Nokogiri::XML).to receive(:parse).with(xml) { document }
       expect(record.document).to eq document
     end
@@ -149,27 +149,27 @@ describe SupplejackCommon::Oai::Base do
       allow(record).to receive(:document) {
                          Nokogiri.parse('<?xml version="1.0"?><record><header status="deleted"></header></record>')
                        }
-      expect(record.deletable?).to be_truthy
+      expect(record).to be_deletable
     end
 
     it 'returns false when header does not have deleted attribute' do
       allow(record).to receive(:document) { Nokogiri.parse('<?xml version="1.0"?><record><header></header></record>') }
-      expect(record.deletable?).to be_falsey
+      expect(record).not_to be_deletable
     end
 
     it 'is not deleteable if there are no deletion rules' do
-      allow(described_class).to receive(:deletion_rules) { nil }
-      expect(record.deletable?).to be_falsey
+      allow(described_class).to receive(:deletion_rules).and_return(nil)
+      expect(record).not_to be_deletable
     end
 
     it 'is deletable if the block evals to true' do
       allow(described_class).to receive(:deletion_rules) { proc { true } }
-      expect(record.deletable?).to be_truthy
+      expect(record).to be_deletable
     end
 
     it 'is not deletable if the block evals to true' do
       described_class.delete_if { false }
-      expect(record.deletable?).to be_falsey
+      expect(record).not_to be_deletable
     end
   end
 end

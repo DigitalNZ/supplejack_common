@@ -15,7 +15,7 @@ describe SupplejackCommon::Modifiers::WhitespaceCompactor do
     let(:node) { double(:node) }
 
     it 'returns a compacted array of values' do
-      allow(subject).to receive(:original_value) { ['Dogs   Hotels  - foo', 'Job   blah'] }
+      allow(subject).to receive(:original_value).and_return(['Dogs   Hotels  - foo', 'Job   blah'])
       expect(subject.modify).to eq ['Dogs Hotels - foo', 'Job blah']
     end
 

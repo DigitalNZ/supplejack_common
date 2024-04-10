@@ -15,7 +15,7 @@ describe SupplejackCommon::Modifiers::WhitespaceStripper do
     let(:node) { double(:node) }
 
     it 'returns a stripped array of values' do
-      allow(subject).to receive(:original_value) { [' Dogs ', ' cats '] }
+      allow(subject).to receive(:original_value).and_return([' Dogs ', ' cats '])
       expect(subject.modify).to eq %w[Dogs cats]
     end
 

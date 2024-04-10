@@ -33,14 +33,14 @@ describe SupplejackCommon::XmlDocumentMethods do
       klass.xml_records('url')
     end
 
-    it 'should set the total results if the xpath expression returns xpath node' do
-      allow(klass).to receive(:pagination_options) { { total_selector: '/items/item/total' } }
+    it 'sets the total results if the xpath expression returns xpath node' do
+      allow(klass).to receive(:pagination_options).and_return({ total_selector: '/items/item/total' })
       klass.xml_records('url')
       expect(klass._total_results).not_to be_nil
     end
 
-    it 'should set the total results if the xpath expression returns string' do
-      allow(klass).to receive(:pagination_options) { { total_selector: 'normalize-space(/items/item/total)' } }
+    it 'sets the total results if the xpath expression returns string' do
+      allow(klass).to receive(:pagination_options).and_return({ total_selector: 'normalize-space(/items/item/total)' })
       klass.xml_records('url')
       expect(klass._total_results).not_to be_nil
     end

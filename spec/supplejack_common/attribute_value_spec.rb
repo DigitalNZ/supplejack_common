@@ -21,22 +21,22 @@ describe SupplejackCommon::AttributeValue do
       expect(value.original_value).to eq ['ahoy']
     end
 
-    it 'should deep clone th original_value' do
+    it 'deeps clone th original_value' do
       expect(described_class).to receive(:deep_clone).with(['books'])
       value = described_class.new('books')
     end
 
-    it 'should act as a set' do
+    it 'acts as a set' do
       value = described_class.new(%w[1 1])
       expect(value.original_value).to eq ['1']
     end
 
-    it 'should work with the boolean value false' do
+    it 'works with the boolean value false' do
       value = described_class.new(false)
       expect(value.original_value).to eq [false]
     end
 
-    it 'should work with the boolean value true' do
+    it 'works with the boolean value true' do
       value = described_class.new(true)
       expect(value.original_value).to eq [true]
     end
@@ -44,18 +44,18 @@ describe SupplejackCommon::AttributeValue do
 
   describe 'present?' do
     it 'returns true when it has any value' do
-      allow(value).to receive(:original_value) { ['Images'] }
-      expect(value.present?).to be_truthy
+      allow(value).to receive(:original_value).and_return(['Images'])
+      expect(value).to be_present
     end
 
     it "returns false when it doesn't have any value" do
-      allow(value).to receive(:original_value) { [] }
-      expect(value.present?).to be_falsey
+      allow(value).to receive(:original_value).and_return([])
+      expect(value).not_to be_present
     end
   end
 
   describe '#downcase' do
-    it 'should downcase every value' do
+    it 'downcases every value' do
       value = described_class.new(%w[Images Videos])
       expect(value.downcase.original_value).to eq %w[images videos]
     end
@@ -87,12 +87,12 @@ describe SupplejackCommon::AttributeValue do
       let(:value) { described_class.new('Images') }
 
       it 'returns true' do
-        expect(value.includes?('Images')).to be_truthy
-        expect(value.include?('Images')).to be_truthy
+        expect(value).to be_includes('Images')
+        expect(value).to include('Images')
       end
 
       it 'returns false' do
-        expect(value.includes?('Videos')).to be_falsey
+        expect(value).not_to be_includes('Videos')
       end
     end
 
@@ -100,11 +100,11 @@ describe SupplejackCommon::AttributeValue do
       let(:value) { described_class.new('Foxes and cats') }
 
       it 'returns true' do
-        expect(value.includes?(/Fox/)).to be_truthy
+        expect(value).to be_includes(/Fox/)
       end
 
       it 'returns false' do
-        expect(value.includes?(/Tiger/)).to be_falsey
+        expect(value).not_to be_includes(/Tiger/)
       end
     end
   end
@@ -120,7 +120,7 @@ describe SupplejackCommon::AttributeValue do
     end
 
     it 'handles fixnums' do
-      expect { described_class.deep_clone([1, 2]) }.to_not raise_error
+      expect { described_class.deep_clone([1, 2]) }.not_to raise_error
     end
   end
 end

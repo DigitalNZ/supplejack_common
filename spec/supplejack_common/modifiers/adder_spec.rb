@@ -12,7 +12,7 @@ describe SupplejackCommon::Modifiers::Adder do
     end
 
     it 'adds an array of values to the original_value' do
-      allow(replacer).to receive(:new_value) { %w[Videos Audio] }
+      allow(replacer).to receive(:new_value).and_return(%w[Videos Audio])
       expect(replacer.modify).to eq %w[Images Videos Audio]
     end
   end

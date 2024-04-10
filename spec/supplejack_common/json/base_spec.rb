@@ -104,6 +104,7 @@ describe SupplejackCommon::Json::Base do
 
   describe '.total_results' do
     let(:json) { { 'description' => 'Some json!', 'total_results_selector' => 500 }.to_json }
+
     it 'returns the total results from the json document' do
       described_class._throttle = {}
       described_class.http_headers('Authorization' => 'Token token="token"', 'x-api-key' => 'gus')
@@ -116,6 +117,7 @@ describe SupplejackCommon::Json::Base do
 
   describe '.next_page_token' do
     let(:json) { { 'description' => 'Some json!', 'your_next_page' => '1234' }.to_json }
+
     it 'returns the total results from the json document' do
       described_class._throttle = {}
       described_class.http_headers('Authorization' => 'Token token="token"', 'x-api-key' => 'gus')
@@ -130,7 +132,7 @@ describe SupplejackCommon::Json::Base do
     let(:document) { { 'location' => 1234 } }
 
     before do
-      allow(described_class).to receive(:records_json) { [{ 'title' => 'Record1' }] }
+      allow(described_class).to receive(:records_json).and_return([{ 'title' => 'Record1' }])
       allow(described_class).to receive(:document) { document }
     end
 
@@ -141,11 +143,11 @@ describe SupplejackCommon::Json::Base do
 
     context 'pagination options defined' do
       before do
-        allow(described_class).to receive(:pagination_options) { { total_selector: 'totalResults' } }
+        allow(described_class).to receive(:pagination_options).and_return({ total_selector: 'totalResults' })
       end
 
-      it 'should set the total results if the json expression returns string' do
-        expect(JsonPath).to receive(:on).with(described_class._document, 'totalResults') { [22] }
+      it 'sets the total results if the json expression returns string' do
+        expect(JsonPath).to receive(:on).with(described_class._document, 'totalResults').and_return([22])
         expect(described_class.total_results('totalResults')).to eq 22
       end
     end
@@ -186,7 +188,7 @@ describe SupplejackCommon::Json::Base do
   describe '#full_raw_data' do
     let(:record) { described_class.new('title' => 'Hi') }
 
-    it 'should convert the raw_data to json' do
+    it 'converts the raw_data to json' do
       expect(record.full_raw_data).to eq({ 'title' => 'Hi' }.to_json)
     end
   end

@@ -8,7 +8,7 @@ describe SupplejackCommon::Modifiers::FinderWith do
 
   describe 'modify' do
     context 'fetch only 1' do
-      before { allow(replacer).to receive(:scope) { :first } }
+      before { allow(replacer).to receive(:scope).and_return(:first) }
 
       it 'returns the first result found' do
         expect(replacer.modify).to eq ['Data']
@@ -16,7 +16,7 @@ describe SupplejackCommon::Modifiers::FinderWith do
     end
 
     context 'fetch all' do
-      before { allow(replacer).to receive(:scope) { :all } }
+      before { allow(replacer).to receive(:scope).and_return(:all) }
 
       it 'returns the first result found' do
         expect(replacer.modify).to eq %w[Data Dataset]
