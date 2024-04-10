@@ -90,17 +90,17 @@ describe SupplejackCommon::Request do
 
     it 'should do a POST request initially and NOT follow redirects' do
       expect(RestClient::Request).to receive(:execute).with(method: :post,
-                                                        url: 'http://google.com/collection/_scroll',
-                                                        timeout: 10_000,
-                                                        headers: { 'x-api-key' => 'key' }, max_redirects: 0)
+                                                            url: 'http://google.com/collection/_scroll',
+                                                            timeout: 10_000,
+                                                            headers: { 'x-api-key' => 'key' }, max_redirects: 0)
       initial_request.scroll
     end
 
     it 'should follow up with subsequent GET requests and NOT follow redirects' do
       expect(RestClient::Request).to receive(:execute).with(method: :get,
-                                                        url: 'http://google.com/collection/scroll',
-                                                        timeout: 10_000,
-                                                        headers: { 'x-api-key' => 'key' }, max_redirects: 0)
+                                                            url: 'http://google.com/collection/scroll',
+                                                            timeout: 10_000,
+                                                            headers: { 'x-api-key' => 'key' }, max_redirects: 0)
       subsequent_request.scroll
     end
   end
@@ -158,10 +158,10 @@ describe SupplejackCommon::Request do
   describe '#request_url' do
     it 'should request the url with the given timeout' do
       expect(RestClient::Request).to receive(:execute).with(method: :get,
-                                                        url: 'http://google.com',
-                                                        timeout: 60_000,
-                                                        headers: { 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken' },
-                                                        proxy: nil)
+                                                            url: 'http://google.com',
+                                                            timeout: 60_000,
+                                                            headers: { 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken' },
+                                                            proxy: nil)
       request_obj = described_class.new('http://google.com', 60_000, [{ host: 'google.com', delay: 5 }], 'x-api-key' => 'key', 'Authorization' => 'tokentokentoken')
       request_obj.request_url
     end

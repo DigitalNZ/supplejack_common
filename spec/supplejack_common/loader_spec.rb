@@ -16,7 +16,7 @@ describe SupplejackCommon::Loader do
     end
 
     it 'memoizes the path' do
-      expect(parser).to receive(:file_name).once { '/path' }
+      expect(parser).to(receive(:file_name).once { '/path' })
       loader.path
       loader.path
     end

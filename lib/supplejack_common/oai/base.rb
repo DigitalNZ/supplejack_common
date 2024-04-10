@@ -67,9 +67,7 @@ module SupplejackCommon
       end
 
       def document
-        @document ||= begin
-          doc = Nokogiri::XML.parse(original_xml)
-        end
+        @document ||= doc = Nokogiri::XML.parse(original_xml)
       end
 
       def deletable?

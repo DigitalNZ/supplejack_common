@@ -8,7 +8,7 @@ describe SupplejackCommon::Oai::Base do
   context 'normal records' do
     before do
       body = File.read(File.dirname(__FILE__) + '/source_data/oai_library.xml')
-      stub_request(:get, 'http://library.org/?metadataPrefix=oai_dc&verb=ListRecords').to_return(status: 200, body: body)
+      stub_request(:get, 'http://library.org/?metadataPrefix=oai_dc&verb=ListRecords').to_return(status: 200, body:)
 
       allow_any_instance_of(OAI::Client).to receive(:strip_invalid_utf_8_chars).with(body).and_return(body)
     end
@@ -39,7 +39,7 @@ describe SupplejackCommon::Oai::Base do
   context 'incremental harvest' do
     before do
       body = File.read(File.dirname(__FILE__) + '/source_data/oai_library_inc.xml')
-      stub_request(:get, 'http://library.org/?metadataPrefix=oai_dc&verb=ListRecords&from=2012-11-10').to_return(status: 200, body: body)
+      stub_request(:get, 'http://library.org/?metadataPrefix=oai_dc&verb=ListRecords&from=2012-11-10').to_return(status: 200, body:)
 
       allow_any_instance_of(OAI::Client).to receive(:strip_invalid_utf_8_chars).with(body).and_return(body)
     end

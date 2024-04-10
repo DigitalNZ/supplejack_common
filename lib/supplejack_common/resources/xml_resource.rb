@@ -10,9 +10,7 @@ module SupplejackCommon
     end
 
     def document
-      @document ||= begin
-        Nokogiri::XML.parse(fetch_document)
-      end
+      @document ||= Nokogiri::XML.parse(fetch_document)
     end
 
     def strategy_value(options)

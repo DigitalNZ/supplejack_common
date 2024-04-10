@@ -45,9 +45,9 @@ describe SupplejackCommon::Json::Base do
     context 'json web document' do
       before do
         described_class._throttle = {}
-        described_class.http_headers('Authorization': 'Token token="token"', 'x-api-key': 'gus')
+        described_class.http_headers(Authorization: 'Token token="token"', 'x-api-key': 'gus')
         described_class._request_timeout = 60_000
-        expect(SupplejackCommon::Request).to receive(:get).with('http://google.com', 60_000, {}, { 'Authorization': 'Token token="token"', 'x-api-key': 'gus' }, nil) { json }
+        expect(SupplejackCommon::Request).to receive(:get).with('http://google.com', 60_000, {}, { Authorization: 'Token token="token"', 'x-api-key': 'gus' }, nil) { json }
       end
 
       it 'stores the raw json' do

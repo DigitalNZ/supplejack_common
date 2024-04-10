@@ -22,7 +22,7 @@ module SupplejackCommon
                            elsif url =~ /^https?/
                              SupplejackCommon::Request.get(url, _request_timeout, _throttle, _http_headers, _proxy)
                            elsif url =~ /^file/
-                             File.read(url.gsub(/file:\/\//, ''))
+                             File.read(url.gsub('file://', ''))
                            end
           self._document = _pre_process_block.call(_document) if _pre_process_block
           _document

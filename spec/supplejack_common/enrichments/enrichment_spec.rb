@@ -13,7 +13,7 @@ describe SupplejackCommon::Enrichment do
   let(:fragment) { double(:fragment, priority: 0) }
   let(:block) { proc {} }
   let(:record) { double(:record, id: 1234, attributes: {}, fragments: [fragment]) }
-  subject { described_class.new(:ndha_rights, { block: block }, record, TestParser) }
+  subject { described_class.new(:ndha_rights, { block: }, record, TestParser) }
 
   describe '#initialize' do
     it 'sets the name and block' do
@@ -197,8 +197,8 @@ describe SupplejackCommon::Enrichment do
 
   describe '#http_headers' do
     it 'returns the value of the http_headers' do
-      subject.http_headers('Authorization': 'hello')
-      expect(subject._http_headers).to eq('Authorization': 'hello')
+      subject.http_headers(Authorization: 'hello')
+      expect(subject._http_headers).to eq(Authorization: 'hello')
     end
   end
 end

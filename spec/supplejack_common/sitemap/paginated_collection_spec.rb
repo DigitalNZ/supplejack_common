@@ -29,8 +29,8 @@ describe SupplejackCommon::Sitemap::PaginatedCollection do
     PaginatedTestXml.namespaces page: 'http://www.w3.org/1999/xhtml'
 
     expect(collection.sitemap_klass).to receive(:_namespaces=).with(hash_including(
-                                                                  { page: 'http://www.w3.org/1999/xhtml' }
-                                                                ))
+                                                                      { page: 'http://www.w3.org/1999/xhtml' }
+                                                                    ))
 
     described_class.new(PaginatedTestXml)
   end
