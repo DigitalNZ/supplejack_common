@@ -15,6 +15,7 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+/spec/examples.txt
 
 .DS_Store
 /supplejack_common.sublime-workspace
