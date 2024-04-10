@@ -8,13 +8,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-  
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.2
+          ruby-version: 3.2.2
           bundler-cache: true
-  
+
       - name: Rubocop
         run: |
           bundle exec rubocop
@@ -31,13 +31,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-  
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.2
+          ruby-version: 3.2.2
           bundler-cache: true
-  
+
       - name: Run RSpec unit tests
         run: |
           bundle exec rspec spec --fail-fast --format=progress
@@ -52,5 +52,5 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7.2
+        ruby-version: 3.2.2
         bundler-cache: true
