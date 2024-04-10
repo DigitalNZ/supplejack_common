@@ -41,8 +41,9 @@ describe SupplejackCommon::Modifiers do
 
   describe '#concept_lookup' do
     before do
-      SupplejackApi::Concept.stub_chain(:where, :map).and_return([1, 2, 3])
+      allow(SupplejackApi::Concept).to receive_message_chain(:where, :map).and_return([1, 2, 3])
     end
+
     it 'return concepts that has fragments with sameAs field contains lookup url' do
       values = record.concept_lookup('http://localhost.com')
       expect(values.to_a).to eq [1, 2, 3]

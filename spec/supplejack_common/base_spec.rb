@@ -129,7 +129,7 @@ describe SupplejackCommon::Base do
       before { allow(Snippet).to receive(:find_by_name) }
 
       it 'finds the snippet by name and environment' do
-        described_class.stub_chain(:module_parent, :name) { 'OAI::Staging' }
+        allow(described_class).to receive_message_chain(:module_parent, :name) { 'OAI::Staging' }
         expect(Snippet).to receive(:find_by_name).with('snip', :staging)
         described_class.include_snippet('snip')
       end
