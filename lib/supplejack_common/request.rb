@@ -22,9 +22,9 @@ module SupplejackCommon
       @url = url
 
       options ||= []
-      @throttling_options = Hash[options.map do |option|
+      @throttling_options = options.to_h do |option|
         [option[:host], option[:delay]]
-      end]
+      end
       @request_timeout = request_timeout || 60_000
       @headers = headers
       @proxy = proxy
