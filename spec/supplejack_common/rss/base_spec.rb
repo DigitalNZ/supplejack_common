@@ -15,7 +15,7 @@ describe SupplejackCommon::Rss::Base do
     let(:node) { double(:node).as_null_object }
     let(:url) { 'http://goo.gle' }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:index_document) { doc }
       described_class._namespaces = { dc: 'http://dc.com' }
       allow(doc).to receive(:xpath).with('//item', anything) { [node] }
@@ -52,7 +52,7 @@ describe SupplejackCommon::Rss::Base do
     let(:record) { described_class.new(xml) }
     let(:document) { double(:document).as_null_object }
 
-    it 'should parse the xml with Nokogiri' do
+    it 'parses the xml with Nokogiri' do
       expect(Nokogiri::XML).to receive(:parse).with(xml) { document }
       expect(record.document).to eq document
     end

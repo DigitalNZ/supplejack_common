@@ -7,9 +7,9 @@ describe SupplejackCommon::Loader do
     double(:parser, strategy: 'json', name: 'Europeana', content: 'class Europeana < SupplejackCommon::Json::Base; end',
                     file_name: 'europeana.rb')
   end
-  let(:loader) { SupplejackCommon::Loader.new(parser, 'staging') }
+  let(:loader) { described_class.new(parser, 'staging') }
 
-  before(:each) do
+  before do
     SupplejackCommon.parser_base_path = File.dirname(__FILE__) + '/tmp'
   end
 
@@ -19,14 +19,14 @@ describe SupplejackCommon::Loader do
     end
 
     it 'memoizes the path' do
-      expect(parser).to(receive(:file_name).once { '/path' })
+      expect(parser).to(receive(:file_name).once.and_return('/path'))
       loader.path
       loader.path
     end
   end
 
   describe '#content_with_encoding' do
-    it 'should add a utf-8 encoding to the top of the file' do
+    it 'adds a utf-8 encoding to the top of the file' do
       expect(loader.content_with_encoding).to eq "# encoding: utf-8\r\nmodule LoadedParser::Staging\nclass Europeana < SupplejackCommon::Json::Base; end\nend"
     end
   end
@@ -40,30 +40,30 @@ describe SupplejackCommon::Loader do
 
   describe '#parser_class_name' do
     it 'removes whitespace from the name' do
-      allow(parser).to receive(:name) { 'NatLib Pages' }
+      allow(parser).to receive(:name).and_return('NatLib Pages')
       expect(loader.parser_class_name).to eq 'NatLibPages'
     end
 
     it 'capitalizes each word' do
-      allow(parser).to receive(:name) { 'nlnzcat catalog' }
+      allow(parser).to receive(:name).and_return('nlnzcat catalog')
       expect(loader.parser_class_name).to eq 'NlnzcatCatalog'
     end
   end
 
   describe '#parser_class_name_with_module' do
     it 'removes whitespace from the name' do
-      allow(parser).to receive(:name) { 'NatLib Pages' }
+      allow(parser).to receive(:name).and_return('NatLib Pages')
       expect(loader.parser_class_name_with_module).to eq 'LoadedParser::Staging::NatLibPages'
     end
 
     it 'capitalizes each word' do
-      allow(parser).to receive(:name) { 'nlnzcat catalog' }
+      allow(parser).to receive(:name).and_return('nlnzcat catalog')
       expect(loader.parser_class_name_with_module).to eq 'LoadedParser::Staging::NlnzcatCatalog'
     end
   end
 
   describe '#parser_class' do
-    before(:each) do
+    before do
       loader.load_parser
     end
 
@@ -97,12 +97,12 @@ describe SupplejackCommon::Loader do
 
     it 'returns the @loaded value' do
       loader.instance_variable_set('@loaded', true)
-      expect(loader.loaded?).to be_truthy
+      expect(loader).to be_loaded
     end
   end
 
   describe 'clear_parser_class_definitions' do
-    before(:each) do
+    before do
       loader.load_parser
     end
 

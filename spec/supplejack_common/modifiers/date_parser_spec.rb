@@ -14,23 +14,22 @@ describe SupplejackCommon::Modifiers::DateParser do
 
   describe '#modify' do
     it 'parses the date with Chronic' do
-      allow(parse_date).to receive(:original_value) { ['1st of January 1997'] }
+      allow(parse_date).to receive(:original_value).and_return(['1st of January 1997'])
       expect(parse_date.modify).to eq [Time.utc(1997, 1, 1, 12)]
     end
 
     it 'parses the date with a specific format' do
-      allow(parse_date).to receive(:original_value) { ['01/12/1997'] }
-      allow(parse_date).to receive(:format) { '%d/%m/%Y' }
+      allow(parse_date).to receive_messages(original_value: ['01/12/1997'], format: '%d/%m/%Y')
       expect(parse_date.modify).to eq [Time.utc(1997, 12, 1)]
     end
 
     it 'parses a circa date' do
-      allow(parse_date).to receive(:original_value) { ['circa 1994'] }
+      allow(parse_date).to receive(:original_value).and_return(['circa 1994'])
       expect(parse_date.modify).to eq [Time.utc(1994, 1, 1, 12)]
     end
 
     it 'parses a decade date (1940s)' do
-      allow(parse_date).to receive(:original_value) { ['1940s'] }
+      allow(parse_date).to receive(:original_value).and_return(['1940s'])
       expect(parse_date.modify).to eq [Time.utc(1940, 1, 1, 12)]
     end
   end
@@ -43,7 +42,7 @@ describe SupplejackCommon::Modifiers::DateParser do
     end
 
     it 'rescues from a DateTime exception' do
-      allow(parse_date).to receive(:format) { '%d %m %Y' }
+      allow(parse_date).to receive(:format).and_return('%d %m %Y')
       allow(DateTime).to receive(:strptime).and_raise(StandardError.new('ArgumentError - invalid date'))
       parse_date.parse_date('2009/1/1')
       expect(parse_date.errors).to eq ["Cannot parse date: '2009/1/1', ArgumentError - invalid date"]

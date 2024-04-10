@@ -6,7 +6,7 @@ class Snippet
 end
 
 describe SupplejackCommon::Base do
-  before(:each) do
+  before do
     described_class._base_urls[described_class.identifier] = []
     described_class._attribute_definitions[described_class.identifier] = {}
     described_class._basic_auth[described_class.identifier] = nil
@@ -23,7 +23,7 @@ describe SupplejackCommon::Base do
 
     it 'memoizes the identifier' do
       LibraryParser.instance_variable_set('@identifier', nil)
-      expect(LibraryParser).to(receive(:ancestors).once { [nil, SupplejackCommon::Xml::Base] })
+      expect(LibraryParser).to(receive(:ancestors).once.and_return([nil, SupplejackCommon::Xml::Base]))
       LibraryParser.identifier
       LibraryParser.identifier
     end
@@ -182,19 +182,19 @@ describe SupplejackCommon::Base do
   describe '#set_attribute_values' do
     let(:record) { described_class.new }
 
-    it 'should set the priority' do
+    it 'sets the priority' do
       described_class.priority 2
       record.set_attribute_values
       expect(record.attributes).to include(priority: 2)
     end
 
-    it 'should set the match_concepts' do
+    it 'sets the match_concepts' do
       described_class.match_concepts :create_or_match
       record.set_attribute_values
       expect(record.attributes).to include(match_concepts: :create_or_match)
     end
 
-    it 'should run values through the attribute value object so we do not get empty strings and nils' do
+    it 'runs values through the attribute value object so we do not get empty strings and nils' do
       described_class.attribute :category, default: ['value', nil]
       record.set_attribute_values
       expect(record.attributes[:category]).to eq ['value']
@@ -202,7 +202,7 @@ describe SupplejackCommon::Base do
 
     it 'assigns the attribute values in a hash' do
       described_class.attribute :category, default: 'Value'
-      allow(record).to receive(:attribute_value) { 'Value' }
+      allow(record).to receive(:attribute_value).and_return('Value')
       record.set_attribute_values
       expect(record.attributes).to include(category: ['Value'])
     end
@@ -224,7 +224,7 @@ describe SupplejackCommon::Base do
       expect(record.field_errors).to include(date: ['Error'])
     end
 
-    it 'should rescue from exceptions and store it' do
+    it 'rescues from exceptions and store it' do
       described_class.attribute :date
       allow(SupplejackCommon::AttributeBuilder).to receive(:new).and_raise(StandardError.new('Hi'))
       record.set_attribute_values
@@ -236,18 +236,18 @@ describe SupplejackCommon::Base do
     let(:record) { described_class.new }
 
     it 'is not deleteable if there are no deletion rules' do
-      allow(described_class).to receive(:deletion_rules) { nil }
-      expect(record.deletable?).to be_falsey
+      allow(described_class).to receive(:deletion_rules).and_return(nil)
+      expect(record).not_to be_deletable
     end
 
     it 'is deletable if the block evals to true' do
       described_class.delete_if { true }
-      expect(record.deletable?).to be_truthy
+      expect(record).to be_deletable
     end
 
     it 'is not deletable if the block evals to true' do
       described_class.delete_if { false }
-      expect(record.deletable?).to be_falsey
+      expect(record).not_to be_deletable
     end
   end
 
@@ -256,17 +256,17 @@ describe SupplejackCommon::Base do
 
     it 'returns true if any rejection_rule is true' do
       allow(described_class).to receive(:rejection_rules) { [proc { false }, proc { true }] }
-      expect(record.rejected?).to be_truthy
+      expect(record).to be_rejected
     end
 
     it 'returns false if all rejection_rules are false' do
       allow(described_class).to receive(:rejection_rules) { [proc { false }, proc { false }] }
-      expect(record.rejected?).to be_falsey
+      expect(record).not_to be_rejected
     end
 
     it 'returns false if rejection_rules is undefined' do
-      allow(described_class).to receive(:rejection_rules) { nil }
-      expect(record.rejected?).to be_falsey
+      allow(described_class).to receive(:rejection_rules).and_return(nil)
+      expect(record).not_to be_rejected
     end
   end
 

@@ -5,7 +5,7 @@ require 'spec_helper'
 describe SupplejackCommon::DSL do
   subject { SupplejackCommon::Base }
 
-  before(:each) do
+  before do
     subject.clear_definitions
   end
 
@@ -32,7 +32,7 @@ describe SupplejackCommon::DSL do
   end
 
   describe '.basic_auth' do
-    it 'should set the basic auth username and password' do
+    it 'sets the basic auth username and password' do
       subject.basic_auth 'username', 'password'
       expect(subject._basic_auth[subject.identifier]).to eq(username: 'username', password: 'password')
     end
@@ -138,12 +138,12 @@ describe SupplejackCommon::DSL do
       subject._throttle = nil
     end
 
-    it 'should store the throttling information' do
+    it 'stores the throttling information' do
       subject.throttle host: 'gdata.youtube.com', max_per_minute: 100
       expect(subject._throttle).to eq [{ host: 'gdata.youtube.com', max_per_minute: 100 }]
     end
 
-    it 'should store multiple throttle options' do
+    it 'stores multiple throttle options' do
       subject.throttle host: 'www.google.com', max_per_minute: 100
       subject.throttle host: 'www.yahoo.com', max_per_minute: 100
       expect(subject._throttle).to eq [{ host: 'www.google.com', max_per_minute: 100 },
@@ -156,7 +156,7 @@ describe SupplejackCommon::DSL do
       subject._request_timeout = nil
     end
 
-    it 'should store the timeout information' do
+    it 'stores the timeout information' do
       subject.request_timeout(10_000)
       expect(subject._request_timeout).to eq 10_000
     end

@@ -9,16 +9,16 @@ describe ActiveModel::Validations::FormatValidator do
       validates :dc_type, format: { with: /Images|Videos/ }
     end
 
-    it 'should be valid' do
+    it 'is valid' do
       record = TestJsonWith.new('dc_type' => %w[Videos Images])
       record.set_attribute_values
-      expect(record.valid?).to be_truthy
+      expect(record).to be_valid
     end
 
-    it "should not be valid when at least one value doesn't match " do
+    it "is not valid when at least one value doesn't match" do
       record = TestJsonWith.new('dc_type' => %w[Videos Photos])
       record.set_attribute_values
-      expect(record.valid?).to be_falsey
+      expect(record).not_to be_valid
     end
   end
 
@@ -28,16 +28,16 @@ describe ActiveModel::Validations::FormatValidator do
       validates :dc_type, format: { without: /Images|Videos/ }
     end
 
-    it 'should be valid' do
+    it 'is valid' do
       record = TestJsonWithout.new('dc_type' => %w[Photos Manuscripts])
       record.set_attribute_values
-      expect(record.valid?).to be_truthy
+      expect(record).to be_valid
     end
 
-    it 'should not be valid when at least one value matches the without regexp' do
+    it 'is not valid when at least one value matches the without regexp' do
       record = TestJsonWithout.new('dc_type' => %w[Videos Photos])
       record.set_attribute_values
-      expect(record.valid?).to be_falsey
+      expect(record).not_to be_valid
     end
   end
 end

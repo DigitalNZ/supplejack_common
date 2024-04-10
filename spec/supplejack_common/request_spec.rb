@@ -6,12 +6,12 @@ describe SupplejackCommon::Request do
   # let!(:described_class) { SupplejackCommon::Request }
   let!(:request) { described_class.new('http://google.com/titles/1', 10_000) }
 
-  before(:each) do
-    allow(RestClient::Request).to receive(:execute) { 'body' }
+  before do
+    allow(RestClient::Request).to receive(:execute).and_return('body')
   end
 
   describe '.get' do
-    before(:each) do
+    before do
       allow(described_class).to receive(:new) { request }
     end
 
@@ -20,12 +20,12 @@ describe SupplejackCommon::Request do
       described_class.get('google.com', nil, [{ delay: 1 }])
     end
 
-    it 'should fetch the resource and returns it' do
-      expect(request).to receive(:get) { 'body' }
+    it 'fetches the resource and returns it' do
+      expect(request).to receive(:get).and_return('body')
       expect(described_class.get('google.com', nil)).to eq 'body'
     end
 
-    it 'should set the request_timeout' do
+    it 'sets the request_timeout' do
       expect(request.request_timeout).to eq 10_000
     end
   end
@@ -51,7 +51,7 @@ describe SupplejackCommon::Request do
   end
 
   describe '#uri' do
-    it 'should initialize a URI from the url' do
+    it 'initializes a URI from the url' do
       expect(request.uri).to eq URI.parse('http://google.com/titles/1')
     end
   end
@@ -66,17 +66,17 @@ describe SupplejackCommon::Request do
   describe 'get' do
     let!(:time) { Time.now }
 
-    before(:each) do
+    before do
       allow(Time).to receive(:now) { time }
     end
 
-    it 'should aquire the lock' do
+    it 'aquires the lock' do
       expect(request).to receive(:acquire_lock)
       request.get
     end
 
-    it 'should request the resource' do
-      expect(request).to receive(:request_resource) { 'body' }
+    it 'requests the resource' do
+      expect(request).to receive(:request_resource).and_return('body')
       expect(request.get).to eq 'body'
     end
   end
@@ -85,12 +85,12 @@ describe SupplejackCommon::Request do
     let(:initial_request)    { described_class.new('http://google.com/collection/_scroll', 10_000, {}, 'x-api-key' => 'key') }
     let(:subsequent_request) { described_class.new('http://google.com/collection/scroll', 10_000, {}, 'x-api-key' => 'key') }
 
-    it 'should aquire the lock' do
+    it 'aquires the lock' do
       expect(request).to receive(:acquire_lock)
       request.scroll
     end
 
-    it 'should do a POST request initially and NOT follow redirects' do
+    it 'does a POST request initially and NOT follow redirects' do
       expect(RestClient::Request).to receive(:execute).with(method: :post,
                                                             url: 'http://google.com/collection/_scroll',
                                                             timeout: 10_000,
@@ -98,7 +98,7 @@ describe SupplejackCommon::Request do
       initial_request.scroll
     end
 
-    it 'should follow up with subsequent GET requests and NOT follow redirects' do
+    it 'follows up with subsequent GET requests and NOT follow redirects' do
       expect(RestClient::Request).to receive(:execute).with(method: :get,
                                                             url: 'http://google.com/collection/scroll',
                                                             timeout: 10_000,
@@ -113,15 +113,15 @@ describe SupplejackCommon::Request do
     before do
       allow(request).to receive(:request_resource)
       allow(SupplejackCommon).to receive(:redis) { mock_redis }
-      allow(request).to receive(:delay) { 2000 }
+      allow(request).to receive(:delay).and_return(2000)
     end
 
-    it 'should set a key of host in redis' do
+    it 'sets a key of host in redis' do
       expect(mock_redis).to receive(:setnx).with('harvester.throttle.google.com', 0)
       request.acquire_lock {}
     end
 
-    it 'should set the expiry of the key' do
+    it 'sets the expiry of the key' do
       expect(mock_redis).to receive(:pexpire).with('harvester.throttle.google.com', 2000)
       request.acquire_lock {}
     end
@@ -131,14 +131,14 @@ describe SupplejackCommon::Request do
         allow(mock_redis).to receive(:setnx).and_return(false, true) # fails the first time, then succeeds
       end
 
-      it 'should sleep for the time left' do
-        allow(mock_redis).to receive(:pttl).with('harvester.throttle.google.com') { 1234 }
+      it 'sleeps for the time left' do
+        allow(mock_redis).to receive(:pttl).with('harvester.throttle.google.com').and_return(1234)
         expect(request).to receive(:sleep).with(1.244)
         request.acquire_lock {}
       end
 
-      it 'should sleep for the whole delay is there is a problem with the key' do
-        allow(mock_redis).to receive(:pttl).with('harvester.throttle.google.com') { -1 }
+      it 'sleeps for the whole delay is there is a problem with the key' do
+        allow(mock_redis).to receive(:pttl).with('harvester.throttle.google.com').and_return(-1)
         expect(mock_redis).to receive(:pexpire).with('harvester.throttle.google.com', 2000)
         request.acquire_lock {}
       end
@@ -158,7 +158,7 @@ describe SupplejackCommon::Request do
   end
 
   describe '#request_url' do
-    it 'should request the url with the given timeout' do
+    it 'requests the url with the given timeout' do
       expect(RestClient::Request).to receive(:execute).with(method: :get,
                                                             url: 'http://google.com',
                                                             timeout: 60_000,
@@ -172,8 +172,8 @@ describe SupplejackCommon::Request do
   end
 
   describe 'request_resource' do
-    it 'should request the resource and return it' do
-      expect(request).to receive(:request_url) { 'body' }
+    it 'requests the resource and return it' do
+      expect(request).to receive(:request_url).and_return('body')
       expect(request.request_resource).to eq 'body'
     end
   end

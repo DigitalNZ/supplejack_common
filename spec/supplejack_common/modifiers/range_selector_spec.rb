@@ -47,7 +47,7 @@ describe SupplejackCommon::Modifiers::RangeSelector do
       expect(described_class.new(value, :last).modify).to eq ['4']
     end
 
-    it 'returns the first 3 elements ' do
+    it 'returns the first 3 elements' do
       expect(described_class.new(value, :first, 3).modify).to eq %w[1 2 3]
     end
   end

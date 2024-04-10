@@ -6,7 +6,7 @@ describe SupplejackCommon::JsonResource do
   subject { described_class.new('http://google.com/1', {}) }
 
   describe '#document' do
-    it 'should parse the resource as JSON' do
+    it 'parses the resource as JSON' do
       allow(subject).to receive(:fetch_document) { { title: 'Value' }.to_json }
       expect(subject.document).to eq('title' => 'Value')
     end
