@@ -1,7 +1,7 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.7.2
+  TargetRubyVersion: 3.2.2
   NewCops: enable
   Exclude:
     - 'spec/supplejack_common/tmp/**/*'
@@ -9,5 +9,5 @@ AllCops:
 
 Metrics/BlockLength:
   Enabled: true
-  Exclude: 
+  Exclude:
     - 'spec/supplejack_common/**'
