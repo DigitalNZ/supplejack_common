@@ -5,6 +5,8 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'supplejack_common/version'
 
 Gem::Specification.new do |gem|
+  gem.required_ruby_version = '>= 3.2.2'
+
   gem.name          = 'supplejack_common'
   gem.version       = SupplejackCommon::VERSION
   gem.authors       = ['DigitalNZ']
@@ -12,9 +14,9 @@ Gem::Specification.new do |gem|
   gem.description   = 'Supplejack Common provides a DSL to harvest records of different sources'
   gem.summary       = 'Supplejack Common provides a DSL to harvest records of different sources'
   gem.homepage      = ''
+  gem.metadata      = { 'rubygems_mfa_required' => 'true' }
   gem.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
 
   gem.add_runtime_dependency 'actionpack'

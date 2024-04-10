@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    supplejack_common (0.0.2)
+    supplejack_common (3.0.0)
       actionpack
       activesupport
       aws-sdk-s3
