@@ -8,46 +8,46 @@ describe SupplejackCommon::PaginatedCollection do
 
   describe '#initialize' do
     it 'assigns the klass' do
-      collection.klass.should eq SupplejackCommon::Base
+      expect(collection.klass).to eq SupplejackCommon::Base
     end
 
     it 'initializes pagination options' do
-      collection.page_parameter.should eq 'page'
-      collection.per_page_parameter.should eq 'per_page'
-      collection.per_page.should eq 5
-      collection.page.should eq 1
+      expect(collection.page_parameter).to eq 'page'
+      expect(collection.per_page_parameter).to eq 'per_page'
+      expect(collection.per_page).to eq 5
+      expect(collection.page).to eq 1
     end
 
     it 'initializes a counter and extra options' do
-      collection.counter.should eq 1
-      collection.options.should eq(limit: 1)
+      expect(collection.counter).to eq 1
+      expect(collection.options).to eq(limit: 1)
     end
   end
 
   describe '#each' do
     before do
-      collection.klass.stub(:base_urls) { ['http://go.gle/', 'http://dnz.harvest/1'] }
-      collection.stub(:yield_from_records) { true }
-      collection.stub(:paginated?) { false }
+      allow(collection.klass).to receive(:base_urls) { ['http://go.gle/', 'http://dnz.harvest/1'] }
+      allow(collection).to receive(:yield_from_records) { true }
+      allow(collection).to receive(:paginated?) { false }
     end
 
     it 'should process all base_urls' do
-      SupplejackCommon::Base.should_receive(:fetch_records).with('http://go.gle/')
-      SupplejackCommon::Base.should_receive(:fetch_records).with('http://dnz.harvest/1')
+      expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://go.gle/')
+      expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://dnz.harvest/1')
       collection.each { ; }
     end
 
     context 'paginated' do
       before do
-        collection.stub(:paginated?) { true }
-        collection.stub(:url_options) { { page: 1, per_page: 10 } }
-        collection.klass.stub(:base_urls) { ['http://go.gle/', 'http://dnz.harvest/1'] }
-        SupplejackCommon::Base.stub(:total_results) { 1 }
+        allow(collection).to receive(:paginated?) { true }
+        allow(collection).to receive(:url_options) { { page: 1, per_page: 10 } }
+        allow(collection.klass).to receive(:base_urls) { ['http://go.gle/', 'http://dnz.harvest/1'] }
+        allow(SupplejackCommon::Base).to receive(:total_results) { 1 }
       end
 
       it 'should call fetch records with a paginated url' do
-        SupplejackCommon::Base.should_receive(:fetch_records).with('http://go.gle/?page=1&per_page=10')
-        SupplejackCommon::Base.should_receive(:fetch_records).with('http://dnz.harvest/1?page=1&per_page=10')
+        expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://go.gle/?page=1&per_page=10')
+        expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://dnz.harvest/1?page=1&per_page=10')
         collection.each { ; }
       end
     end
@@ -55,42 +55,42 @@ describe SupplejackCommon::PaginatedCollection do
 
   describe '#paginated?' do
     it 'returns true when page and per_page are set' do
-      collection.send(:paginated?).should be_true
+      expect(collection.send(:paginated?)).to be_truthy
     end
 
     it 'returns false when no pagination options are set' do
       collection = klass.new(SupplejackCommon::Base, nil, {})
-      collection.send(:paginated?).should be_false
+      expect(collection.send(:paginated?)).to be_falsey
     end
   end
 
   describe '#next_url' do
     context 'paginated' do
       before do
-        collection.stub(:paginated?) { true }
-        collection.stub(:url_options) { { page: 1, per_page: 10 } }
+        allow(collection).to receive(:paginated?) { true }
+        allow(collection).to receive(:url_options) { { page: 1, per_page: 10 } }
       end
 
       it 'returns the url with paginated options' do
-        collection.send(:next_url, 'http://go.gle/').should eq 'http://go.gle/?page=1&per_page=10'
+        expect(collection.send(:next_url, 'http://go.gle/')).to eq 'http://go.gle/?page=1&per_page=10'
       end
 
       it 'appends to existing url parameters' do
-        collection.send(:next_url, 'http://go.gle/?sort=asc').should eq 'http://go.gle/?sort=asc&page=1&per_page=10'
+        expect(collection.send(:next_url, 'http://go.gle/?sort=asc')).to eq 'http://go.gle/?sort=asc&page=1&per_page=10'
       end
 
       it 'should call a block if given' do
         collec = klass.new(SupplejackCommon::Base, { page_parameter: 'page', type: 'item', block:
           proc { 'http://google.com' } })
-        collec.send(:next_url, 'http://go.gle/?sort=asc').should eq 'http://google.com'
+        expect(collec.send(:next_url, 'http://go.gle/?sort=asc')).to eq 'http://google.com'
       end
     end
 
     context 'not paginated' do
-      before { collection.stub(:paginated?) }
+      before { allow(collection).to receive(:paginated?) }
 
       it 'returns the url passed' do
-        collection.send(:next_url, 'http://goog.gle').should eq 'http://goog.gle'
+        expect(collection.send(:next_url, 'http://goog.gle')).to eq 'http://goog.gle'
       end
     end
 
@@ -106,8 +106,8 @@ describe SupplejackCommon::PaginatedCollection do
       let(:collection) { klass.new(SupplejackCommon::Base, params, limit: 1) }
 
       before do
-        SupplejackCommon::Base.stub(:next_page_token) { 'abc_1234' }
-        SupplejackCommon::Base.stub(:_document) { true }
+        allow(SupplejackCommon::Base).to receive(:next_page_token) { 'abc_1234' }
+        allow(SupplejackCommon::Base).to receive(:_document) { true }
       end
 
       it 'generates the next url' do
@@ -122,7 +122,7 @@ describe SupplejackCommon::PaginatedCollection do
 
         context 'when the _document is present' do
           before do
-            SupplejackCommon::Base.stub(:_document) { OpenStruct.new(body: '{ "_scroll_id": "scroll_id" }') }
+            allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(body: '{ "_scroll_id": "scroll_id" }') }
           end
 
           it 'generates the next url based on the response payload' do
@@ -132,7 +132,7 @@ describe SupplejackCommon::PaginatedCollection do
 
         context 'when the _document is not present' do
           before do
-            SupplejackCommon::Base.stub(:_document) { nil }
+            allow(SupplejackCommon::Base).to receive(:_document) { nil }
           end
 
           it 'uses the URL it was instantiated with' do
@@ -151,7 +151,7 @@ describe SupplejackCommon::PaginatedCollection do
 
         context 'when the _document is present' do
           before do
-            SupplejackCommon::Base.stub(:_document) { OpenStruct.new(headers: OpenStruct.new(location: '/scroll/scroll_token/pages')) }
+            allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(headers: OpenStruct.new(location: '/scroll/scroll_token/pages')) }
           end
 
           it 'generates the next url based on the header :location in the response' do
@@ -161,7 +161,7 @@ describe SupplejackCommon::PaginatedCollection do
 
         context 'when the _document is not present' do
           before do
-            SupplejackCommon::Base.stub(:_document) { nil }
+            allow(SupplejackCommon::Base).to receive(:_document) { nil }
           end
 
           it 'uses the url that it was instantiated with' do
@@ -204,8 +204,8 @@ describe SupplejackCommon::PaginatedCollection do
       let(:collection) { klass.new(SupplejackCommon::Base, params, limit: 1) }
 
       before do
-        SupplejackCommon::Base.stub(:next_page_token) { 'abc_1234' }
-        SupplejackCommon::Base.stub(:_document) { true }
+        allow(SupplejackCommon::Base).to receive(:next_page_token) { 'abc_1234' }
+        allow(SupplejackCommon::Base).to receive(:_document) { true }
       end
 
       it 'generates a url with an initial parameter' do
@@ -221,12 +221,12 @@ describe SupplejackCommon::PaginatedCollection do
 
   describe '#url_options' do
     it 'returns a hash with the url options' do
-      collection.send(:url_options).should eq('page' => 1, 'per_page' => 5)
+      expect(collection.send(:url_options)).to eq('page' => 1, 'per_page' => 5)
     end
 
     it 'removes nil keys from the hash of url options' do
       collection = klass.new(SupplejackCommon::Base, page_parameter: 'page', page: 1, type: 'item', per_page_parameter: nil)
-      collection.send(:url_options).should eq('page' => 1)
+      expect(collection.send(:url_options)).to eq('page' => 1)
     end
   end
 
@@ -235,7 +235,7 @@ describe SupplejackCommon::PaginatedCollection do
       let(:collection) { klass.new(SupplejackCommon::Base, page_parameter: 'page', type: 'page', per_page_parameter: 'per_page', per_page: 5, page: 1) }
 
       it 'returns the current_page' do
-        collection.send(:current_page).should eq 1
+        expect(collection.send(:current_page)).to eq 1
       end
     end
 
@@ -243,32 +243,32 @@ describe SupplejackCommon::PaginatedCollection do
       let(:collection) { klass.new(SupplejackCommon::Base, page_parameter: 'page', type: 'item', per_page_parameter: 'per_page', per_page: 5, page: 1) }
 
       it 'returns the first page' do
-        collection.send(:current_page).should eq 1
+        expect(collection.send(:current_page)).to eq 1
       end
 
       it 'returns the second page' do
-        collection.stub(:page) { 6 }
-        collection.send(:current_page).should eq 2
+        allow(collection).to receive(:page) { 6 }
+        expect(collection.send(:current_page)).to eq 2
       end
 
       it 'returns the third page' do
-        collection.stub(:page) { 11 }
-        collection.send(:current_page).should eq 3
+        allow(collection).to receive(:page) { 11 }
+        expect(collection.send(:current_page)).to eq 3
       end
     end
   end
 
   describe '#total_pages' do
     it 'returns the total number of pages' do
-      SupplejackCommon::Base.stub(:total_results) { 40 }
-      collection.stub(:per_page) { 10 }
-      collection.send(:total_pages).should eq 4
+      allow(SupplejackCommon::Base).to receive(:total_results) { 40 }
+      allow(collection).to receive(:per_page) { 10 }
+      expect(collection.send(:total_pages)).to eq 4
     end
 
     it 'returns the total number of pages even when the last page is not full of records' do
-      SupplejackCommon::Base.stub(:total_results) { 41 }
-      collection.stub(:per_page) { 10 }
-      collection.send(:total_pages).should eq 5
+      allow(SupplejackCommon::Base).to receive(:total_results) { 41 }
+      allow(collection).to receive(:per_page) { 10 }
+      expect(collection.send(:total_pages)).to eq 5
     end
   end
 
@@ -278,7 +278,7 @@ describe SupplejackCommon::PaginatedCollection do
 
       it 'increments the page by one' do
         collection.send(:increment_page_counter!)
-        collection.page.should eq 2
+        expect(collection.page).to eq 2
       end
     end
 
@@ -287,7 +287,7 @@ describe SupplejackCommon::PaginatedCollection do
 
       it 'increments the page by the number per_page' do
         collection.send(:increment_page_counter!)
-        collection.page.should eq 6
+        expect(collection.page).to eq 6
       end
     end
   end
@@ -299,13 +299,13 @@ describe SupplejackCommon::PaginatedCollection do
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         it 'returns true when the document returns that there are hits on the current page' do
-          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":["a"]}}') }
+          allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":["a"]}}') }
 
           expect(collection.send(:more_results?)).to eq true
         end
 
         it 'returns false when the document returns that there are no hits on the current page' do
-          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":[]}}') }
+          allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":[]}}') }
 
           expect(collection.send(:more_results?)).to eq false
         end
@@ -316,13 +316,13 @@ describe SupplejackCommon::PaginatedCollection do
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         it 'returns true when the response code is 303' do
-          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(code: 303) }
+          allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(code: 303) }
 
           expect(collection.send(:more_results?)).to eq true
         end
 
         it 'returns false when the response code is not 303' do
-          SupplejackCommon::Base.stub(:_document) { OpenStruct.new(code: 200) }
+          allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(code: 200) }
 
           expect(collection.send(:more_results?)).to eq false
         end

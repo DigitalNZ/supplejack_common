@@ -8,12 +8,12 @@ describe SupplejackCommon::Modifiers::Adder do
 
   describe 'modify' do
     it 'adds a value to the original value' do
-      replacer.modify.should eq %w[Images Videos]
+      expect(replacer.modify).to eq %w[Images Videos]
     end
 
     it 'adds an array of values to the original_value' do
-      replacer.stub(:new_value) { %w[Videos Audio] }
-      replacer.modify.should eq %w[Images Videos Audio]
+      allow(replacer).to receive(:new_value) { %w[Videos Audio] }
+      expect(replacer.modify).to eq %w[Images Videos Audio]
     end
   end
 end

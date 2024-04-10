@@ -8,18 +8,18 @@ describe SupplejackCommon::Modifiers::FinderWith do
 
   describe 'modify' do
     context 'fetch only 1' do
-      before { replacer.stub(:scope) { :first } }
+      before { allow(replacer).to receive(:scope) { :first } }
 
       it 'returns the first result found' do
-        replacer.modify.should eq ['Data']
+        expect(replacer.modify).to eq ['Data']
       end
     end
 
     context 'fetch all' do
-      before { replacer.stub(:scope) { :all } }
+      before { allow(replacer).to receive(:scope) { :all } }
 
       it 'returns the first result found' do
-        replacer.modify.should eq %w[Data Dataset]
+        expect(replacer.modify).to eq %w[Data Dataset]
       end
     end
   end

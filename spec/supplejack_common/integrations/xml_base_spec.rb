@@ -14,27 +14,27 @@ describe SupplejackCommon::Xml::Base do
 
   context 'default values' do
     it 'defaults the collection to NZ On Screen' do
-      record.content_partner.should eq ['NZ On Screen']
+      expect(record.content_partner).to eq ['NZ On Screen']
     end
   end
 
   it 'gets the title' do
-    record.title.should eq ['Page 4 Advertisements Column 4 (Otago Daily Times, 02 April 1888)']
+    expect(record.title).to eq ['Page 4 Advertisements Column 4 (Otago Daily Times, 02 April 1888)']
   end
 
   it 'gets the record description' do
-    record.description.should eq ['A thing']
+    expect(record.description).to eq ['A thing']
   end
 
   it 'gets the date' do
-    record.date.should eq ['2011-02-13 14:09:03 +1300']
+    expect(record.date).to eq ['2011-02-13 14:09:03 +1300']
   end
 
   it 'gets the display_date using fetch' do
-    record.display_date.should eq ['2011-02-13 14:09:03 +1300']
+    expect(record.display_date).to eq ['2011-02-13 14:09:03 +1300']
   end
 
   it 'gets the author' do
-    record.author.should eq ['Andy']
+    expect(record.author).to eq ['Andy']
   end
 end

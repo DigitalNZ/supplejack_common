@@ -5,46 +5,46 @@ require 'spec_helper'
 describe SupplejackCommon::Oai::PaginatedCollection do
   class TestSource < SupplejackCommon::Oai::Base; end
 
-  let(:client) { mock(:client) }
+  let(:client) { double(:client) }
   let(:options) { {} }
-  let(:klass) { mock(:klass) }
-  let(:record) { mock(:record).as_null_object }
+  let(:klass) { double(:klass) }
+  let(:record) { double(:record).as_null_object }
 
   it 'initializes the client, options and klass' do
     collection = SupplejackCommon::Oai::PaginatedCollection.new(client, options, klass)
-    collection.client.should eq client
-    collection.options.should eq options
-    collection.klass.should eq klass
+    expect(collection.client).to eq client
+    expect(collection.options).to eq options
+    expect(collection.klass).to eq klass
   end
 
   it 'initializes the limit' do
-    SupplejackCommon::Oai::PaginatedCollection.new(client, { limit: 10 }, klass).limit.should eq 10
+    expect(SupplejackCommon::Oai::PaginatedCollection.new(client, { limit: 10 }, klass).limit).to eq 10
   end
 
   describe '#each' do
     let(:collection) { SupplejackCommon::Oai::PaginatedCollection.new(client, {}, TestSource) }
 
     before do
-      list = mock(:list, full: [record, record])
-      collection.stub(:client) { mock(:client, list_records: list) }
+      list = double(:list, full: [record, record])
+      allow(collection).to receive(:client) { double(:client, list_records: list) }
     end
 
     it 'stops iterating when the limit is reached' do
-      collection.stub(:limit) { 1 }
+      allow(collection).to receive(:limit) { 1 }
       records = []
       collection.each { |r| records << r }
-      records.size.should eq 1
+      expect(records.size).to eq 1
     end
 
     it 'initializes a new TestSource record for every oai record' do
-      TestSource.should_receive(:new).twice { record }
+      expect(TestSource).to receive(:new).twice { record }
       collection.each { |r| r }
     end
 
     it 'returns a array of TestSource records' do
       records = []
       collection.each { |r| records << r }
-      records.first.should be_a(TestSource)
+      expect(records.first).to be_a(TestSource)
     end
   end
 end

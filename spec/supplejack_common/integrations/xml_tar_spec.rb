@@ -12,11 +12,11 @@ describe SupplejackCommon::Xml::Base do
 
   context 'default values' do
     it 'defaults the collection to NZ On Screen' do
-      record.content_partner.should eq ['NZ On Screen']
+      expect(record.content_partner).to eq ['NZ On Screen']
     end
   end
 
   it 'gets the title' do
-    record.title.should eq ['Record 1']
+    expect(record.title).to eq ['Record 1']
   end
 end

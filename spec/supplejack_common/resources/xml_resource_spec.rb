@@ -7,14 +7,14 @@ describe SupplejackCommon::XmlResource do
 
   describe '#initialize' do
     it 'should set the namespaces class attribute' do
-      subject.class._namespaces[:dc].should eq 'http://purl.org/dc/elements/1.1/'
+      expect(subject.class._namespaces[:dc]).to eq 'http://purl.org/dc/elements/1.1/'
     end
   end
 
   describe '#document' do
     it 'should parse the resource as XML' do
-      subject.stub(:fetch_document) { '</xml>' }
-      subject.document.should be_a Nokogiri::XML::Document
+      allow(subject).to receive(:fetch_document) { '</xml>' }
+      expect(subject.document).to be_a Nokogiri::XML::Document
     end
   end
 
@@ -22,8 +22,8 @@ describe SupplejackCommon::XmlResource do
     let(:doc) { double(:document) }
 
     it 'should create a new XpathOption with the namespaces class attribute' do
-      subject.stub(:document) { doc }
-      SupplejackCommon::XpathOption.should_receive(:new).with(doc, { xpath: '/doc' }, dc: 'http://purl.org/dc/elements/1.1/') { double(:option).as_null_object }
+      allow(subject).to receive(:document) { doc }
+      expect(SupplejackCommon::XpathOption).to receive(:new).with(doc, { xpath: '/doc' }, dc: 'http://purl.org/dc/elements/1.1/') { double(:option).as_null_object }
       subject.strategy_value(xpath: '/doc')
     end
   end
