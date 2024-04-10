@@ -111,19 +111,19 @@ describe SupplejackCommon::Enrichment do
     end
 
     it 'should initialize a xml resource object' do
-      expect(SupplejackCommon::XmlResource).to receive(:new).with('http://goo.gle/1', attributes: { priority: 1, source_id: 'ndha_rights' })
+      expect(SupplejackCommon::XmlResource).to receive(:new).with('http://goo.gle/1', { attributes: { priority: 1, source_id: 'ndha_rights' } })
       enrichment.resource
     end
 
     it 'should initialize a json resource object' do
       enrichment = described_class.new(:ndha_rights, { block: proc { url 'http://goo.gle/1'; format 'json' } }, record, TestParser)
-      expect(SupplejackCommon::JsonResource).to receive(:new).with('http://goo.gle/1', attributes: { priority: 1, source_id: 'ndha_rights' })
+      expect(SupplejackCommon::JsonResource).to receive(:new).with('http://goo.gle/1', { attributes: { priority: 1, source_id: 'ndha_rights' } })
       enrichment.resource
     end
 
     it 'should initialize a file resource object' do
       enrichment = described_class.new(:ndha_rights, { block: proc { url 'http://goo.gle/1'; format 'file' } }, record, TestParser)
-      expect(SupplejackCommon::FileResource).to receive(:new).with('http://goo.gle/1', attributes: { priority: 1, source_id: 'ndha_rights' })
+      expect(SupplejackCommon::FileResource).to receive(:new).with('http://goo.gle/1', { attributes: { priority: 1, source_id: 'ndha_rights' } })
       enrichment.resource
     end
 
@@ -133,7 +133,7 @@ describe SupplejackCommon::Enrichment do
 
     it 'initializes the resource with throttle options' do
       allow(TestParser).to receive(:_throttle) { { host: 'gdata.youtube.com', delay: 1 } }
-      expect(SupplejackCommon::Resource).to receive(:new).with('http://goo.gle/1', attributes: { priority: 1, source_id: 'ndha_rights' }, throttling_options: { host: 'gdata.youtube.com', delay: 1 })
+      expect(SupplejackCommon::Resource).to receive(:new).with('http://goo.gle/1', { attributes: { priority: 1, source_id: 'ndha_rights' }, throttling_options: { host: 'gdata.youtube.com', delay: 1 } })
       enrichment.resource
     end
 
