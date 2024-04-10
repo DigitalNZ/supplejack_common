@@ -80,7 +80,7 @@ describe SupplejackCommon::Json::Base do
         described_class._throttle = {}
         described_class.http_headers('x-api-key': 'key')
         described_class._request_timeout = 60_000
-        expect(SupplejackCommon::Request).to receive(:scroll).with('http://google.com/_scroll', 60_000, {}, 'x-api-key': 'key') { json }
+        expect(SupplejackCommon::Request).to receive(:scroll).with('http://google.com/_scroll', 60_000, {}, { 'x-api-key': 'key' }) { json }
         described_class.document('http://google.com/_scroll')
         expect(described_class._document).to eq json
       end
@@ -89,7 +89,7 @@ describe SupplejackCommon::Json::Base do
         described_class._throttle = {}
         described_class.http_headers('x-api-key': 'key')
         described_class._request_timeout = 60_000
-        expect(SupplejackCommon::Request).to receive(:scroll).with('http://google.com/scroll', 60_000, {}, 'x-api-key': 'key') { json }
+        expect(SupplejackCommon::Request).to receive(:scroll).with('http://google.com/scroll', 60_000, {}, { 'x-api-key': 'key' }) { json }
         described_class.document('http://google.com/scroll')
         expect(described_class._document).to eq json
       end
@@ -129,7 +129,7 @@ describe SupplejackCommon::Json::Base do
     end
 
     it 'initializes record for every json record' do
-      expect(described_class).to receive(:new).once.with('title' => 'Record1') { record }
+      expect(described_class).to receive(:new).once.with({ 'title' => 'Record1' }) { record }
       expect(described_class.fetch_records('http://google.com')).to eq [record]
     end
 

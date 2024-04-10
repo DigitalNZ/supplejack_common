@@ -15,7 +15,7 @@ describe SupplejackCommon::AttributeBuilder do
 
     it 'gets the value from another location' do
       builder = described_class.new(record, :category, xpath: '//category')
-      expect(record).to receive(:strategy_value).with(xpath: '//category') { 'Google' }
+      expect(record).to receive(:strategy_value).with({ xpath: '//category' }) { 'Google' }
       expect(builder.attribute_value).to eq 'Google'
     end
   end
