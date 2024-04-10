@@ -24,9 +24,7 @@ module SupplejackCommon
     end
 
     def add_html_tag(html)
-      unless html =~ /(<(!DOCTYPE )?html.*>)|(<\?xml.*\?>)/i
-        html = "<html>#{html}</html>"
-      end
+      html = "<html>#{html}</html>" unless html =~ /(<(!DOCTYPE )?html.*>)|(<\?xml.*\?>)/i
       html
     end
 

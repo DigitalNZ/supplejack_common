@@ -92,7 +92,8 @@ describe SupplejackCommon::XpathOption do
 
     it 'should add all namespaces to the xpath query' do
       xo = described_class.new(document, { xpath: '//dc:id' }, { dc: 'http://goo.gle/', xsi: 'http://yah.oo' })
-      expect(document).to receive(:xpath).with('//dc:id', { dc: 'http://goo.gle/', xsi: 'http://yah.oo' }).and_return([node])
+      expect(document).to receive(:xpath).with('//dc:id',
+                                               { dc: 'http://goo.gle/', xsi: 'http://yah.oo' }).and_return([node])
 
       expect(xo.send(:nodes)).to eq [node]
     end

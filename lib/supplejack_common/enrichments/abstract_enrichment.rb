@@ -29,7 +29,8 @@ module SupplejackCommon
     end
 
     def set_attribute_values
-      raise NotImplementedError, 'All subclasses of SupplejackCommon::AbstractEnrichment must override #set_attribute_values.'
+      raise NotImplementedError,
+            'All subclasses of SupplejackCommon::AbstractEnrichment must override #set_attribute_values.'
     end
 
     def enrichable?

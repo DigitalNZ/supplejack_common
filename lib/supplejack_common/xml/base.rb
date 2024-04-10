@@ -72,6 +72,7 @@ module SupplejackCommon
 
       def format
         return self.class._record_format if self.class._record_format.present?
+
         @url.present? ? :html : :xml
       end
 

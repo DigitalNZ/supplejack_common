@@ -10,9 +10,9 @@ module ActiveModel
         value = Array(value)
         matches = value.map { |v| exclusions.send(inclusion_method(exclusions), v) }
 
-        if matches.include?(true)
-          record.errors.add(attribute, :exclusion, **options.except(:in, :within).merge!(value:))
-        end
+        return unless matches.include?(true)
+
+        record.errors.add(attribute, :exclusion, **options.except(:in, :within).merge!(value:))
       end
     end
   end

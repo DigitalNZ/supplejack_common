@@ -18,7 +18,7 @@ describe SupplejackCommon::Modifiers::RangeSelector do
     end
 
     it 'returns -1' do
-      expect(described_class.new('Value', :last).start_range).to eq -1
+      expect(described_class.new('Value', :last).start_range).to eq(-1)
     end
 
     it 'returns 4' do
@@ -28,7 +28,7 @@ describe SupplejackCommon::Modifiers::RangeSelector do
 
   describe '#end_range' do
     it 'returns -1' do
-      expect(described_class.new('Value', :first, :last).end_range).to eq -1
+      expect(described_class.new('Value', :first, :last).end_range).to eq(-1)
     end
 
     it 'returns 4' do
