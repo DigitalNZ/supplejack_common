@@ -4,7 +4,10 @@ require 'spec_helper'
 
 describe SupplejackCommon::PaginatedCollection do
   let(:klass) { SupplejackCommon::PaginatedCollection }
-  let(:collection) { klass.new(SupplejackCommon::Base, { page_parameter: 'page', type: 'item', per_page_parameter: 'per_page', per_page: 5, page: 1, counter: 1 }, limit: 1) }
+  let(:collection) do
+    klass.new(SupplejackCommon::Base,
+              { page_parameter: 'page', type: 'item', per_page_parameter: 'per_page', per_page: 5, page: 1, counter: 1 }, limit: 1)
+  end
 
   describe '#initialize' do
     it 'assigns the klass' do
@@ -122,11 +125,14 @@ describe SupplejackCommon::PaginatedCollection do
 
         context 'when the _document is present' do
           before do
-            allow(SupplejackCommon::Base).to receive(:_document) { double(:document, body: '{ "_scroll_id": "scroll_id" }') }
+            allow(SupplejackCommon::Base).to receive(:_document) {
+                                               double(:document, body: '{ "_scroll_id": "scroll_id" }')
+                                             }
           end
 
           it 'generates the next url based on the response payload' do
-            expect(collection.send(:next_url, 'http://google/search/collectionsonline/_search?scroll=10m&q=334')).to eq 'http://google/search/_search/scroll/scroll_id?scroll=1m'
+            expect(collection.send(:next_url,
+                                   'http://google/search/collectionsonline/_search?scroll=10m&q=334')).to eq 'http://google/search/_search/scroll/scroll_id?scroll=1m'
           end
         end
 
@@ -156,7 +162,9 @@ describe SupplejackCommon::PaginatedCollection do
 
         context 'when the _document is present' do
           before do
-            allow(SupplejackCommon::Base).to receive(:_document) { double(:document, headers: { location: '/scroll/scroll_token/pages' }) }
+            allow(SupplejackCommon::Base).to receive(:_document) {
+                                               double(:document, headers: { location: '/scroll/scroll_token/pages' })
+                                             }
           end
 
           it 'generates the next url based on the header :location in the response' do
@@ -230,14 +238,18 @@ describe SupplejackCommon::PaginatedCollection do
     end
 
     it 'removes nil keys from the hash of url options' do
-      collection = klass.new(SupplejackCommon::Base, page_parameter: 'page', page: 1, type: 'item', per_page_parameter: nil)
+      collection = klass.new(SupplejackCommon::Base, page_parameter: 'page', page: 1, type: 'item',
+                                                     per_page_parameter: nil)
       expect(collection.send(:url_options)).to eq('page' => 1)
     end
   end
 
   describe '#current_page' do
     context 'page type pagination' do
-      let(:collection) { klass.new(SupplejackCommon::Base, page_parameter: 'page', type: 'page', per_page_parameter: 'per_page', per_page: 5, page: 1) }
+      let(:collection) do
+        klass.new(SupplejackCommon::Base, page_parameter: 'page', type: 'page', per_page_parameter: 'per_page', per_page: 5,
+                                          page: 1)
+      end
 
       it 'returns the current_page' do
         expect(collection.send(:current_page)).to eq 1
@@ -245,7 +257,10 @@ describe SupplejackCommon::PaginatedCollection do
     end
 
     context 'item type pagination' do
-      let(:collection) { klass.new(SupplejackCommon::Base, page_parameter: 'page', type: 'item', per_page_parameter: 'per_page', per_page: 5, page: 1) }
+      let(:collection) do
+        klass.new(SupplejackCommon::Base, page_parameter: 'page', type: 'item', per_page_parameter: 'per_page', per_page: 5,
+                                          page: 1)
+      end
 
       it 'returns the first page' do
         expect(collection.send(:current_page)).to eq 1
@@ -279,7 +294,10 @@ describe SupplejackCommon::PaginatedCollection do
 
   describe 'increment_page_counter!' do
     context 'page type pagination' do
-      let(:collection) { klass.new(SupplejackCommon::Base, page_parameter: 'page', type: 'page', per_page_parameter: 'per_page', per_page: 5, page: 1) }
+      let(:collection) do
+        klass.new(SupplejackCommon::Base, page_parameter: 'page', type: 'page', per_page_parameter: 'per_page', per_page: 5,
+                                          page: 1)
+      end
 
       it 'increments the page by one' do
         collection.send(:increment_page_counter!)
@@ -288,7 +306,10 @@ describe SupplejackCommon::PaginatedCollection do
     end
 
     context 'item type pagination' do
-      let(:collection) { klass.new(SupplejackCommon::Base, page_parameter: 'page', type: 'item', per_page_parameter: 'per_page', per_page: 5, page: 1) }
+      let(:collection) do
+        klass.new(SupplejackCommon::Base, page_parameter: 'page', type: 'item', per_page_parameter: 'per_page', per_page: 5,
+                                          page: 1)
+      end
 
       it 'increments the page by the number per_page' do
         collection.send(:increment_page_counter!)
@@ -304,20 +325,30 @@ describe SupplejackCommon::PaginatedCollection do
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         it 'returns true when the document returns that there are hits on the current page' do
-          allow(SupplejackCommon::Base).to receive(:_document) { double(:document, body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":["a"]}}') }
+          allow(SupplejackCommon::Base).to receive(:_document) {
+                                             double(:document,
+                                                    body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":["a"]}}')
+                                           }
 
           expect(collection.send(:more_results?)).to eq true
         end
 
         it 'returns false when the document returns that there are no hits on the current page' do
-          allow(SupplejackCommon::Base).to receive(:_document) { double(:document, body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":[]}}') }
+          allow(SupplejackCommon::Base).to receive(:_document) {
+                                             double(:document,
+                                                    body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":[]}}')
+                                           }
 
           expect(collection.send(:more_results?)).to eq false
         end
       end
 
       context 'when the harvests scroll_more_results_block is provided' do
-        let(:params) { { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m', scroll_more_results_block: proc { |klass| klass._document.code == 303 } } }
+        let(:params) do
+          { type: 'scroll', duration_parameter: 'scroll', duration_value: '1m', scroll_more_results_block: proc { |klass|
+                                                                                                             klass._document.code == 303
+                                                                                                           } }
+        end
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         it 'returns true when the response code is 303' do

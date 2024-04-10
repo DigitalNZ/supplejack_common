@@ -23,13 +23,19 @@ describe SupplejackCommon::Json::Base do
   end
 
   describe '.records_json' do
-    let(:json_example_1) { RestClient::Response.create('{"items": [{"title": "Record1"}, {"title": "Record2"}, {"title": "Record3"}]}', double.as_null_object, double.as_null_object) }
-    let(:json_example_2) { RestClient::Response.create('{"items": {"title": "Record1"}}', double.as_null_object, double.as_null_object) }
+    let(:json_example_1) do
+      RestClient::Response.create('{"items": [{"title": "Record1"}, {"title": "Record2"}, {"title": "Record3"}]}',
+                                  double.as_null_object, double.as_null_object)
+    end
+    let(:json_example_2) do
+      RestClient::Response.create('{"items": {"title": "Record1"}}', double.as_null_object, double.as_null_object)
+    end
 
     it 'returns an array of records with the parsed json' do
       allow(described_class).to receive(:document) { json_example_1 }
       described_class.record_selector '$.items'
-      expect(described_class.records_json('http://goo.gle.com/1')).to eq [{ 'title' => 'Record1' }, { 'title' => 'Record2' }, { 'title' => 'Record3' }]
+      expect(described_class.records_json('http://goo.gle.com/1')).to eq [{ 'title' => 'Record1' },
+                                                                          { 'title' => 'Record2' }, { 'title' => 'Record3' }]
     end
 
     it 'returns an array of records with the parsed json when json object is not array' do
@@ -70,7 +76,7 @@ describe SupplejackCommon::Json::Base do
 
     context 'json files' do
       it 'stores the raw json' do
-        expect(File).to receive(:read).with('file:///data/sites/data.json'.gsub(%r{file:\/\/}, '')) { json }
+        expect(File).to receive(:read).with('file:///data/sites/data.json'.gsub(%r{file://}, '')) { json }
         expect(described_class.document('file:///data/sites/data.json')).to eq json
       end
     end

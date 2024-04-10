@@ -42,6 +42,7 @@ module SupplejackCommon
 
     def nodes
       return [] unless options[:xpath].present?
+
       xpath_expressions = Array(options[:xpath])
       @nodes = []
 
@@ -54,9 +55,7 @@ module SupplejackCommon
 
     def extract_node_value(node)
       sanitized_value = Sanitize.fragment(node.to_html, options[:sanitize_config] || @default_sanitization_config).strip
-      decoded_value = HTMLEntities.new.decode sanitized_value
-
-      decoded_value
+      HTMLEntities.new.decode sanitized_value
     end
 
     def xpath_value(xpath)

@@ -20,7 +20,9 @@ describe SupplejackCommon::Modifiers::Mapper do
     end
 
     it 'makes multiple modifications' do
-      allow(subject).to receive(:replacement_rules) { { /width=[\d]{1,4}/ => 'width=520', /height=[\d]{1,4}/ => 'height=310' } }
+      allow(subject).to receive(:replacement_rules) {
+                          { /width=[\d]{1,4}/ => 'width=520', /height=[\d]{1,4}/ => 'height=310' }
+                        }
       expect(subject.modify).to eq ['http://google.com?width=520&height=310']
     end
 

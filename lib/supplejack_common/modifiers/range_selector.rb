@@ -13,12 +13,14 @@ module SupplejackCommon
         return 0 if @start_range == :first
         return -1 if @start_range == :last
         return @start_range - 1 if @start_range.positive?
+
         @start_range
       end
 
       def end_range
         return -1 if @end_range == :last
         return @end_range - 1 if @end_range&.positive?
+
         @end_range
       end
 

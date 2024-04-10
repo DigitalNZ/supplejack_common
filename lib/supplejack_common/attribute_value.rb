@@ -27,9 +27,9 @@ module SupplejackCommon
       original_value.present?
     end
 
-    def +(attribute_value)
-      attribute_value = attribute_value.original_value if attribute_value.is_a?(AttributeValue)
-      self.class.new(original_value + Array(attribute_value).uniq)
+    def +(other)
+      other = other.original_value if other.is_a?(AttributeValue)
+      self.class.new(original_value + Array(other).uniq)
     end
 
     def includes?(value)

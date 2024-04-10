@@ -9,7 +9,8 @@ describe SupplejackCommon::Resource do
     let(:resource) { described_class.new('http://google.com/1', throttling_options: { host: 'google.com', delay: 1 }, http_headers: { 'x-api-key' => 'key' }) }
 
     it 'request the resource with the throttling options, request timeout, and http_headers' do
-      expect(SupplejackCommon::Request).to receive(:get).with('http://google.com/1', 60_000, { host: 'google.com', delay: 1 }, { 'x-api-key' => 'key' }, nil)
+      expect(SupplejackCommon::Request).to receive(:get).with('http://google.com/1', 60_000,
+                                                              { host: 'google.com', delay: 1 }, { 'x-api-key' => 'key' }, nil)
       resource.send(:fetch_document)
     end
   end

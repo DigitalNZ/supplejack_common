@@ -138,7 +138,9 @@ describe SupplejackCommon::Base do
 
   describe '#attribute_definitions' do
     it 'returns the attributes defined' do
-      allow(described_class).to receive(:_attribute_definitions) { { described_class.identifier => { category: { option: true } } } }
+      allow(described_class).to receive(:_attribute_definitions) {
+                                  { described_class.identifier => { category: { option: true } } }
+                                }
       expect(described_class.attribute_definitions).to eq(category: { option: true })
     end
   end
@@ -213,7 +215,10 @@ describe SupplejackCommon::Base do
 
     it 'adds errors to field_errors' do
       described_class.attribute :date, default: '1999/1/1', date: true
-      allow(SupplejackCommon::AttributeBuilder).to receive(:new).with(record, :date, { default: '1999/1/1', date: true }) { double(:builder, errors: ['Error']).as_null_object }
+      allow(SupplejackCommon::AttributeBuilder).to receive(:new).with(record, :date,
+                                                                      { default: '1999/1/1', date: true }) {
+                                                     double(:builder, errors: ['Error']).as_null_object
+                                                   }
       record.set_attribute_values
       expect(record.attributes).to include(date: nil)
       expect(record.field_errors).to include(date: ['Error'])

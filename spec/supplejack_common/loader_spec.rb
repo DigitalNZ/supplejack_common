@@ -3,7 +3,10 @@
 require 'spec_helper'
 
 describe SupplejackCommon::Loader do
-  let(:parser) { double(:parser, strategy: 'json', name: 'Europeana', content: 'class Europeana < SupplejackCommon::Json::Base; end', file_name: 'europeana.rb') }
+  let(:parser) do
+    double(:parser, strategy: 'json', name: 'Europeana', content: 'class Europeana < SupplejackCommon::Json::Base; end',
+                    file_name: 'europeana.rb')
+  end
   let(:loader) { SupplejackCommon::Loader.new(parser, 'staging') }
 
   before(:each) do

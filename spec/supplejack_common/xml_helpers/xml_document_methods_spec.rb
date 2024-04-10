@@ -64,14 +64,19 @@ describe SupplejackCommon::XmlDocumentMethods do
 
       context 'filename ends with .tar.gz' do
         let(:gzipped_file) { double(:file) }
-        let(:tar) { [double(:file, file?: true, read: 'file1'), double(:dir, file?: false), double(:file, file?: true, read: 'file2')] }
+        let(:tar) do
+          [double(:file, file?: true, read: 'file1'), double(:dir, file?: false),
+           double(:file, file?: true, read: 'file2')]
+        end
 
         it 'opens the tar and yields each file' do
           expect(Zlib::GzipReader).to receive(:open).with('/data/foo.tar.gz') { gzipped_file }
           expect(Gem::Package::TarReader).to receive(:new).with(gzipped_file) { tar }
           expect(tar).to receive(:rewind)
 
-          expect { |b| klass.send(:with_each_file, 'file:///data/foo.tar.gz', &b) }.to yield_successive_args('file1', 'file2')
+          expect do |b|
+            klass.send(:with_each_file, 'file:///data/foo.tar.gz', &b)
+          end.to yield_successive_args('file1', 'file2')
         end
       end
     end

@@ -10,7 +10,8 @@ module SupplejackCommon
       end
 
       def modify
-        raise NotImplementedError, 'All subclasses of SupplejackCommon::Modifiers::AbstractModifier must override #modify.'
+        raise NotImplementedError,
+              'All subclasses of SupplejackCommon::Modifiers::AbstractModifier must override #modify.'
       end
 
       def value
