@@ -34,7 +34,7 @@ describe SupplejackCommon::PaginatedCollection do
     it 'should process all base_urls' do
       expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://go.gle/')
       expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://dnz.harvest/1')
-      collection.each { ; }
+      collection.each {}
     end
 
     context 'paginated' do
@@ -48,7 +48,7 @@ describe SupplejackCommon::PaginatedCollection do
       it 'should call fetch records with a paginated url' do
         expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://go.gle/?page=1&per_page=10')
         expect(SupplejackCommon::Base).to receive(:fetch_records).with('http://dnz.harvest/1?page=1&per_page=10')
-        collection.each { ; }
+        collection.each {}
       end
     end
   end

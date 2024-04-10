@@ -5,7 +5,7 @@ require 'spec_helper'
 describe SupplejackCommon::Oai::Base do
   let(:header) { double(:header, identifier: '123') }
   let(:root) { double(:root).as_null_object }
-  let(:oai_record) { double(:oai_record, header: header, metadata: [root]).as_null_object }
+  let(:oai_record) { double(:oai_record, header:, metadata: [root]).as_null_object }
   let(:record) { described_class.new(oai_record) }
 
   before do

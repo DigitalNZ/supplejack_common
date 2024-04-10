@@ -10,7 +10,7 @@ module SupplejackCommon
 
     def fetch(xpath, namespaces = [], options = {})
       xpath = xpath[:xpath] if xpath.is_a?(Hash)
-      values = SupplejackCommon::XpathOption.new(document, { xpath: xpath, namespaces: namespaces }.merge(options), self.class._namespaces).value
+      values = SupplejackCommon::XpathOption.new(document, { xpath:, namespaces: }.merge(options), self.class._namespaces).value
       SupplejackCommon::AttributeValue.new(values)
     end
 
