@@ -23,7 +23,7 @@ describe SupplejackCommon::Base do
 
     it 'memoizes the identifier' do
       LibraryParser.instance_variable_set('@identifier', nil)
-      expect(LibraryParser).to receive(:ancestors).once { [nil, SupplejackCommon::Xml::Base] }
+      expect(LibraryParser).to(receive(:ancestors).once { [nil, SupplejackCommon::Xml::Base] })
       LibraryParser.identifier
       LibraryParser.identifier
     end

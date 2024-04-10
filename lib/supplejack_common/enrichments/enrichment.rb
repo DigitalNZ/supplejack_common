@@ -35,9 +35,9 @@ module SupplejackCommon
       self._format = format.to_sym
     end
 
-    def requires(name, &block)
+    def requires(name, &)
       _required_attributes[name] = begin
-                                     instance_eval(&block)
+                                     instance_eval(&)
                                    rescue StandardError
                                      nil
                                    end

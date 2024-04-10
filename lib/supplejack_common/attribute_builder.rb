@@ -50,8 +50,8 @@ module SupplejackCommon
       end
     end
 
-    def evaluate_attribute_block(&block)
-      block_result = record.instance_eval(&block)
+    def evaluate_attribute_block(&)
+      block_result = record.instance_eval(&)
       return transform if block_result.nil?
 
       block_result = strip_html_option(block_result)

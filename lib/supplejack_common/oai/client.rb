@@ -12,7 +12,7 @@ module OAI
       @parser = options.fetch(:parser, 'rexml')
 
       @http_client = options.fetch(:http) do
-        Faraday.new(url: @base.clone, proxy: proxy) do |builder|
+        Faraday.new(url: @base.clone, proxy:) do |builder|
           follow_redirects = options.fetch(:redirects, true)
           if follow_redirects
             count = follow_redirects.is_a?(Integer) ? follow_redirects : 5

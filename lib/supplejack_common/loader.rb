@@ -21,7 +21,7 @@ module SupplejackCommon
 
     def create_tempfile
       FileUtils.mkdir_p("#{SupplejackCommon.parser_base_path}/#{parser.strategy}")
-      File.open(path, 'w') { |f| f.write(content_with_encoding) }
+      File.write(path, content_with_encoding)
     end
 
     def parser_class_name

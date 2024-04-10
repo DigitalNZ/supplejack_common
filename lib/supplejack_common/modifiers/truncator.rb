@@ -13,7 +13,7 @@ module SupplejackCommon
 
       def modify
         original_value.map do |value|
-          value.is_a?(String) ? value.truncate(length, omission: omission) : value
+          value.is_a?(String) ? value.truncate(length, omission:) : value
         end
       end
     end
