@@ -122,7 +122,7 @@ describe SupplejackCommon::PaginatedCollection do
 
         context 'when the _document is present' do
           before do
-            allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(body: '{ "_scroll_id": "scroll_id" }') }
+            allow(SupplejackCommon::Base).to receive(:_document) { double(:document, body: '{ "_scroll_id": "scroll_id" }') }
           end
 
           it 'generates the next url based on the response payload' do
@@ -143,15 +143,20 @@ describe SupplejackCommon::PaginatedCollection do
 
       context 'when the next_scroll_url_block is provided' do
         let(:params) do
-          { type: 'scroll', duration_parameter: 'scrolling_duration', duration_value: '10m', next_scroll_url_block: proc do |url, klass|
-                                                                                                                      url.match('(?<base_url>.+\/collection)')[:base_url] + klass._document.headers[:location]
-                                                                                                                    end }
+          {
+            type: 'scroll',
+            duration_parameter: 'scrolling_duration',
+            duration_value: '10m',
+            next_scroll_url_block: proc do |url, klass|
+                                     url.match('(?<base_url>.+\/collection)')[:base_url] + klass._document.headers[:location]
+                                   end
+          }
         end
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         context 'when the _document is present' do
           before do
-            allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(headers: OpenStruct.new(location: '/scroll/scroll_token/pages')) }
+            allow(SupplejackCommon::Base).to receive(:_document) { double(:document, headers: { location: '/scroll/scroll_token/pages' }) }
           end
 
           it 'generates the next url based on the header :location in the response' do
@@ -299,13 +304,13 @@ describe SupplejackCommon::PaginatedCollection do
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         it 'returns true when the document returns that there are hits on the current page' do
-          allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":["a"]}}') }
+          allow(SupplejackCommon::Base).to receive(:_document) { double(:document, body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":["a"]}}') }
 
           expect(collection.send(:more_results?)).to eq true
         end
 
         it 'returns false when the document returns that there are no hits on the current page' do
-          allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":[]}}') }
+          allow(SupplejackCommon::Base).to receive(:_document) { double(:document, body: '{"hits":{"total":{"value":34,"relation":"eq"},"max_score":15.885282,"hits":[]}}') }
 
           expect(collection.send(:more_results?)).to eq false
         end
@@ -316,13 +321,13 @@ describe SupplejackCommon::PaginatedCollection do
         let(:collection) { klass.new(SupplejackCommon::Base, params) }
 
         it 'returns true when the response code is 303' do
-          allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(code: 303) }
+          allow(SupplejackCommon::Base).to receive(:_document) { double(:document, code: 303) }
 
           expect(collection.send(:more_results?)).to eq true
         end
 
         it 'returns false when the response code is not 303' do
-          allow(SupplejackCommon::Base).to receive(:_document) { OpenStruct.new(code: 200) }
+          allow(SupplejackCommon::Base).to receive(:_document) { double(:document, code: 200) }
 
           expect(collection.send(:more_results?)).to eq false
         end
