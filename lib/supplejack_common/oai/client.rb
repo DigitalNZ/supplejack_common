@@ -3,6 +3,9 @@
 # This is overriding the existing initialize method within the OAI gem.
 # The reason for this is so that we can specify retries in Faraday
 
+require 'faraday/follow_redirects'
+require 'faraday/retry'
+
 module OAI
   # lib/supplejack_common/client.rb
   class Client
@@ -17,7 +20,6 @@ module OAI
           if follow_redirects
             count = follow_redirects.is_a?(Integer) ? follow_redirects : 5
 
-            require 'faraday_middleware'
             builder.response :follow_redirects, limit: count
           end
           builder.adapter :net_http
