@@ -30,7 +30,9 @@ describe SupplejackCommon::Xml::Base do
   end
 
   it 'gets the record description' do
-    expect(record.description).to eq ['This Weekly Review features: An interview with Sir Peter Buck in which Te Rangi Hīroa (then Medical Officer of Health for Maori) explains the sabbatical he took to research Polynesian anthropology']
+    expect(record.description).to eq [
+      'This Weekly Review features: An interview with Sir Peter Buck in which Te Rangi Hīroa (then Medical Officer of Health for Maori) explains the sabbatical he took to research Polynesian anthropology'
+    ]
   end
 
   it 'gets the date' do
