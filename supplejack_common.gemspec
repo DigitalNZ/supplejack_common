@@ -27,7 +27,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'faraday-retry'
   gem.add_dependency 'htmlentities'
   gem.add_dependency 'json', '>= 2.3.0'
-  gem.add_dependency 'jsonpath', '~> 0.5.0'
+  gem.add_dependency 'jsonpath'
   gem.add_dependency 'loofah'
   gem.add_dependency 'mimemagic'
   gem.add_dependency 'mongoid'
