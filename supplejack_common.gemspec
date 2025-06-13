@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'supplejack_common/version'
 
 Gem::Specification.new do |gem|
-  gem.required_ruby_version = '>= 3.2.2'
+  gem.required_ruby_version = '>= 3.4.4'
   gem.name          = 'supplejack_common'
   gem.version       = SupplejackCommon::VERSION
   gem.authors       = ['DigitalNZ']
