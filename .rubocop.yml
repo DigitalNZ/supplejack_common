@@ -5,7 +5,7 @@ require:
   - rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 3.2.2
+  TargetRubyVersion: 3.4.4
   NewCops: enable
   Exclude:
     - 'spec/supplejack_common/tmp/**/*'
