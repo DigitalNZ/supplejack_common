@@ -12,6 +12,4 @@ RSpec.configure do |config|
   config.example_status_persistence_file_path = 'spec/examples.txt'
 end
 
-Mongoid.configure do |config|
-  config.load!('spec/support/mongoid.yml', 'test')
-end
+Mongoid.load!('spec/support/mongoid.yml', :test)
