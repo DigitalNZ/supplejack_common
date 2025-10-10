@@ -34,7 +34,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'mongoid'
   gem.add_dependency 'nokogiri'
   gem.add_dependency 'oai'
-  gem.add_dependency 'rails-observers'
+  gem.add_dependency 'observer'
   gem.add_dependency 'redis'
   gem.add_dependency 'rest-client'
   gem.add_dependency 'retriable'
