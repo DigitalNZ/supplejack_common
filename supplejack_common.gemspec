@@ -18,8 +18,9 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   gem.require_paths = ['lib']
 
-  gem.add_dependency 'actionpack', '~> 7.1.4'
-  gem.add_dependency 'activesupport', '~> 7.1.4'
+  gem.add_dependency 'actionpack', '~> 7.2.2.2'
+  gem.add_dependency 'activemodel', '~> 7.2.2.2'
+  gem.add_dependency 'activesupport', '~> 7.2.2.2'
   gem.add_dependency 'aws-sdk-s3'
   gem.add_dependency 'chronic', '<= 0.10.2'
   gem.add_dependency 'dimensions'
@@ -33,6 +34,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'mongoid'
   gem.add_dependency 'nokogiri'
   gem.add_dependency 'oai'
+  gem.add_dependency 'observer'
   gem.add_dependency 'redis'
   gem.add_dependency 'rest-client'
   gem.add_dependency 'retriable'
