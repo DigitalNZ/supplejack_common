@@ -25,7 +25,7 @@ PATH
       json (>= 2.3.0)
       jsonpath
       loofah
-      mimemagic (~> 0.4.3)
+      mimemagic
       mongoid
       nokogiri
       oai
