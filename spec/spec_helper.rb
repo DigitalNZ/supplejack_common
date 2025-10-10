@@ -4,6 +4,7 @@ require 'pry'
 require 'supplejack_common'
 require 'webmock/rspec'
 require 'loofah'
+require 'mongoid'
 
 RSpec.configure do |config|
   config.raise_errors_for_deprecations!
